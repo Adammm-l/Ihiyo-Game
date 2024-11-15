@@ -7,6 +7,7 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 moveDir;
     private Animator animator;
+    private LayerMask solidObjectsLayer; //Layer for Object Collision
 
     void Start() {
         rb = GetComponent<Rigidbody2D>(); //Accesses the RigidBody Component that are both attached to the same object
@@ -28,6 +29,7 @@ public class PlayerControl : MonoBehaviour
             animator.SetFloat("LastInputX", moveDir.x);
             animator.SetFloat("LastInputX", moveDir.y);
         }
+
 
         rb.velocity = moveDir.normalized * moveSpeed; //Physics Based Movement
         animator.SetFloat("InputX", moveDir.x);  
