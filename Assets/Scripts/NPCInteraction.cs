@@ -16,6 +16,8 @@ public class NPCInteraction : MonoBehaviour
     [SerializeField] private List<DialogueResponse> responseOptions; //array of responses
     [SerializeField] private List<string> npcResponses; //NPC reply to each response
 
+    [SerializeField] private List<GameQuests> npcQuests; //List of quests that NPC's can give
+
 
     private bool isPlayerInRange = false;
     public GameObject interactionText; //the text that says "E" to interact
@@ -60,6 +62,9 @@ public class NPCInteraction : MonoBehaviour
     private void Interact()
     {
         //Debug.Log("Interacted with NPC!");
+        PlayerControl player = FindObjectOfType<PlayerControl>(); 
+        player.canMove = false; //disable movement during interactions
+
         if (interactionCount < dialogueLines.Count)
         {
             //initial dialogue
@@ -77,19 +82,43 @@ public class NPCInteraction : MonoBehaviour
         else
         {
             dialogueManager.ShowDialogue(npcName, "STOP TALKING TO ME!!");
+            player.canMove = true;
+        }
+
+        //quest giving
+        if (npcQuests.Count > 0)
+        {
+            //Show the quest details
+            GameQuests currentQuest = npcQuests[0];
+            dialogueManager.ShowDialogue(npcName, $"Quest: {currentQuest.questTitle}\n{currentQuest.questDescription}");
+            GiveQuestToPlayer(currentQuest);
         }
     }
     private void OnResponseSelected(int responseIndex)
     {
         //Show NPC's response to the selected option
-        if (responseIndex < npcResponses.Count)
-        {
-            dialogueManager.ShowDialogue(npcName, npcResponses[responseIndex]);
-        }
+        PlayerControl player = FindObjectOfType<PlayerControl>();
+        dialogueManager.ShowDialogue(npcName, npcResponses[responseIndex]);
+
         interactionCount++;
+
+        if (interactionCount >= dialogueLines.Count)
+        {
+            player.canMove = true; // Re-enable movement
+        }
     }
     void ResetDialogue() //not really necessary yet, will probably be useful later
     {
         interactionCount = 0;
+    }
+
+    private void GiveQuestToPlayer(GameQuests quest)
+    {
+        PlayerQuestManager playerQuestManager = FindObjectOfType<PlayerQuestManager>();
+        if (playerQuestManager != null)
+        {
+            playerQuestManager.AcceptQuest(quest);
+            npcQuests.Remove(quest);
+        }
     }
 }

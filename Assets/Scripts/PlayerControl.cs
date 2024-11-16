@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 2f;
+    [SerializeField] public bool canMove = true; //added by Adam
     private Rigidbody2D rb;
     private Vector2 moveDir;
     private Animator animator;
@@ -16,6 +17,11 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!canMove)
+        {
+            moveDir = Vector2.zero; //stops all movement
+            return;
+        }
         moveDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); //Reads User Input
     }
 
