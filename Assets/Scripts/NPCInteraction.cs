@@ -1,12 +1,29 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class DialogueResponse
+{
+    public string[] responses;
+}
+
 public class NPCInteraction : MonoBehaviour
 {
+    [SerializeField] private string npcName;
+    [SerializeField] private List<string> dialogueLines; //initial dialogues
+    [SerializeField] private List<DialogueResponse> responseOptions; //array of responses
+    [SerializeField] private List<string> npcResponses; //NPC reply to each response
+
+
     private bool isPlayerInRange = false;
     public GameObject interactionText; //the text that says "E" to interact
     private DialogueManager dialogueManager;
+
+    //this is for different dialogues depending how many times the player has interacted with the NPC
+    private int interactionCount = 0;
+
     void Start()
     {
         interactionText.SetActive(false);
@@ -43,7 +60,36 @@ public class NPCInteraction : MonoBehaviour
     private void Interact()
     {
         //Debug.Log("Interacted with NPC!");
-        dialogueManager.ShowDialogue("Hi, I am from Terraria");
-
+        if (interactionCount < dialogueLines.Count)
+        {
+            //initial dialogue
+            dialogueManager.ShowDialogue(npcName, dialogueLines[interactionCount]);
+            //Show response options if available
+            if (interactionCount < responseOptions.Count && responseOptions[interactionCount].responses.Length > 0)
+            {
+                dialogueManager.ShowResponses(responseOptions[interactionCount].responses, OnResponseSelected);
+            }
+            else
+            {
+                interactionCount++;
+            }
+        }
+        else
+        {
+            dialogueManager.ShowDialogue(npcName, "STOP TALKING TO ME!!");
+        }
+    }
+    private void OnResponseSelected(int responseIndex)
+    {
+        //Show NPC's response to the selected option
+        if (responseIndex < npcResponses.Count)
+        {
+            dialogueManager.ShowDialogue(npcName, npcResponses[responseIndex]);
+        }
+        interactionCount++;
+    }
+    void ResetDialogue() //not really necessary yet, will probably be useful later
+    {
+        interactionCount = 0;
     }
 }
