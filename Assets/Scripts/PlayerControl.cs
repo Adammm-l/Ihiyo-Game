@@ -9,6 +9,17 @@ public class PlayerControl : MonoBehaviour
     private Vector2 moveDir;
     private Animator animator;
     private LayerMask solidObjectsLayer; //Layer for Object Collision
+    
+    AudioManager audioManager; // Var needed so that we can incoporate SFX for our player 11 lines added so far
+
+  
+
+
+    private void Awake() {
+
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+
+    }
 
     void Start() {
         rb = GetComponent<Rigidbody2D>(); //Accesses the RigidBody Component that are both attached to the same object
@@ -23,6 +34,7 @@ public class PlayerControl : MonoBehaviour
             return;
         }
         moveDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); //Reads User Input
+
     }
 
     void FixedUpdate() {
@@ -34,10 +46,12 @@ public class PlayerControl : MonoBehaviour
             animator.SetBool("isWalking", false);
             animator.SetFloat("LastInputX", moveDir.x);
             animator.SetFloat("LastInputX", moveDir.y);
+            
         }
 
 
         rb.velocity = moveDir.normalized * moveSpeed; //Physics Based Movement
+
         animator.SetFloat("InputX", moveDir.x);  
         animator.SetFloat("InputY", moveDir.y);
     }
