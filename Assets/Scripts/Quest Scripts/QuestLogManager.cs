@@ -37,11 +37,15 @@ public class QuestLogManager : MonoBehaviour
         //Clear old quest items
         foreach (Transform child in questContent)
         {
-            Destroy(child.gameObject);
+            if (child.gameObject != questTextPrefab)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         //Get active quests from the PlayerQuestManager
         PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+        if (questManager == null) return;
         List<GameQuests> activeQuests = questManager.GetActiveQuests();
 
         foreach (GameQuests quest in activeQuests)

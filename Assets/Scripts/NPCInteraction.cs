@@ -104,7 +104,7 @@ public class NPCInteraction : MonoBehaviour
 
         if (interactionCount >= dialogueLines.Count)
         {
-            player.canMove = true; // Re-enable movement
+            player.canMove = true; //Re-enable movement
         }
     }
     void ResetDialogue() //not really necessary yet, will probably be useful later
@@ -119,6 +119,12 @@ public class NPCInteraction : MonoBehaviour
         {
             playerQuestManager.AcceptQuest(quest);
             npcQuests.Remove(quest);
+
+            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //update quest log
+            if (questLogManager != null)
+            {
+                questLogManager.UpdateQuestLog();
+            }
         }
     }
 }
