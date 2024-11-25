@@ -30,7 +30,6 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
         if (activeQuests.Contains(quest))
         {
             quest.isCompleted = true;
-            Debug.Log($"Quest completed: {quest.questTitle}. You earned {quest.questReward}");
             activeQuests.Remove(quest); // Remove completed quest
         }
     }

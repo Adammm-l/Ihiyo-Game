@@ -11154,6 +11154,7 @@ GameObject:
   - component: {fileID: 1412536197}
   - component: {fileID: 1412536196}
   - component: {fileID: 1412536195}
+  - component: {fileID: 1412536199}
   m_Layer: 0
   m_Name: QuestLogCanvas
   m_TagString: Untagged
@@ -11245,6 +11246,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1412536199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1412536194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af3bcd4ab1839f9448e531a21e4c7305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questLogPanel: {fileID: 1966802996}
+  questContent: {fileID: 1552802896}
+  questTextPrefab: {fileID: 8282963673474962711, guid: 74a1a1356703a214893fa12e541346f7, type: 3}
+  toggleKey: 113
 --- !u!1 &1464405458
 GameObject:
   m_ObjectHideFlags: 0
@@ -11833,20 +11850,27 @@ MonoBehaviour:
   npcName: Steveio
   dialogueLines:
   - Hello I am an NPC.
-  - My name is Steveio
+  - Could you collect an apple for me?
   responseOptions:
   - responses: []
   - responses:
-    - skrrrrt
-    - skibidi
+    - no
+    - sure thang
   npcResponses:
-  - Like I said I am an NPC
-  - Again, my name is Steveio
-  npcQuests:
-  - questTitle: Collect Apple
-    questDescription: Collect an apple and give it to me!
+  - please please please
+  - thanks alot gang
+  triggeredQuests:
+  - isEnabled: 0
+    questTitle: 
+    questDescription: 
     isCompleted: 0
-    questReward: 0
+    requiredItem: 
+    requiredAmount: 0
+    currentAmount: 0
+  - isEnabled: 1
+    questTitle: Collecting Apples
+    questDescription: Give Steveio an apple
+    isCompleted: 0
     requiredItem: Apple
     requiredAmount: 1
     currentAmount: 0
@@ -12744,7 +12768,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1966803000}
+      - m_Target: {fileID: 1412536199}
         m_TargetAssemblyTypeName: QuestLogManager, Assembly-CSharp
         m_MethodName: ToggleQuestLog
         m_Mode: 1
@@ -13879,7 +13903,6 @@ GameObject:
   - component: {fileID: 1966802997}
   - component: {fileID: 1966802999}
   - component: {fileID: 1966802998}
-  - component: {fileID: 1966803000}
   m_Layer: 0
   m_Name: QuestLogPanel
   m_TagString: Untagged
@@ -13946,21 +13969,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1966802996}
   m_CullTransparentMesh: 1
---- !u!114 &1966803000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1966802996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af3bcd4ab1839f9448e531a21e4c7305, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  questLogPanel: {fileID: 1966802996}
-  questContent: {fileID: 1552802896}
-  questTextPrefab: {fileID: 8282963673474962711, guid: 74a1a1356703a214893fa12e541346f7, type: 3}
 --- !u!1 &2038583711
 GameObject:
   m_ObjectHideFlags: 0

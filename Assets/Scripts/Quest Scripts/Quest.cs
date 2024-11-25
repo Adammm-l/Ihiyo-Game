@@ -6,10 +6,12 @@ using System;
 [Serializable]
 public class GameQuests
 {
+    [SerializeField] private bool isEnabled = true;
+    public bool IsEnabled => isEnabled;
+
     public string questTitle;          //The name of the quest
     public string questDescription;    //Details about the quest
     public bool isCompleted;           //Whether the quest is complete
-    public int questReward;             //Reward for completing the quest
 
     //details about current quest progress
     public string requiredItem;        //The goal of the quest

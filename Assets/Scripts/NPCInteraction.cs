@@ -16,9 +16,9 @@ public class NPCInteraction : MonoBehaviour
     [SerializeField] private List<DialogueResponse> responseOptions; //array of responses
     [SerializeField] private List<string> npcResponses; //NPC reply to each response
 
-    [SerializeField] private List<GameQuests> npcQuests; //List of quests that NPC's can give
+    [SerializeField] private List<GameQuests> triggeredQuests; //Quests triggered by specific dialogue lines
 
-
+    public static bool IsInteracting = false;  //when interacting with an NPC
     private bool isPlayerInRange = false;
     public GameObject interactionText; //the text that says "E" to interact
     private DialogueManager dialogueManager;
@@ -61,15 +61,26 @@ public class NPCInteraction : MonoBehaviour
     }
     private void Interact()
     {
-        //Debug.Log("Interacted with NPC!");
-        PlayerControl player = FindObjectOfType<PlayerControl>(); 
-        player.canMove = false; //disable movement during interactions
+        PlayerControl player = FindObjectOfType<PlayerControl>();
+        player.canMove = false; //freezes player when interacting
+        IsInteracting = true;
 
         if (interactionCount < dialogueLines.Count)
         {
-            //initial dialogue
             dialogueManager.ShowDialogue(npcName, dialogueLines[interactionCount]);
-            //Show response options if available
+            if (interactionCount < triggeredQuests.Count && triggeredQuests[interactionCount] != null) //Check if the current dialogue triggers a quest
+            {
+                if (triggeredQuests[interactionCount].IsEnabled)                 //Trigger the quest only if it is enabled since i couldnt get null quests to work
+                {
+                    //Debug.Log($"Triggering quest: {triggeredQuests[interactionCount].questTitle}");
+                    GiveQuestToPlayer(triggeredQuests[interactionCount]);
+                }
+                else
+                {
+                    //Debug.Log($"Quest skipped: {triggeredQuests[interactionCount].questTitle} (Disabled)");
+                }
+            }
+
             if (interactionCount < responseOptions.Count && responseOptions[interactionCount].responses.Length > 0)
             {
                 dialogueManager.ShowResponses(responseOptions[interactionCount].responses, OnResponseSelected);
@@ -79,21 +90,15 @@ public class NPCInteraction : MonoBehaviour
                 interactionCount++;
             }
         }
-        else
+        else //End of dialogue, allow the player to move again
         {
-            dialogueManager.ShowDialogue(npcName, "STOP TALKING TO ME!!");
+            dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
             player.canMove = true;
-        }
-
-        //quest giving
-        if (npcQuests.Count > 0)
-        {
-            //Show the quest details
-            GameQuests currentQuest = npcQuests[0];
-            dialogueManager.ShowDialogue(npcName, $"Quest: {currentQuest.questTitle}\n{currentQuest.questDescription}");
-            GiveQuestToPlayer(currentQuest);
+            IsInteracting = false;
         }
     }
+
+
     private void OnResponseSelected(int responseIndex)
     {
         //Show NPC's response to the selected option
@@ -105,6 +110,7 @@ public class NPCInteraction : MonoBehaviour
         if (interactionCount >= dialogueLines.Count)
         {
             player.canMove = true; //Re-enable movement
+            IsInteracting = false;
         }
     }
     void ResetDialogue() //not really necessary yet, will probably be useful later
@@ -118,9 +124,9 @@ public class NPCInteraction : MonoBehaviour
         if (playerQuestManager != null)
         {
             playerQuestManager.AcceptQuest(quest);
-            npcQuests.Remove(quest);
 
-            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //update quest log
+            //Update quest log
+            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
             if (questLogManager != null)
             {
                 questLogManager.UpdateQuestLog();

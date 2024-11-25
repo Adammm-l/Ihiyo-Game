@@ -8,7 +8,9 @@ public class QuestLogManager : MonoBehaviour
     [SerializeField] private GameObject questLogPanel;
     [SerializeField] private Transform questContent;
     [SerializeField] private GameObject questTextPrefab;
+    [SerializeField] private KeyCode toggleKey = KeyCode.Q;
     private bool isLogOpen = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -17,9 +19,14 @@ public class QuestLogManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (NPCInteraction.IsInteracting) return;
+
+        if (Input.GetKeyDown(toggleKey))
+        {
+            ToggleQuestLog();
+        }
     }
     public void ToggleQuestLog()
     {
