@@ -17,6 +17,8 @@ public class NPCInteraction : MonoBehaviour
     [SerializeField] private List<string> npcResponses; //NPC reply to each response
 
     [SerializeField] private List<GameQuests> triggeredQuests; //Quests triggered by specific dialogue lines
+    [SerializeField] private List<string> questCompleteResponses; //Responses for just-completed quests
+    [SerializeField] private List<string> incompleteQuestResponses; //Responses for incomplete quests
 
     public static bool IsInteracting = false;  //when interacting with an NPC
     private bool isPlayerInRange = false;
@@ -35,6 +37,8 @@ public class NPCInteraction : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (DialogueManager.IsMultipleChoiceActive) return;
+
         if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
             Interact();
@@ -67,27 +71,52 @@ public class NPCInteraction : MonoBehaviour
 
         if (interactionCount < dialogueLines.Count)
         {
-            dialogueManager.ShowDialogue(npcName, dialogueLines[interactionCount]);
-            if (interactionCount < triggeredQuests.Count && triggeredQuests[interactionCount] != null) //Check if the current dialogue triggers a quest
-            {
-                if (triggeredQuests[interactionCount].IsEnabled)                 //Trigger the quest only if it is enabled since i couldnt get null quests to work
-                {
-                    //Debug.Log($"Triggering quest: {triggeredQuests[interactionCount].questTitle}");
-                    GiveQuestToPlayer(triggeredQuests[interactionCount]);
-                }
-                else
-                {
-                    //Debug.Log($"Quest skipped: {triggeredQuests[interactionCount].questTitle} (Disabled)");
-                }
-            }
+            GameQuests quest = interactionCount < triggeredQuests.Count ? triggeredQuests[interactionCount] : null;
 
-            if (interactionCount < responseOptions.Count && responseOptions[interactionCount].responses.Length > 0)
+            if (quest != null && quest.IsEnabled && quest.currentAmount > 0) //path if the quest is already activated
             {
-                dialogueManager.ShowResponses(responseOptions[interactionCount].responses, OnResponseSelected);
+                Debug.Log($"NPC detected active quest: {quest.questTitle}");
+                Inventory playerInventory = FindObjectOfType<Inventory>();
+                if (playerInventory != null)
+                {
+                    int playerItemCount = playerInventory.GetItemCount(quest.requiredItem); //part of debug log
+                    Debug.Log($"Player has {playerItemCount} {quest.requiredItem}(s). Quest requires {quest.requiredAmount}.");
+
+                    if (playerInventory.GetItemCount(quest.requiredItem) >= quest.requiredAmount)
+                    {
+                        playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
+                        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+                        if (questManager != null)
+                        {
+                            questManager.CompleteQuest(quest);
+                        }
+                        Debug.Log("Quest completed!");
+                        dialogueManager.ShowDialogue(npcName, questCompleteResponses[interactionCount]); //response for complete
+                    }
+                    else
+                    {
+                        dialogueManager.ShowDialogue(npcName, incompleteQuestResponses[interactionCount]); //response for incomplete quest
+                    }
+                }
             }
             else
             {
-                interactionCount++;
+                dialogueManager.ShowDialogue(npcName, dialogueLines[interactionCount]);
+                if (interactionCount < triggeredQuests.Count && triggeredQuests[interactionCount] != null) //Check if the current dialogue triggers a quest
+                {
+                    if (quest != null && quest.IsEnabled && quest.currentAmount == 0)
+                    {
+                        GiveQuestToPlayer(quest);
+                    }
+                    if (interactionCount < responseOptions.Count && responseOptions[interactionCount].responses.Length > 0) //Handle multiple-choice responses if available
+                    {
+                        dialogueManager.ShowResponses(responseOptions[interactionCount].responses, OnResponseSelected);
+                    }
+                    else
+                    {
+                        interactionCount++;
+                    }
+                }
             }
         }
         else //End of dialogue, allow the player to move again
@@ -95,6 +124,22 @@ public class NPCInteraction : MonoBehaviour
             dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
             player.canMove = true;
             IsInteracting = false;
+        }
+    }
+    private void CompleteQuest(GameQuests quest)
+    {
+        PlayerQuestManager playerQuestManager = FindObjectOfType<PlayerQuestManager>();
+        if (playerQuestManager != null)
+        {
+            playerQuestManager.RemoveQuest(quest); // Remove quest from quest log
+
+            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
+            if (questLogManager != null)
+            {
+                questLogManager.UpdateQuestLog(); // Update quest log UI
+            }
+
+            Debug.Log($"Quest completed: {quest.questTitle}");
         }
     }
 
@@ -124,12 +169,27 @@ public class NPCInteraction : MonoBehaviour
         if (playerQuestManager != null)
         {
             playerQuestManager.AcceptQuest(quest);
+            EnableQuestItems(quest.requiredItem);
 
             //Update quest log
             QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
             if (questLogManager != null)
             {
                 questLogManager.UpdateQuestLog();
+            }
+        }
+    }
+
+    private void EnableQuestItems(string itemName)
+    {
+        Item[] items = Resources.FindObjectsOfTypeAll<Item>();
+
+        foreach (Item item in items)
+        {
+            if (item.ItemName == itemName) //uses the name of the item, set from Item.cs to determine what items will appear
+            {
+                item.gameObject.SetActive(true);
+                Debug.Log($"Enabled item: {itemName}");
             }
         }
     }

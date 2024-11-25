@@ -23,6 +23,13 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
     {
         activeQuests.Add(quest);
         Debug.Log($"Quest accepted: {quest.questTitle}");
+
+        QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+        if (questLogManager != null)
+        {
+            questLogManager.UpdateQuestLog();
+        }
+
     }
 
     public void CompleteQuest(GameQuests quest)
@@ -31,6 +38,13 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
         {
             quest.isCompleted = true;
             activeQuests.Remove(quest); // Remove completed quest
+            Debug.Log($"Quest completed: {quest.questTitle}");
+
+            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+            if (questLogManager != null)
+            {
+                questLogManager.UpdateQuestLog();
+            }
         }
     }
     public List<GameQuests> GetActiveQuests()
@@ -44,14 +58,35 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
         {
             if (quest.requiredItem == itemName && !quest.isCompleted)
             {
-                quest.currentAmount++;
-                if (quest.currentAmount >= quest.requiredAmount)
+                if (quest.currentAmount < quest.requiredAmount)
                 {
-                    CompleteQuest(quest);
+                    quest.currentAmount++;
+                    Debug.Log($"Updated progress for {quest.questTitle}: {quest.currentAmount}/{quest.requiredAmount}");
                 }
             }
         }
+
+        QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+        if (questLogManager != null)
+        {
+            questLogManager.UpdateQuestLog();
+        }
     }
+    public void RemoveQuest(GameQuests quest)
+    {
+        if (activeQuests.Contains(quest))
+        {
+            activeQuests.Remove(quest);
+            Debug.Log($"Removed quest: {quest.questTitle}");
+
+            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+            if (questLogManager != null)
+            {
+                questLogManager.UpdateQuestLog();
+            }
+        }
+    }
+
     /*private void OnTriggerEnter2D(Collider2D other)   //reactivate later
     {
         if (other.CompareTag("Item")) 

@@ -12,6 +12,8 @@ public class DialogueManager : MonoBehaviour
     public TextMeshProUGUI dialogueText;   //npc dialogue text box
     public GameObject responsePanel;      //response panel
     public Button[] responseButtons;    //Buttons for player responses
+    public static bool IsMultipleChoiceActive = false; //to fix a bug where quests are duplicated when E is pressed on multiple choice prompts
+
 
     private System.Action<int> onResponseSelected; //Callback for the selected response
 
@@ -38,6 +40,7 @@ public class DialogueManager : MonoBehaviour
 
     public void ShowResponses(string[] responses, System.Action<int> callback)
     {
+        IsMultipleChoiceActive = true;
         responsePanel.SetActive(true);
         dialoguePanel.SetActive(true);
         onResponseSelected = callback;
@@ -66,6 +69,7 @@ public class DialogueManager : MonoBehaviour
     {
         responsePanel.SetActive(false);
         onResponseSelected?.Invoke(responseIndex);
+        IsMultipleChoiceActive = false;
     }
 
     public void HideDialogue()

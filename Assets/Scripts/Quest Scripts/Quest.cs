@@ -17,5 +17,10 @@ public class GameQuests
     public string requiredItem;        //The goal of the quest
     public int requiredAmount;       //The quantity needed to complete the quest
     public int currentAmount;       //The current quantity the player has aquired
+
+    public bool IsQuestCompleted()
+    {
+        return currentAmount >= requiredAmount;
+    }
 }
 
