@@ -11853,26 +11853,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcName: Steveio
-  dialogueLines:
-  - Hello I am an NPC.
-  - Could you collect an apple for me?
-  responseOptions: []
-  npcResponses: []
-  triggeredQuests:
-  - isEnabled: 0
-    questTitle: 
-    questDescription: 
-    isCompleted: 0
-    requiredItem: 
-    requiredAmount: 0
-    currentAmount: 0
-  - isEnabled: 1
-    questTitle: Collecting Apples
-    questDescription: Give Steveio an apple
-    isCompleted: 0
-    requiredItem: Apple
-    requiredAmount: 1
-    currentAmount: 0
+  dialogueSegments:
+  - lines:
+    - Hello my name is Steveio
+    - Can you bring me an apple?
+    breakPoints: 0000
+    responseOptions:
+      responses:
+      - Sure
+      - No
+    triggeredQuest:
+      isEnabled: 1
+      questTitle: Bring Apples
+      questDescription: Bring an apple to Steveio
+      isCompleted: 0
+      requiredItem: Apple
+      requiredAmount: 1
+      currentAmount: 0
   questCompleteResponses:
   - Thanks for the apple
   incompleteQuestResponses:

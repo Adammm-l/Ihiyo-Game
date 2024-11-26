@@ -1,32 +1,35 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
+[System.Serializable]
 public class DialogueResponse
 {
     public string[] responses;
 }
 
+[System.Serializable]
+public class DialogueSegment
+{
+    public List<string> lines; // Dialogue lines for this segment
+    public List<bool> breakPoints; // Breakpoints for each line
+    public DialogueResponse responseOptions; // Response options for the segment
+    public GameQuests triggeredQuest; // Quest triggered by this segment
+}
+
 public class NPCInteraction : MonoBehaviour
 {
     [SerializeField] private string npcName;
-    [SerializeField] private List<string> dialogueLines; //initial dialogues
-    [SerializeField] private List<DialogueResponse> responseOptions; //array of responses
-    [SerializeField] private List<string> npcResponses; //NPC reply to each response
+    [SerializeField] private List<DialogueSegment> dialogueSegments; // Dialogue split into segments
+    [SerializeField] private List<string> questCompleteResponses; // Responses for completed quests
+    [SerializeField] private List<string> incompleteQuestResponses; // Responses for incomplete quests
 
-    [SerializeField] private List<GameQuests> triggeredQuests; //Quests triggered by specific dialogue lines
-    [SerializeField] private List<string> questCompleteResponses; //Responses for just-completed quests
-    [SerializeField] private List<string> incompleteQuestResponses; //Responses for incomplete quests
-
-    public static bool IsInteracting = false;  //when interacting with an NPC
+    public static bool IsInteracting = false;
     private bool isPlayerInRange = false;
-    public GameObject interactionText; //the text that says "E" to interact
+    public GameObject interactionText; // "E to interact" text
     private DialogueManager dialogueManager;
 
-    //this is for different dialogues depending how many times the player has interacted with the NPC
     private int interactionCount = 0;
+    private int dialogueSegmentIndex = 0;
 
     void Start()
     {
@@ -34,7 +37,6 @@ public class NPCInteraction : MonoBehaviour
         dialogueManager = FindObjectOfType<DialogueManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (DialogueManager.IsMultipleChoiceActive) return;
@@ -53,6 +55,7 @@ public class NPCInteraction : MonoBehaviour
             interactionText.SetActive(true);
         }
     }
+
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -63,163 +66,117 @@ public class NPCInteraction : MonoBehaviour
             dialogueManager.HideDialogue();
         }
     }
+
     private void Interact()
     {
         PlayerControl player = FindObjectOfType<PlayerControl>();
-        player.canMove = false; // Freeze player during interaction
+        player.canMove = false; // Freeze player movement during interaction
         IsInteracting = true;
 
-        // Debug: Interaction triggered
-        Debug.Log($"Interact called. Interaction Count: {interactionCount}, Dialogue Lines Count: {dialogueLines.Count}");
-
-        // Check if there's an active quest to handle
-        GameQuests quest = interactionCount < triggeredQuests.Count ? triggeredQuests[interactionCount] : null;
-
-        // Handle quest progression and completion
-        if (quest != null && quest.IsEnabled)
+        // Check if there are remaining dialogue segments
+        if (dialogueSegmentIndex < dialogueSegments.Count)
         {
-            Inventory playerInventory = FindObjectOfType<Inventory>();
-            if (playerInventory != null)
+            DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
+
+            // Process the current line in the segment
+            if (interactionCount < currentSegment.lines.Count)
             {
-                Debug.Log($"Player Inventory detected. {quest.requiredItem} count: {playerInventory.GetItemCount(quest.requiredItem)}");
+                string currentLine = currentSegment.lines[interactionCount];
+                dialogueManager.ShowDialogue(npcName, currentLine);
 
-                if (playerInventory.GetItemCount(quest.requiredItem) >= quest.requiredAmount)
+                // Trigger responses if available
+                if (currentSegment.responseOptions != null &&
+                    interactionCount == currentSegment.lines.Count - 1)
                 {
-                    // Complete the quest
-                    Debug.Log("Completing quest...");
-                    playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
-                    PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
-                    if (questManager != null)
-                    {
-                        questManager.CompleteQuest(quest);
-                    }
-
-                    // Use custom dialogue for quest completion
-                    dialogueManager.ShowDialogue(npcName, questCompleteResponses[Mathf.Min(interactionCount, questCompleteResponses.Count - 1)]);
-
-                    // Increment interaction count after quest completion
-                    interactionCount++;
-                    return; // Exit after handling quest completion
+                    dialogueManager.ShowResponses(currentSegment.responseOptions.responses, OnResponseSelected);
                 }
                 else
                 {
-                    // Quest incomplete dialogue
-                    int remaining = quest.requiredAmount - playerInventory.GetItemCount(quest.requiredItem);
-                    Debug.Log($"Quest incomplete. Remaining: {remaining} {quest.requiredItem}(s)");
-                    dialogueManager.ShowDialogue(npcName, $"You still need {remaining} more {quest.requiredItem}(s)");
-
-                    // Increment interaction count even if the quest is incomplete
                     interactionCount++;
-                    return; // Exit after handling quest status
                 }
-            }
-        }
 
-        // Handle regular dialogue if no active quest or quest logic is completed
-        if (interactionCount < dialogueLines.Count)
-        {
-            Debug.Log($"Displaying regular dialogue: {dialogueLines[interactionCount]}");
-            dialogueManager.ShowDialogue(npcName, dialogueLines[interactionCount]);
-
-            // Trigger a new quest if applicable
-            if (quest != null && quest.IsEnabled && quest.currentAmount == 0)
-            {
-                Debug.Log($"Triggering quest: {quest.questTitle}");
-                GiveQuestToPlayer(quest);
-            }
-
-            // Handle response options if available
-            if (interactionCount < responseOptions.Count && responseOptions[interactionCount].responses.Length > 0)
-            {
-                Debug.Log($"Displaying response options for dialogue line {interactionCount}");
-                dialogueManager.ShowResponses(responseOptions[interactionCount].responses, OnResponseSelected);
+                // Check for a breakpoint
+                if (interactionCount <= currentSegment.breakPoints.Count && currentSegment.breakPoints[interactionCount - 1])
+                {
+                    EndInteraction();
+                    return;
+                }
             }
             else
             {
-                Debug.Log("No response options. Incrementing interaction count.");
-                interactionCount++;
+                // End the current segment
+                if (currentSegment.triggeredQuest != null)
+                {
+                    TriggerQuest(currentSegment.triggeredQuest);
+                }
+
+                MoveToNextSegment();
             }
         }
         else
         {
-            // Default dialogue when all lines are exhausted
-            Debug.Log("Default dialogue triggered. Checking for quest...");
-            if (quest != null && quest.IsEnabled)
-            {
-                Debug.Log($"Quest still active: {quest.questTitle}");
-                dialogueManager.ShowDialogue(npcName, "You still need to complete my task!");
-            }
-            else
-            {
-                dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
-                player.canMove = true;
-                IsInteracting = false;
-            }
+            // All dialogue segments completed
+            dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
+            EndInteraction();
         }
     }
 
-
-    private void CompleteQuest(GameQuests quest)
+    private void MoveToNextSegment()
     {
-        PlayerQuestManager playerQuestManager = FindObjectOfType<PlayerQuestManager>();
-        if (playerQuestManager != null)
+        dialogueSegmentIndex++;
+        interactionCount = 0;
+
+        if (dialogueSegmentIndex >= dialogueSegments.Count)
         {
-            playerQuestManager.RemoveQuest(quest); // Remove quest from quest log
-
-            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
-            if (questLogManager != null)
-            {
-                questLogManager.UpdateQuestLog(); // Update quest log UI
-            }
-
-            Debug.Log($"Quest completed: {quest.questTitle}");
+            Debug.Log("All dialogue segments completed.");
         }
+
+        EndInteraction();
     }
 
+    private void EndInteraction()
+    {
+        PlayerControl player = FindObjectOfType<PlayerControl>();
+        player.canMove = true;
+        IsInteracting = false;
+    }
 
     private void OnResponseSelected(int responseIndex)
     {
-        //Show NPC's response to the selected option
         PlayerControl player = FindObjectOfType<PlayerControl>();
-        dialogueManager.ShowDialogue(npcName, npcResponses[responseIndex]);
 
-        interactionCount++;
-
-        if (interactionCount >= dialogueLines.Count)
+        // Handle quest trigger based on response
+        DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
+        if (currentSegment.triggeredQuest != null && responseIndex == 0) // Example: trigger quest on "Yes" response
         {
-            player.canMove = true; //Re-enable movement
-            IsInteracting = false;
+            TriggerQuest(currentSegment.triggeredQuest);
         }
-    }
-    void ResetDialogue() //not useful yet
-    {
-        interactionCount = 0;
+
+        MoveToNextSegment();
     }
 
-    private void GiveQuestToPlayer(GameQuests quest)
+    private void TriggerQuest(GameQuests quest)
     {
-        PlayerQuestManager playerQuestManager = FindObjectOfType<PlayerQuestManager>();
-        if (playerQuestManager != null)
+        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+        if (questManager != null)
         {
-            playerQuestManager.AcceptQuest(quest);
-            EnableQuestItems(quest.requiredItem);
+            questManager.AcceptQuest(quest);
+            Debug.Log($"Triggered quest: {quest.questTitle}");
 
-            //Update quest log
-            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
-            if (questLogManager != null)
-            {
-                questLogManager.UpdateQuestLog();
-            }
+            // Enable quest-related items
+            EnableQuestItems(quest.requiredItem);
         }
     }
 
     private void EnableQuestItems(string itemName)
     {
+        // Find all items in the scene
         Item[] items = Resources.FindObjectsOfTypeAll<Item>();
 
         foreach (Item item in items)
         {
-            if (item.ItemName == itemName) //uses the name of the item, set from Item.cs to determine what items will appear
+            // Activate items that match the quest's required item name
+            if (item.ItemName == itemName)
             {
                 item.gameObject.SetActive(true);
                 Debug.Log($"Enabled item: {itemName}");
