@@ -11856,14 +11856,8 @@ MonoBehaviour:
   dialogueLines:
   - Hello I am an NPC.
   - Could you collect an apple for me?
-  responseOptions:
-  - responses: []
-  - responses:
-    - no
-    - sure thang
-  npcResponses:
-  - please please please
-  - thanks alot gang
+  responseOptions: []
+  npcResponses: []
   triggeredQuests:
   - isEnabled: 0
     questTitle: 
