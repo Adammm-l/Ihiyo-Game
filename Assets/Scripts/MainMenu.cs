@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        // allows user to click on each of the buttons listed and gives them functionality to their corresponding functions
         Dictionary<string, UnityEngine.Events.UnityAction> menuButtons = new Dictionary<string, UnityEngine.Events.UnityAction>()
         {
             {"NewGame", NewGameClicked},
@@ -29,6 +31,7 @@ public class MainMenuController : MonoBehaviour
             {"ExitGame", ExitGameClicked}
         };
 
+        // assign listeners to buttons (what gives each button functionality)
         foreach (Transform child in mainMenu.transform)
         {
             Button button = child.GetComponent<Button>();
@@ -46,6 +49,7 @@ public class MainMenuController : MonoBehaviour
 
     void NewGameClicked()
     {
+        // activates the new game popup, and assigns functionality to the yes/no buttons
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
         mainMenu.SetActive(false);
         newGamePopup.SetActive(true);
@@ -53,6 +57,7 @@ public class MainMenuController : MonoBehaviour
         Button newGameYes = newGamePopup.transform.Find("Yes").GetComponent<Button>();
         Button newGameNo = newGamePopup.transform.Find("No").GetComponent<Button>();
 
+        // assign listeners to yes and no buttons
         newGameYes.onClick.AddListener(newGameDialogYesClicked);
         newGameNo.onClick.AddListener(ReturnToMainMenu);
     }
@@ -63,10 +68,12 @@ public class MainMenuController : MonoBehaviour
     }
     void ReturnToMainMenu()
     {
+        // hides the active popup/menu and activates the main menu again
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
         mainMenu.SetActive(true);
         newGamePopup.SetActive(false);
         settingsMenu.SetActive(false);
+        galleryMenu.SetActive(false);
     }
 
     void LoadGameClicked()
@@ -82,18 +89,88 @@ public class MainMenuController : MonoBehaviour
 
     void SettingsClicked()
     {
+        // hides the main menu and activates the settings section
         mainMenu.SetActive(false);
         settingsMenu.SetActive(true);
+
+        Button audioButton = settingsMenu.transform.Find("AudioButton").GetComponent<Button>();
+        Button viewButton = settingsMenu.transform.Find("ViewButton").GetComponent<Button>();
+        Button accessibilityButton = settingsMenu.transform.Find("AccessibilityButton").GetComponent<Button>();
 
         Button resetButton = settingsMenu.transform.Find("Reset").GetComponent<Button>();
         Button confirmButton = settingsMenu.transform.Find("Confirm").GetComponent<Button>();
 
-        resetButton.onClick.AddListener(() => OpenSettingsPopup("reset")); // lambda expression, allows a parameter to pass through the function
+        GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
+        GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
+        GameObject accessibilitySettings = settingsMenu.transform.Find("AccessibilitySettings").gameObject;
+
+        Button[] settingsButtons = {audioButton, viewButton, accessibilityButton};
+
+        // set default "panel" and button (will be audio since it's the first)
+        SetActiveSettingTab(audioSettings.gameObject, audioButton, settingsButtons);
+
+        // assign listeners to settings buttons
+        audioButton.onClick.AddListener(() => SetActiveSettingTab(audioSettings, audioButton, settingsButtons)); // lambda expression, allows a parameter to pass through the function
+        viewButton.onClick.AddListener(() => SetActiveSettingTab(viewSettings, viewButton, settingsButtons));
+        accessibilityButton.onClick.AddListener(() => SetActiveSettingTab(accessibilitySettings, accessibilityButton, settingsButtons));
+
+        resetButton.onClick.AddListener(() => OpenSettingsPopup("reset"));
         confirmButton.onClick.AddListener(() => OpenSettingsPopup("confirm"));
+    }
+
+    void SetActiveSettingTab(GameObject selectedPanel, Button activeButton, Button[] buttons)
+    {
+        // deactivate all settings panels
+        settingsMenu.transform.Find("AudioSettings").gameObject.SetActive(false);
+        settingsMenu.transform.Find("ViewSettings").gameObject.SetActive(false);
+        settingsMenu.transform.Find("AccessibilitySettings").gameObject.SetActive(false);
+
+        // activate the selected panel
+        selectedPanel.SetActive(true);
+
+        // update button states
+        UpdateButtonStates(activeButton, buttons);
+    }
+
+    void UpdateButtonStates(Button activeButton, Button[] buttons)
+    {
+        // update each of the button colors
+        foreach (Button button in buttons)
+        {
+            ColorBlock colors = button.colors;
+
+            // active button appears pressed and is disabled, other inactive buttons use different color
+            if (button == activeButton)
+            {
+                button.interactable = false;
+            }
+            else
+            {
+                button.interactable = true;
+            }
+            UpdateButtonStyle(button, button.interactable);
+
+        }
+    }
+    
+    void UpdateButtonStyle(Button button, bool isActive)
+    {
+        // seperate function in case we switch from colors to textures
+        ColorBlock colors = button.colors;
+        if (isActive)
+        {
+            colors.normalColor = colors.pressedColor; // color for active button
+        }
+        else
+        {
+            colors.normalColor = colors.disabledColor; // color for inactive button
+        }
+        button.colors = colors;
     }
 
     void OpenSettingsPopup(string action)
     {
+        // activates the settings pop up to reset/confirm changes made and continues based off user response
         GameObject settingsPopup = dialoguePopup.transform.Find("SettingsPopup").gameObject;
         TextMeshProUGUI popupText = settingsPopup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         popupText.text = $"Would you like to {action} all changes?";
@@ -102,40 +179,48 @@ public class MainMenuController : MonoBehaviour
         Button settingsYes = settingsPopup.transform.Find("Yes").GetComponent<Button>();
         Button settingsNo = settingsPopup.transform.Find("No").GetComponent<Button>();
         
+        // fixes issue with buttons not correctly responding to user input
+        settingsYes.onClick.RemoveAllListeners();
+        settingsNo.onClick.RemoveAllListeners();
+
+        // assign listeners to yes/no buttons
         settingsYes.onClick.AddListener(() => SettingsChange(settingsPopup, action, "yes"));
         settingsNo.onClick.AddListener(() => SettingsChange(settingsPopup, action, "no"));
     }
 
     void SettingsChange(GameObject settingsPopup, string action, string choice)
     {
-        if (action == "reset")
+        // functionality for reset and confirm buttons for settings pop up
+        Debug.Log($"{action}, {choice}");
+        settingsPopup.SetActive(false);
+        if (action == "reset" && choice == "yes")
         {
-            if (choice == "yes")
-            {
-                // reset values to original
-            }
-            settingsPopup.SetActive(false);
+            // reset values to original
+            return;
         }
-        else
+        if (action == "confirm" && choice == "yes")
         {
-            if (choice == "yes")
-            {
-                ReturnToMainMenu();
-            }
-            else
-            {
-                settingsPopup.SetActive(false);
-            }
+            ReturnToMainMenu();
         }
     }
 
     void GalleryClicked()
     {
+        // hides the main menu and activates the gallery
         mainMenu.SetActive(false);
         galleryMenu.SetActive(true);
+
+        Button galleryBack = galleryMenu.transform.Find("Back").GetComponent<Button>();
+        Button galleryNext = galleryMenu.transform.Find("Next").GetComponent<Button>();
+        Button returnToMain = galleryMenu.transform.Find("MainMenu").GetComponent<Button>();
+
+        // assign listeners to gallery buttons
+        // galleryBack.onClick.AddListener();
+        // galleryNext.onClick.AddListener();
+        returnToMain.onClick.AddListener(ReturnToMainMenu);
     }
 
-    void ExitGameClicked()
+    void ExitGameClicked() // closes game
     {
         Application.Quit();
     }
