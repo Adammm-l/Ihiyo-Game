@@ -6,7 +6,7 @@ using TMPro;
 using System;
 using UnityEngine.EventSystems;
 
-public class UIInventoryItem : MonoBehaviour
+public class UIInventoryItem : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDropHandler
 {
     // Set up general settings
     [SerializeField] private Image itemIMG;
@@ -15,7 +15,7 @@ public class UIInventoryItem : MonoBehaviour
 
     [SerializeField] private Image borderIMG;
 
-    public event Action<UIInventoryItem> OnItemCLicked, OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag, OnRightMouseBtnClick; // Actions to take when certains actions happen to item
+    public event Action<UIInventoryItem> OnItemClicked, OnItemDroppedOn, OnItemBeginDrag, OnItemEndDrag, OnRightMouseBtnClick; // Actions to take when certains actions happen to item
 
     private bool empty = true; 
 
@@ -53,7 +53,7 @@ public class UIInventoryItem : MonoBehaviour
 
     }
 
-    public void OnBeginDrag() {
+    public void OnBeginDrag(PointerEventData eventData) {
 
         if (empty) { // Check if item is empty so that we don't drag
 
@@ -65,29 +65,21 @@ public class UIInventoryItem : MonoBehaviour
 
     }
 
-    public void OnDrop() {
+    public void OnDrop(PointerEventData eventData) {
 
         OnItemDroppedOn?.Invoke(this); // Same Logic as earlier
 
     }
 
-    public void OnEndDrag() {
+    public void OnEndDrag(PointerEventData eventData) {
 
         OnItemEndDrag?.Invoke(this);
 
     }
 
-    public void OnPointerClick(BaseEventData data) { // Branching Path where we determine which behavior to run depending on which Mouse Click is used
+    public void OnPointerClick(PointerEventData pointerData) { // Branching Path where we determine which behavior to run depending on which Mouse Click is used
 
-        if (empty) { // Don't Click on Item when Inventory Slot is empty
-
-            return;
-
-        }
-
-        PointerEventData pData = (PointerEventData)data; // Convert Input to Mouse Input
-
-        if (pData.button == PointerEventData.InputButton.Right) { // If the input is Right Click
+        if (pointerData.button == PointerEventData.InputButton.Right) { // If the input is Right Click
 
             OnRightMouseBtnClick?.Invoke(this);
 
@@ -95,10 +87,15 @@ public class UIInventoryItem : MonoBehaviour
 
         else { // Otherwise, run behavior for left click
 
-            OnItemCLicked?.Invoke(this);
+            OnItemClicked?.Invoke(this);
 
 
         }
+    }
+
+    public void OnDrag(PointerEventData eventData) {
+
+
     }
 
 
