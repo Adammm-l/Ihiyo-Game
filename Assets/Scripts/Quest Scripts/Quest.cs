@@ -6,9 +6,12 @@ using System;
 [Serializable]
 public class GameQuests
 {
-    [SerializeField] private bool isEnabled = true;
-    public bool IsEnabled => isEnabled;
-
+    [SerializeField] private bool isEnabled = false;
+    public bool IsEnabled
+    {
+        get => isEnabled;
+        set => isEnabled = value; // Allow writing to the property
+    }
     public string questTitle;          //The name of the quest
     public string questDescription;    //Details about the quest
     public bool isCompleted;           //Whether the quest is complete

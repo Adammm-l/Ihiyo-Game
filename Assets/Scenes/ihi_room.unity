@@ -12227,13 +12227,16 @@ MonoBehaviour:
   - lines:
     - Hello my name is Steveio
     - Can you bring me an apple?
-    breakPoints: 0000
+    breakPoints: 0001
     responseOptions:
       responses:
       - Sure
       - No
+    npcResponsesToPlayer:
+    - Thanks alot!
+    - Let me know if you change your mind
     triggeredQuest:
-      isEnabled: 1
+      isEnabled: 0
       questTitle: Bring Apples
       questDescription: Bring an apple to Steveio
       isCompleted: 0

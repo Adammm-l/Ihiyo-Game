@@ -10,22 +10,23 @@ public class DialogueResponse
 [System.Serializable]
 public class DialogueSegment
 {
-    public List<string> lines; // Dialogue lines for this segment
-    public List<bool> breakPoints; // Breakpoints for each line
-    public DialogueResponse responseOptions; // Response options for the segment
-    public GameQuests triggeredQuest; // Quest triggered by this segment
+    public List<string> lines;
+    public List<bool> breakPoints;
+    public DialogueResponse responseOptions;
+    public string[] npcResponsesToPlayer;
+    public GameQuests triggeredQuest;
 }
 
 public class NPCInteraction : MonoBehaviour
 {
     [SerializeField] private string npcName;
-    [SerializeField] private List<DialogueSegment> dialogueSegments; // Dialogue split into segments
-    [SerializeField] private List<string> questCompleteResponses; // Responses for completed quests
-    [SerializeField] private List<string> incompleteQuestResponses; // Responses for incomplete quests
+    [SerializeField] private List<DialogueSegment> dialogueSegments;
+    [SerializeField] private List<string> questCompleteResponses;
+    [SerializeField] private List<string> incompleteQuestResponses;
 
     public static bool IsInteracting = false;
     private bool isPlayerInRange = false;
-    public GameObject interactionText; // "E to interact" text
+    public GameObject interactionText; //"E to interact" text
     private DialogueManager dialogueManager;
 
     private int interactionCount = 0;
@@ -70,56 +71,58 @@ public class NPCInteraction : MonoBehaviour
     private void Interact()
     {
         PlayerControl player = FindObjectOfType<PlayerControl>();
-        player.canMove = false; // Freeze player movement during interaction
-        IsInteracting = true;
-
-        // Check if there are remaining dialogue segments
-        if (dialogueSegmentIndex < dialogueSegments.Count)
+        if (dialogueSegmentIndex >= dialogueSegments.Count) //nothing for the NPC to say, default case essentially 
         {
-            DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
+            dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
+            player.canMove = true; //player movement immediately
+            return;
+        }
+        
+        //Otherwise, proceed with interaction
+        player.canMove = false;
+        IsInteracting = true;
+        DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
 
-            // Process the current line in the segment
-            if (interactionCount < currentSegment.lines.Count)
+        if (interactionCount < currentSegment.lines.Count)
+        {
+            string currentLine = currentSegment.lines[interactionCount];
+            dialogueManager.ShowDialogue(npcName, currentLine);
+
+            if (currentSegment.responseOptions != null && interactionCount == currentSegment.lines.Count - 1) //trigger responses if available
             {
-                string currentLine = currentSegment.lines[interactionCount];
-                dialogueManager.ShowDialogue(npcName, currentLine);
-
-                // Trigger responses if available
-                if (currentSegment.responseOptions != null &&
-                    interactionCount == currentSegment.lines.Count - 1)
-                {
-                    dialogueManager.ShowResponses(currentSegment.responseOptions.responses, OnResponseSelected);
-                }
-                else
-                {
-                    interactionCount++;
-                }
-
-                // Check for a breakpoint
-                if (interactionCount <= currentSegment.breakPoints.Count && currentSegment.breakPoints[interactionCount - 1])
-                {
-                    EndInteraction();
-                    return;
-                }
+                dialogueManager.ShowResponses(currentSegment.responseOptions.responses, OnResponseSelected);
             }
             else
             {
-                // End the current segment
-                if (currentSegment.triggeredQuest != null)
-                {
-                    TriggerQuest(currentSegment.triggeredQuest);
-                }
-
-                MoveToNextSegment();
+                interactionCount++;
+            }
+            if (interactionCount <= currentSegment.breakPoints.Count && currentSegment.breakPoints[interactionCount - 1]) //check for a breakpoint
+            {
+                EndInteraction();
+                return;
             }
         }
-        else
+        else //end current segment
         {
-            // All dialogue segments completed
-            dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
-            EndInteraction();
+            if (currentSegment.triggeredQuest != null)
+            {
+                TriggerQuest(currentSegment.triggeredQuest);
+            }
+            MoveToNextSegment(); //move on
         }
     }
+
+    private void EndInteraction()
+    {
+        PlayerControl player = FindObjectOfType<PlayerControl>();
+        player.canMove = true;
+        IsInteracting = false;
+
+        // Hide dialogue if interaction ends completely
+        dialogueManager.HideDialogue();
+    }
+
+
 
     private void MoveToNextSegment()
     {
@@ -134,32 +137,39 @@ public class NPCInteraction : MonoBehaviour
         EndInteraction();
     }
 
-    private void EndInteraction()
-    {
-        PlayerControl player = FindObjectOfType<PlayerControl>();
-        player.canMove = true;
-        IsInteracting = false;
-    }
-
     private void OnResponseSelected(int responseIndex)
     {
+        DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
         PlayerControl player = FindObjectOfType<PlayerControl>();
 
-        // Handle quest trigger based on response
-        DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
+        // Display the NPC's response to the player's choice
+        if (responseIndex < currentSegment.npcResponsesToPlayer.Length)
+        {
+            string npcResponse = currentSegment.npcResponsesToPlayer[responseIndex];
+            dialogueManager.ShowDialogue(npcName, npcResponse);
+
+            // Store the NPC response for later to prevent skipping directly to end
+            interactionCount = currentSegment.lines.Count; // Move interactionCount to the end of current lines
+            IsInteracting = true; // Stay in interaction state until player presses E again
+        }
+
+        // Trigger quest if applicable
         if (currentSegment.triggeredQuest != null && responseIndex == 0) // Example: trigger quest on "Yes" response
         {
             TriggerQuest(currentSegment.triggeredQuest);
         }
 
-        MoveToNextSegment();
+        // Wait for player to press E to end the interaction after the response
     }
+
+
 
     private void TriggerQuest(GameQuests quest)
     {
         PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
         if (questManager != null)
         {
+            quest.IsEnabled = true;
             questManager.AcceptQuest(quest);
             Debug.Log($"Triggered quest: {quest.questTitle}");
 
