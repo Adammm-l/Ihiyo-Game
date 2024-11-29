@@ -24,21 +24,21 @@ public class InventorySO : ScriptableObject
         }
     }
 
-    public void AddItem(ItemSO item, int num) {
+    // public void AddItem(ItemSO item, int num) {
 
-        for (int i = 0; i < inventoryItems.Count; i++) {
+    //     for (int i = 0; i < inventoryItems.Count; i++) {
 
-            if(inventoryItems[i].isEmpty()) {
+    //         if(inventoryItems[i].isEmpty()) {
 
-                inventoryItems[i] = new InventoryItem {
+    //             inventoryItems[i] = new InventoryItem {
 
-                    item = item,
-                    num = num
-                };
-            }
-        }
+    //                 item = item,
+    //                 num = num
+    //             };
+    //         }
+    //     }
         
-    }
+    // }
 
     public Dictionary<int, InventoryItem> GetCurrentInventoryState() {
 

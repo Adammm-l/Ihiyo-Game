@@ -8,11 +8,13 @@ using System;
 
 public class MainMenuController : MonoBehaviour
 {
-    [Header("UI Panels")]
+    [Header("UI References")]
     public GameObject mainMenu;
     public GameObject settingsMenu;
     public GameObject galleryMenu;
     public GameObject dialoguePopup;
+
+    KeybindManager keybindManager;
 
 
     [Header("Levels")]
@@ -21,6 +23,8 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        keybindManager = GetComponent<KeybindManager>();
+        
         // allows user to click on each of the buttons listed and gives them functionality to their corresponding functions
         Dictionary<string, UnityEngine.Events.UnityAction> menuButtons = new Dictionary<string, UnityEngine.Events.UnityAction>()
         {
@@ -93,18 +97,23 @@ public class MainMenuController : MonoBehaviour
         mainMenu.SetActive(false);
         settingsMenu.SetActive(true);
 
-        Button audioButton = settingsMenu.transform.Find("AudioButton").GetComponent<Button>();
-        Button viewButton = settingsMenu.transform.Find("ViewButton").GetComponent<Button>();
-        Button accessibilityButton = settingsMenu.transform.Find("AccessibilityButton").GetComponent<Button>();
+        GameObject settingsButtonHolder = settingsMenu.transform.Find("SettingPanel").gameObject;
+        GameObject settingsOptions = settingsMenu.transform.Find("OptionPanel").gameObject;
 
-        Button resetButton = settingsMenu.transform.Find("Reset").GetComponent<Button>();
-        Button confirmButton = settingsMenu.transform.Find("Confirm").GetComponent<Button>();
+        Button audioButton = settingsButtonHolder.transform.Find("AudioButton").GetComponent<Button>();
+        Button viewButton = settingsButtonHolder.transform.Find("ViewButton").GetComponent<Button>();
+        Button accessibilityButton = settingsButtonHolder.transform.Find("AccessibilityButton").GetComponent<Button>();
+
+        Button resetButton = settingsOptions.transform.Find("Reset").GetComponent<Button>();
+        Button confirmButton = settingsOptions.transform.Find("Confirm").GetComponent<Button>();
 
         GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
         GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
         GameObject accessibilitySettings = settingsMenu.transform.Find("AccessibilitySettings").gameObject;
 
         Button[] settingsButtons = {audioButton, viewButton, accessibilityButton};
+
+        InitializeKeybindButtons(viewSettings);
 
         // set default "panel" and button (will be audio since it's the first)
         SetActiveSettingTab(audioSettings.gameObject, audioButton, settingsButtons);
@@ -116,6 +125,86 @@ public class MainMenuController : MonoBehaviour
 
         resetButton.onClick.AddListener(() => OpenSettingsPopup("reset"));
         confirmButton.onClick.AddListener(() => OpenSettingsPopup("confirm"));
+    }
+
+    void InitializeKeybindButtons(GameObject viewSettings)
+    {
+        // find buttons in viewSettings object
+        foreach (Transform child in viewSettings.transform)
+        {
+            Button button = child.GetComponentInChildren<Button>();
+
+            // set button text based on keybind
+            string keybind = GetButtonKeybind(button);
+            button.GetComponentInChildren<TextMeshProUGUI>().text = keybindManager.GetKeybind(keybind).ToString();
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => RebindKey(keybind, button)); // apparently you can't call a coroutine from a lambda expression ???
+            Debug.Log(button.GetComponentInChildren<TextMeshProUGUI>().text);
+        }
+    }
+
+    void RebindKey(string action, Button keyButton)
+    {
+        // starts coroutine which waits for a key press to rebind action
+        StartCoroutine(WaitForKeyPress(action, keyButton));
+    }
+
+    IEnumerator WaitForKeyPress(string action, Button keyButton)
+    {
+        bool isKeySet = false;
+
+        // waits until a key is pressed and assigned
+        while (!isKeySet)
+        {
+            foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
+            {
+                // checks if current key is pressed down and updates keybind
+                if (Input.GetKeyDown(key))
+                {
+                    keybindManager.UpdateKeybind(action, key);
+                    keyButton.GetComponentInChildren<TextMeshProUGUI>().text = key.ToString();
+
+                    isKeySet = true;
+                    break;
+                }
+            }
+
+            // waits for next frame before checking again
+            yield return null;
+        }
+    }
+
+
+    string GetButtonKeybind(Button button)
+    {
+        // match the button's name to the corresponding keybind
+        switch (button.name)
+        {
+            case "UpButton":
+                return "MoveUp";
+                
+            case "LeftButton":
+                return "MoveLeft";
+
+            case "DownButton":
+                return "MoveDown";
+
+            case "RightButton":
+                return "MoveRight";
+
+            case "InteractButton":
+                return "Interact";
+
+            case "QuestLogButton":
+                return "QuestLog";
+
+            case "InventoryButton":
+                return "Inventory";
+
+            default:
+                return null;
+        }
     }
 
     void SetActiveSettingTab(GameObject selectedPanel, Button activeButton, Button[] buttons)
@@ -155,7 +244,7 @@ public class MainMenuController : MonoBehaviour
     
     void UpdateButtonStyle(Button button, bool isActive)
     {
-        // seperate function in case we switch from colors to textures
+        // updates button style depending on state of the button
         ColorBlock colors = button.colors;
         if (isActive)
         {
@@ -196,11 +285,16 @@ public class MainMenuController : MonoBehaviour
         if (action == "reset" && choice == "yes")
         {
             // reset values to original
+            keybindManager.ResetKeybinds();
+
+            // implement visual change to keybinds before exit
+
             return;
         }
         if (action == "confirm" && choice == "yes")
         {
             ReturnToMainMenu();
+            keybindManager.ConfirmKeybinds();
         }
     }
 
