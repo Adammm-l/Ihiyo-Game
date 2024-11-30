@@ -5,6 +5,8 @@ using UnityEngine;
 public class DialogueResponse
 {
     public string[] responses;
+    public DialogueResponse[] followUpResponses;
+    public string[] npcResponsesToFollowUps;
 }
 
 [System.Serializable]
@@ -15,6 +17,7 @@ public class DialogueSegment
     public DialogueResponse responseOptions;
     public string[] npcResponsesToPlayer;
     public GameQuests triggeredQuest;
+    public bool triggerQuestAfterSegment = false;
 }
 
 public class NPCInteraction : MonoBehaviour
@@ -144,6 +147,10 @@ public class NPCInteraction : MonoBehaviour
         }
         else //end current segment
         {
+            if (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null)
+            {
+                TriggerQuest(currentSegment.triggeredQuest);
+            }
             MoveToNextSegment(); //move on
         }
     }
@@ -185,11 +192,23 @@ public class NPCInteraction : MonoBehaviour
 
             interactionCount = currentSegment.lines.Count;
             IsInteracting = true;
-        }
+            if (currentSegment.responseOptions != null && responseIndex < currentSegment.responseOptions.followUpResponses.Length)
+            {
+                DialogueResponse followUp = currentSegment.responseOptions.followUpResponses[responseIndex];
 
-        if (currentSegment.triggeredQuest != null && responseIndex == 0) //Trigger quests if applicable
+                if (followUp != null && followUp.responses.Length > 0)
+                {
+                    // Show the follow-up response options
+                    dialogueManager.ShowResponses(followUp.responses, OnFollowUpResponseSelected);
+                }
+            }
+        }
+        if (interactionCount >= currentSegment.lines.Count)
         {
-            TriggerQuest(currentSegment.triggeredQuest);
+            if (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null)
+            {
+                TriggerQuest(currentSegment.triggeredQuest);
+            }
         }
     }
 
@@ -216,8 +235,27 @@ public class NPCInteraction : MonoBehaviour
             if (item.ItemName == itemName)
             {
                 item.gameObject.SetActive(true);
-                Debug.Log($"Enabled item: {itemName}");
+                //Debug.Log($"Enabled item: {itemName}");
             }
         }
     }
+    private void OnFollowUpResponseSelected(int followUpResponseIndex)
+    {
+        DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
+        DialogueResponse initialResponse = currentSegment.responseOptions;
+        DialogueResponse followUpResponse = initialResponse.followUpResponses[0];
+
+        if (followUpResponse != null && followUpResponse.npcResponsesToFollowUps != null && followUpResponseIndex < followUpResponse.npcResponsesToFollowUps.Length)
+        {
+            string npcFollowUpResponse = followUpResponse.npcResponsesToFollowUps[followUpResponseIndex];
+            dialogueManager.ShowDialogue(npcName, npcFollowUpResponse);
+
+           // MoveToNextSegment();
+        }
+        else
+        {
+            MoveToNextSegment();
+        }
+    }
+
 }
