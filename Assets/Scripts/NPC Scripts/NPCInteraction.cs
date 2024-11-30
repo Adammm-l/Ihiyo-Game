@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+//this script basically manages all of NPC interactions and quest giving
 [System.Serializable]
 public class DialogueResponse
 {
@@ -38,7 +38,7 @@ public class NPCInteraction : MonoBehaviour
         dialogueManager = FindObjectOfType<DialogueManager>();
     }
 
-    void Update()
+    void Update() //every time E is pressed
     {
         if (DialogueManager.IsMultipleChoiceActive) return;
 
@@ -48,7 +48,7 @@ public class NPCInteraction : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other) //collider stuff for interaction
     {
         if (other.CompareTag("Player"))
         {
@@ -68,13 +68,53 @@ public class NPCInteraction : MonoBehaviour
         }
     }
 
-    private void Interact()
+    private void Interact() //main interaction method. Manages what happens when you interact, its order, quest responses, multiple choice responses, etc.
     {
         PlayerControl player = FindObjectOfType<PlayerControl>();
-        if (dialogueSegmentIndex >= dialogueSegments.Count) //nothing for the NPC to say, default case essentially 
+        player.canMove = false;
+        NPCMovement npcMovement = GetComponentInParent<NPCMovement>();
+        npcMovement.PauseMovementInfinitely();
+        IsInteracting = true;
+
+        if (dialogueSegmentIndex >= dialogueSegments.Count) //nothing for the NPC to say, default case essentially + quest checking (also when NPC has no more lines)
         {
+            DialogueSegment lastSegment = dialogueSegments[dialogueSegments.Count - 1];
+            GameQuests quest = lastSegment.triggeredQuest;
+
+            if (quest != null && quest.IsEnabled)
+            {
+                Inventory playerInventory = FindObjectOfType<Inventory>();
+                if (playerInventory != null)
+                {
+                    if (playerInventory.GetItemCount(quest.requiredItem) >= quest.requiredAmount)
+                    {
+                        //quest has been completed get rid of quest components
+                        playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
+                        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+                        if (questManager != null)
+                        {
+                            questManager.CompleteQuest(quest);
+                        }
+                        //quest completion response
+                        dialogueManager.ShowDialogue(npcName, questCompleteResponses[dialogueSegmentIndex - 1]);
+                        npcMovement.PauseMovementWithTimer(5f);
+                    }
+                    else
+                    {
+                        //incomplete quest response
+                        dialogueManager.ShowDialogue(npcName, incompleteQuestResponses[dialogueSegmentIndex - 1]);
+                        npcMovement.PauseMovementWithTimer(5f);
+                    }
+                    player.canMove = true;
+                    IsInteracting = false;
+                    return;
+                }
+            }
+            //if no active quest or nothing else to say, show the default line
             dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
-            player.canMove = true; //player movement immediately
+            npcMovement.PauseMovementWithTimer(5f);
+            player.canMove = true;
+            IsInteracting = false;
             return;
         }
         
@@ -104,10 +144,6 @@ public class NPCInteraction : MonoBehaviour
         }
         else //end current segment
         {
-            if (currentSegment.triggeredQuest != null)
-            {
-                TriggerQuest(currentSegment.triggeredQuest);
-            }
             MoveToNextSegment(); //move on
         }
     }
@@ -116,24 +152,24 @@ public class NPCInteraction : MonoBehaviour
     {
         PlayerControl player = FindObjectOfType<PlayerControl>();
         player.canMove = true;
+        NPCMovement npcMovement = GetComponentInParent<NPCMovement>();
+        npcMovement.ResumeMovement();
+
         IsInteracting = false;
 
-        // Hide dialogue if interaction ends completely
         dialogueManager.HideDialogue();
     }
-
-
 
     private void MoveToNextSegment()
     {
         dialogueSegmentIndex++;
         interactionCount = 0;
-
+        /*
         if (dialogueSegmentIndex >= dialogueSegments.Count)
         {
             Debug.Log("All dialogue segments completed.");
         }
-
+        */
         EndInteraction();
     }
 
@@ -142,24 +178,19 @@ public class NPCInteraction : MonoBehaviour
         DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
         PlayerControl player = FindObjectOfType<PlayerControl>();
 
-        // Display the NPC's response to the player's choice
-        if (responseIndex < currentSegment.npcResponsesToPlayer.Length)
+        if (responseIndex < currentSegment.npcResponsesToPlayer.Length) //NPC response to player choice
         {
             string npcResponse = currentSegment.npcResponsesToPlayer[responseIndex];
             dialogueManager.ShowDialogue(npcName, npcResponse);
 
-            // Store the NPC response for later to prevent skipping directly to end
-            interactionCount = currentSegment.lines.Count; // Move interactionCount to the end of current lines
-            IsInteracting = true; // Stay in interaction state until player presses E again
+            interactionCount = currentSegment.lines.Count;
+            IsInteracting = true;
         }
 
-        // Trigger quest if applicable
-        if (currentSegment.triggeredQuest != null && responseIndex == 0) // Example: trigger quest on "Yes" response
+        if (currentSegment.triggeredQuest != null && responseIndex == 0) //Trigger quests if applicable
         {
             TriggerQuest(currentSegment.triggeredQuest);
         }
-
-        // Wait for player to press E to end the interaction after the response
     }
 
 
@@ -171,21 +202,17 @@ public class NPCInteraction : MonoBehaviour
         {
             quest.IsEnabled = true;
             questManager.AcceptQuest(quest);
-            Debug.Log($"Triggered quest: {quest.questTitle}");
-
-            // Enable quest-related items
+            //Debug.Log($"Triggered quest: {quest.questTitle}");
             EnableQuestItems(quest.requiredItem);
         }
     }
 
     private void EnableQuestItems(string itemName)
     {
-        // Find all items in the scene
         Item[] items = Resources.FindObjectsOfTypeAll<Item>();
 
         foreach (Item item in items)
         {
-            // Activate items that match the quest's required item name
             if (item.ItemName == itemName)
             {
                 item.gameObject.SetActive(true);

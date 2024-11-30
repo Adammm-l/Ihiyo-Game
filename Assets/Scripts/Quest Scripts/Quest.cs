@@ -6,7 +6,7 @@ using System;
 [Serializable]
 public class GameQuests
 {
-    [SerializeField] private bool isEnabled = false;
+    [SerializeField] public bool isEnabled = false;
     public bool IsEnabled
     {
         get => isEnabled;
