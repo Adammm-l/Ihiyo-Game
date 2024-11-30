@@ -45,6 +45,8 @@ public class KeybindManager : MonoBehaviour
                 string savedKey = PlayerPrefs.GetString(action);
                 currentKeybinds[action] = (KeyCode)Enum.Parse(typeof(KeyCode), savedKey);
             }
+
+            // otherwise load the existing default keybind
             else
             {
                 currentKeybinds[action] = defaultKey;
@@ -68,9 +70,9 @@ public class KeybindManager : MonoBehaviour
         KeyCode key;
 
         // gets the keybind for the specified action if it exists.
-        if (currentKeybinds.ContainsKey(action))
+        if (tempKeybinds.ContainsKey(action))
         {
-            key = currentKeybinds[action];
+            key = tempKeybinds[action];
         }
 
         // otherwise returns keycode None which is apparently a keybind
@@ -101,5 +103,32 @@ public class KeybindManager : MonoBehaviour
     {
         // resets the temporary keybinds to original default keybinds
         tempKeybinds = new Dictionary<string, KeyCode>(defaultKeybinds);
+    }
+
+    public bool HasKeybindChanged()
+    {
+        // compare each key between current and temporary keybinds
+        foreach (var action in currentKeybinds)
+        {
+            // note that a keybind has changed if the current and temp actions are different
+            var oldBinding = action.Value;
+            var newBinding = tempKeybinds[action.Key];
+
+            bool isNewKeybind = !tempKeybinds.ContainsKey(action.Key);
+
+            if (isNewKeybind || newBinding != oldBinding)
+            {
+                return true;
+            }
+        }
+
+        // otherwise return false cuz no changes have been found
+        return false;
+    }
+
+    public void DiscardKeybindChanges()
+    {  
+        // reverts temp keybinds back to last saved state
+        tempKeybinds = new Dictionary<string, KeyCode>(currentKeybinds);
     }
 }

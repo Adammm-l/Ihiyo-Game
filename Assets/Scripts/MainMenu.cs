@@ -75,6 +75,7 @@ public class MainMenuController : MonoBehaviour
         // hides the active popup/menu and activates the main menu again
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
         mainMenu.SetActive(true);
+        
         newGamePopup.SetActive(false);
         settingsMenu.SetActive(false);
         galleryMenu.SetActive(false);
@@ -105,7 +106,8 @@ public class MainMenuController : MonoBehaviour
         Button accessibilityButton = settingsButtonHolder.transform.Find("AccessibilityButton").GetComponent<Button>();
 
         Button resetButton = settingsOptions.transform.Find("Reset").GetComponent<Button>();
-        Button confirmButton = settingsOptions.transform.Find("Confirm").GetComponent<Button>();
+        Button exitButton = settingsOptions.transform.Find("Exit").GetComponent<Button>();
+        Button saveButton = settingsOptions.transform.Find("Save").GetComponent<Button>();
 
         GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
         GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
@@ -124,7 +126,8 @@ public class MainMenuController : MonoBehaviour
         accessibilityButton.onClick.AddListener(() => SetActiveSettingTab(accessibilitySettings, accessibilityButton, settingsButtons));
 
         resetButton.onClick.AddListener(() => OpenSettingsPopup("reset"));
-        confirmButton.onClick.AddListener(() => OpenSettingsPopup("confirm"));
+        exitButton.onClick.AddListener(() => OpenSettingsPopup("exit"));
+        saveButton.onClick.AddListener(() => OpenSettingsPopup("save"));
     }
 
     void InitializeKeybindButtons(GameObject viewSettings)
@@ -153,6 +156,9 @@ public class MainMenuController : MonoBehaviour
     IEnumerator WaitForKeyPress(string action, Button keyButton)
     {
         bool isKeySet = false;
+        keyButton.interactable = false;
+
+        UpdateButtonStyle(keyButton, keyButton.interactable);
 
         // waits until a key is pressed and assigned
         while (!isKeySet)
@@ -162,8 +168,19 @@ public class MainMenuController : MonoBehaviour
                 // checks if current key is pressed down and updates keybind
                 if (Input.GetKeyDown(key))
                 {
+                    // ignore key press if it's just the left mouse button
+                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    {
+                        break;
+                    }
+
                     keybindManager.UpdateKeybind(action, key);
                     keyButton.GetComponentInChildren<TextMeshProUGUI>().text = key.ToString();
+
+                    keyButton.interactable = true;
+                    Color defaultColor = Color.white;
+
+                    ResetButtonStyle(keyButton, defaultColor); // resets to default style when no longer focused
 
                     isKeySet = true;
                     break;
@@ -175,6 +192,15 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    void ResetButtonStyle(Button button, Color defaultColor)
+    {
+        // reset modified colors to default
+        ColorBlock colors = button.colors;
+        colors.normalColor = defaultColor;
+        
+        button.colors = colors;
+        button.interactable = true;
+    }
 
     string GetButtonKeybind(Button button)
     {
@@ -246,9 +272,11 @@ public class MainMenuController : MonoBehaviour
     {
         // updates button style depending on state of the button
         ColorBlock colors = button.colors;
+        Color defaultColor = Color.white;
+
         if (isActive)
         {
-            colors.normalColor = colors.pressedColor; // color for active button
+            colors.normalColor = defaultColor; // color for active button
         }
         else
         {
@@ -262,9 +290,37 @@ public class MainMenuController : MonoBehaviour
         // activates the settings pop up to reset/confirm changes made and continues based off user response
         GameObject settingsPopup = dialoguePopup.transform.Find("SettingsPopup").gameObject;
         TextMeshProUGUI popupText = settingsPopup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        popupText.text = $"Would you like to {action} all changes?";
 
-        settingsPopup.SetActive(true);
+        // creates pop up text depending on which button was clicked
+        if (action == "reset")
+        {
+            popupText.text = "Would you like to reset all changes?";
+            settingsPopup.SetActive(true);
+        }
+        
+        if (action == "exit")
+        {
+            if (keybindManager.HasKeybindChanged())
+            {
+                // prompt user to save keybinds if at least one keybind has changed
+                popupText.text = "You have unsaved changes. Are you sure you want to exit?";
+                settingsPopup.SetActive(true);
+            }
+
+            // also note to implement conflict stuff
+            // if there's no conflict or unsaved changes, just return to the main menu
+            else
+            {
+                ReturnToMainMenu();
+            }
+        }
+
+        if (action == "save")
+        {
+            popupText.text = "Would you like to save all changes?";
+            settingsPopup.SetActive(true);
+        }
+
         Button settingsYes = settingsPopup.transform.Find("Yes").GetComponent<Button>();
         Button settingsNo = settingsPopup.transform.Find("No").GetComponent<Button>();
         
@@ -279,22 +335,58 @@ public class MainMenuController : MonoBehaviour
 
     void SettingsChange(GameObject settingsPopup, string action, string choice)
     {
-        // functionality for reset and confirm buttons for settings pop up
+        // functionality for buttons in settings pop up
         Debug.Log($"{action}, {choice}");
         settingsPopup.SetActive(false);
-        if (action == "reset" && choice == "yes")
+
+        // different cases for settings button presses
+        switch (action)
         {
-            // reset values to original
-            keybindManager.ResetKeybinds();
+            case "reset":
+                if (choice == "yes")
+                {
+                    keybindManager.ResetKeybinds();
 
-            // implement visual change to keybinds before exit
+                    // visually resets the keybinds
+                    InitializeKeybindButtons(settingsMenu.transform.Find("ViewSettings").gameObject);
+                    Debug.Log("Settings have been reset to default.");
+                }
+                break;
 
-            return;
+            case "exit":
+                if (choice == "yes")
+                {
+                    // exits to main menu discarding unsaved changes
+                    if (keybindManager.HasKeybindChanged())
+                    {
+                        keybindManager.DiscardKeybindChanges();
+                    }
+
+                    // otherwise just returns to menu
+                    ReturnToMainMenu();
+                    Debug.Log("Changes have been reverted, exiting to main menu.");
+                }
+                break;
+
+            case "save":
+                if (choice == "yes")
+                {
+                    // saves changes to keybinds without exiting
+                    keybindManager.ConfirmKeybinds();
+                    RefreshKeybindButtons();
+                    Debug.Log("Changes have been saved.");
+                }
+                break;
         }
-        if (action == "confirm" && choice == "yes")
+    }
+
+    void RefreshKeybindButtons()
+    {
+        foreach (Transform child in settingsMenu.transform.Find("ViewSettings"))
         {
-            ReturnToMainMenu();
-            keybindManager.ConfirmKeybinds();
+            Button button = child.GetComponentInChildren<Button>();
+            string keybind = GetButtonKeybind(button);
+            button.GetComponentInChildren<TextMeshProUGUI>().text = keybindManager.GetKeybind(keybind).ToString();
         }
     }
 
