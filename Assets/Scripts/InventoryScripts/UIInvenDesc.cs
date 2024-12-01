@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+namespace UIInventoryPage {
 public class UIInvenDesc : MonoBehaviour
 {
 
@@ -35,4 +36,5 @@ public class UIInvenDesc : MonoBehaviour
         this.description.text = itemDesc;
 
     }
+}
 }

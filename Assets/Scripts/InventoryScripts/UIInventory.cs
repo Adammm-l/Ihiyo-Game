@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+
+namespace UIInventoryPage {
 public class UIInventory : MonoBehaviour
 {
     [SerializeField] private UIInventoryItem itemPrefab;
@@ -58,7 +60,7 @@ public class UIInventory : MonoBehaviour
 
     }
 
-    private void ResetSelect() {
+    public void ResetSelect() {
 
         itemDesc.ResetDescription();
         DeselectItems();
@@ -105,6 +107,7 @@ public class UIInventory : MonoBehaviour
 // Handle Item Identify logic for dragging and swapping items
 
         OnSwapItems?.Invoke(curDragItemIndex, index);
+        HandleItemSelection(wield);
            
     }
 
@@ -132,6 +135,14 @@ public class UIInventory : MonoBehaviour
   
     }
 
+    internal void UpdateDesc(int itemIndex, Sprite itemIMG, string name, string desc) {
+
+        itemDesc.SetDescription(itemIMG, name, desc);
+        DeselectItems();
+        uiItemList[itemIndex].Select();
+
+    }
+
     public void UpdateData(int itmIndex, Sprite itmIMG, int itmNum) {
 
         if (uiItemList.Count > itmIndex) { // If the item is in our list of items
@@ -143,6 +154,15 @@ public class UIInventory : MonoBehaviour
 
     private void HandleShowItemActions(UIInventoryItem wield) {
 
+        int index = uiItemList.IndexOf(wield);
+
+        if (index == -1) {
+
+            return;
+
+        }
+
+        OnItemActionRequested?.Invoke(index);
 
     }
 
@@ -162,5 +182,17 @@ public class UIInventory : MonoBehaviour
 
     }
 
+    internal void ResetAllItems() {
+
+        foreach(var item in uiItemList) {
+
+            item.ResetData();
+            item.Deselect();
+
+        }
+    }
+
     
+}
+
 }

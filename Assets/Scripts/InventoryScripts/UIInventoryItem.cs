@@ -6,6 +6,8 @@ using TMPro;
 using System;
 using UnityEngine.EventSystems;
 
+
+namespace UIInventoryPage {
 public class UIInventoryItem : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDropHandler
 {
     // Set up general settings
@@ -99,4 +101,5 @@ public class UIInventoryItem : MonoBehaviour, IPointerClickHandler, IBeginDragHa
     }
 
 
+}
 }

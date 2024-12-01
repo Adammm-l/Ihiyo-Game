@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace InventoryModel {
+
 [CreateAssetMenu]
 
 public class ItemSO : ScriptableObject
@@ -32,4 +34,5 @@ public class ItemSO : ScriptableObject
 
     public Sprite ItemIMG { get; set;}
 
+}
 }
