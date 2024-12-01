@@ -45,16 +45,14 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(true);
         onResponseSelected = callback;
 
-        // Enable and set text for each response button
-        for (int i = 0; i < responseButtons.Length; i++)
+        for (int i = 0; i < responseButtons.Length; i++) //the meat and potatoes of displaying the multiple choices and the logic behind it
         {
             if (i < responses.Length)
             {
                 responseButtons[i].gameObject.SetActive(true);
                 responseButtons[i].GetComponentInChildren<TextMeshProUGUI>().text = responses[i];
 
-                int responseIndex = i; //the index for the buttton
-                //code for action when clicking on a response box
+                int responseIndex = i; 
                 responseButtons[i].onClick.RemoveAllListeners();
                 responseButtons[i].onClick.AddListener(() => SelectResponse(responseIndex));
             }
@@ -68,9 +66,10 @@ public class DialogueManager : MonoBehaviour
     private void SelectResponse(int responseIndex)
     {
         responsePanel.SetActive(false);
-        onResponseSelected?.Invoke(responseIndex);
         IsMultipleChoiceActive = false;
+        onResponseSelected?.Invoke(responseIndex);
     }
+
 
     public void HideDialogue()
     {

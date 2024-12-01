@@ -12967,9 +12967,9 @@ MonoBehaviour:
   npcName: Mom
   dialogueSegments:
   - lines:
-    - Ihiyo, You're awake! Good morning!
+    - "Ihiyo, you\u2019re awake! Good morning!"
     - Did you sleep well?
-    breakPoints: 0000
+    breakPoints: 
     responseOptions:
       responses:
       - Mom! There was this girl in a forest, and then... she turned into something
@@ -12978,56 +12978,155 @@ MonoBehaviour:
         night!"
       - "Not really. I think it\u2019s just this place. It\u2019s too quiet... and
         kinda weird."
-      followUpResponses:
-      - responses:
-        - I guess. But it still felt really real, Mom.
-        - "Maybe. But I still don\u2019t like this house. It\u2019s creaky and old."
-        - "Okay, but it\u2019s not like I have much of a choice, right?"
-        followUpResponses: []
-        npcResponsesToFollowUps:
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-      - responses:
-        - I guess. But it still felt really real, Mom.
-        - "Maybe. But I still don\u2019t like this house. It\u2019s creaky and old."
-        followUpResponses: []
-        npcResponsesToFollowUps:
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-      - responses:
-        - I guess. But it still felt really real, Mom.
-        - "Maybe. But I still don\u2019t like this house. It\u2019s creaky and old."
-        - "Okay, but it\u2019s not like I have much of a choice, right?"
-        followUpResponses: []
-        npcResponsesToFollowUps:
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-        - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but
-          it\u2019ll get better."
-      npcResponsesToFollowUps: []
-    npcResponsesToPlayer:
-    - "Scary? Oh dear, maybe it\u2019s all those ghost stories you like to listen
-      to. You know, dreams can\u2019t hurt you, right?"
-    - The floorboards? Maybe they were just saying goodnight to you!
-    - "Weird? Well, new places always feel that way at first. But maybe if you give
-      it a chance, it won\u2019t feel so strange anymore."
+      nextSegmentIDs: 010000000200000003000000
     triggeredQuest:
       isEnabled: 0
-      questTitle: Apples!
-      questDescription: Collect an apple for Mom
+      questTitle: 
+      questDescription: 
       isCompleted: 0
-      requiredItem: Apple
-      requiredAmount: 1
+      requiredItem: 
+      requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
+    nextSegmentID: -1
+  - lines:
+    - "Scary? Oh dear, maybe it\u2019s all those ghost stories you like to listen
+      to."
+    - "You know, dreams can\u2019t hurt you, right?"
+    breakPoints: 
+    responseOptions:
+      responses:
+      - I guess. But it still felt really real, Mom.
+      - "Maybe. But I still don\u2019t like this house. It\u2019s creaky and old."
+      nextSegmentIDs: 0400000004000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+    triggerQuestAfterSegment: 0
+    nextSegmentID: -1
+  - lines:
+    - The floorboards?
+    - Maybe they were just saying goodnight to you!
+    breakPoints: 
+    responseOptions:
+      responses:
+      - I guess. But it still felt really real, Mom.
+      - "Maybe. But I still don\u2019t like this house. It\u2019s creaky and old."
+      nextSegmentIDs: 0400000004000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+    triggerQuestAfterSegment: 0
+    nextSegmentID: -1
+  - lines:
+    - Weird? Well, new places always feel that way at first.
+    - "But maybe if you give it a chance, it won\u2019t feel so strange anymore."
+    breakPoints: 
+    responseOptions:
+      responses:
+      - I guess. But it still felt really real, Mom.
+      - "Maybe. But I still don\u2019t like this house. It\u2019s creaky and old."
+      - "Okay, but it\u2019s not like I have much of a choice, right?"
+      nextSegmentIDs: 040000000400000004000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+    triggerQuestAfterSegment: 0
+    nextSegmentID: -1
+  - lines:
+    - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but it\u2019ll
+      get better."
+    - I actually need your help today.
+    breakPoints: 
+    responseOptions:
+      responses:
+      - What kind of help? Do I get to do something fun?
+      - Help? Do I have to?
+      nextSegmentIDs: 0500000005000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+    triggerQuestAfterSegment: 0
+    nextSegmentID: -1
+  - lines:
+    - Some fruit would do us good... we need apples.
+    - I need you to go to the market and get some for me. Here... this should be
+      enough coins to get what we need.
+    breakPoints: 
+    responseOptions:
+      responses:
+      - The market, is it far?
+      nextSegmentIDs: 06000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+    triggerQuestAfterSegment: 0
+    nextSegmentID: -1
+  - lines:
+    - 'Not very far. '
+    - 'Just straight down the road from our house! The town is small so you shouldn''t
+      get lost. '
+    - 'Get there, pick some nice ones, and come straight home. Got it?! '
+    breakPoints: 
+    responseOptions:
+      responses:
+      - "Fine, fine, I\u2019ll go. But only because you asked nicely."
+      - "Okay, but I\u2019m gonna pick the shiniest apples ever!"
+      - "Sure, I guess I\u2019ll go. Maybe the market will be interesting."
+      nextSegmentIDs: 070000000700000007000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+    triggerQuestAfterSegment: 0
+    nextSegmentID: -1
+  - lines:
+    - "That\u2019s my boy. Thank you, Ihiyo. And remember, be careful and don\u2019t
+      wander off too much."
+    - The market can be a busy place, even here.
+    breakPoints: 
+    responseOptions:
+      responses: []
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+    triggerQuestAfterSegment: 0
+    nextSegmentID: -1
   questCompleteResponses:
   - Thanks for the apple
   incompleteQuestResponses:
