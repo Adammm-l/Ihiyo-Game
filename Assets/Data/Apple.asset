@@ -9,11 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f2c2e1d3e701146a71ca0c62544de7, type: 3}
+  m_Script: {fileID: 11500000, guid: e5ed81fddf08ca849b2848e987557528, type: 3}
   m_Name: Apple
   m_EditorClassIdentifier: 
   <IsStack>k__BackingField: 1
-  <MaxStackSize>k__BackingField: 1
+  <MaxStackSize>k__BackingField: 5
   <Name>k__BackingField: Apple
-  <Description>k__BackingField: So yummy! It's best to give it to the Vendor!
+  <Description>k__BackingField: Yummy Apples!
   <ItemIMG>k__BackingField: {fileID: 21300000, guid: b4d92df096add954ca90507da12008c6, type: 3}
+  modifiers: []

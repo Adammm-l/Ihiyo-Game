@@ -33,7 +33,7 @@ public class InventorySO : ScriptableObject
 
     public int AddItem(ItemSO item, int num) {
 
-        if (item.IsStackable == false) {
+        if (item.IsStack == false) {
 
             for (int i = 0; i < inventoryItems.Count; i++) {
 
@@ -44,7 +44,7 @@ public class InventorySO : ScriptableObject
                 }
 
                 InformChange(); // Inform system about any changes made
-                return num; // Always return quantity, even if we doin't have space
+                //return num; // Always return quantity, even if we doin't have space
             }
         }
 
@@ -123,18 +123,18 @@ public class InventorySO : ScriptableObject
 
         return num;
     }
-/*
+
     public void RemoveItem(int itemIndex, int num) {
 
         if (inventoryItems.Count > itemIndex) {
 
-            if (inventoryItems[itemIndex].isEmpty()) {
+            if (inventoryItems[itemIndex].isEmpty) {
 
                 return;
 
             }
 
-            int remind = inventoryItems[itemIndex].num - amount;
+            int remind = inventoryItems[itemIndex].num - num;
 
             if (remind <= 0) {
 
@@ -143,13 +143,13 @@ public class InventorySO : ScriptableObject
 
             else {
 
-                inventoryItems[itemIndex] = inventoryItems[itemIndex].ChangeNum(reminder);
+                inventoryItems[itemIndex] = inventoryItems[itemIndex].ChangeNum(remind);
             }
 
             InformChange();
         }
     }
-*/
+
     public void AddItem(InventoryItem item) {
 
         AddItem(item.item, item.num);

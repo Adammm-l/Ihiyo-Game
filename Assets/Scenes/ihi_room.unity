@@ -5053,19 +5053,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 17.11715
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -14.3234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7937666074359767255, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_Pivot.x
@@ -7342,27 +7342,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1877470687667026664, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1877470687667026664, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1877470687667026664, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1877470687667026664, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 120
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1877470687667026664, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1877470687667026664, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2429403551167975889, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_RaycastTarget
@@ -7370,19 +7370,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 17.11715
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4940905169517265650, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -14.3234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7937666074359767255, guid: 4c4bce6c2db72984e9c7896f5b874fbd, type: 3}
       propertyPath: m_Pivot.x
@@ -9832,7 +9832,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1225101755
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13033,7 +13033,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   - lines:
     - "Scary? Oh dear, maybe it\u2019s all those ghost stories you like to listen
       to."
@@ -13053,7 +13052,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   - lines:
     - The floorboards?
     - Maybe they were just saying goodnight to you!
@@ -13072,7 +13070,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   - lines:
     - Weird? Well, new places always feel that way at first.
     - "But maybe if you give it a chance, it won\u2019t feel so strange anymore."
@@ -13092,7 +13089,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   - lines:
     - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but it\u2019ll
       get better."
@@ -13112,7 +13108,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   - lines:
     - Some fruit would do us good... we need apples.
     - I need you to go to the market and get some for me. Here... this should be
@@ -13131,7 +13126,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   - lines:
     - 'Not very far. '
     - 'Just straight down the road from our house! The town is small so you shouldn''t
@@ -13153,7 +13147,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   - lines:
     - "That\u2019s my boy. Thank you, Ihiyo. And remember, be careful and don\u2019t
       wander off too much."
@@ -13171,7 +13164,6 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
     triggerQuestAfterSegment: 0
-    nextSegmentID: -1
   questCompleteResponses:
   - Thanks for the apple
   incompleteQuestResponses:
@@ -13817,6 +13809,7 @@ GameObject:
   - component: {fileID: 1677112046}
   - component: {fileID: 1677112047}
   - component: {fileID: 1677112050}
+  - component: {fileID: 1677112051}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -14039,6 +14032,19 @@ MonoBehaviour:
   inventoryUI: {fileID: 1960155636}
   inventoryData: {fileID: 11400000, guid: b2ab8016512ff444fabf4ee6660f5cfe, type: 2}
   initialItems: []
+--- !u!114 &1677112051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677112041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 840ba4701d396f648a463db8a66c3e06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryData: {fileID: 11400000, guid: b2ab8016512ff444fabf4ee6660f5cfe, type: 2}
 --- !u!1 &1689877065
 GameObject:
   m_ObjectHideFlags: 0
@@ -16427,6 +16433,71 @@ PrefabInstance:
       addedObject: {fileID: 2111793067}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7204e724db8b6d340aebfc3c51b6f975, type: 3}
+--- !u!1001 &4086964322564691469
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3864926371945868718, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_Name
+      value: Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 3864926371945868718, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
+    - target: {fileID: 6185119818222039608, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: <InventoryItem>k__BackingField
+      value: 
+      objectReference: {fileID: 11400000, guid: 619a86daa3ca2cf4d90803ac7422051c, type: 2}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6696213177931826758, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b03a6a106b44afa4fa741258e0322a7a, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -16454,3 +16525,4 @@ SceneRoots:
   - {fileID: 1661968697}
   - {fileID: 2116854247}
   - {fileID: 1317852165}
+  - {fileID: 4086964322564691469}

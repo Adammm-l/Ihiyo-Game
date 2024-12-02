@@ -114,8 +114,28 @@ public class InventoryController : MonoBehaviour
 
     }
 
-    private void HandleItemActionRequest(int obj) {
+    private void HandleItemActionRequest(int wield) {
 
+        InventoryItem item = inventoryData.GetItemAt(wield);
+
+        if (item.isEmpty) {
+            return;
+        }
+
+        IItemAction itemAction = item.item as IItemAction;
+
+        if (itemAction != null) { // Selected an interactble item
+
+            itemAction.PerformAction(gameObject);
+
+        }
+
+        IDestroyableItem destroyableItem = item.item as IDestroyableItem;
+
+        if (destroyableItem != null) { // Get rid of item upon use
+
+            inventoryData.RemoveItem(wield,1);
+        }
 
     }
 }

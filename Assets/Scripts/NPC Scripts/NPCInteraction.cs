@@ -19,9 +19,7 @@ public class DialogueSegment
     public DialogueResponse responseOptions;
     public GameQuests triggeredQuest;
     public bool triggerQuestAfterSegment = false;
-    public int nextSegmentID = -1; 
 }
-
 
 public class NPCInteraction : MonoBehaviour
 {
@@ -90,61 +88,41 @@ public class NPCInteraction : MonoBehaviour
 
     private void Interact()
     {
-        Debug.Log($"[NPCInteraction] Interact called. dialogueSegmentIndex: {dialogueSegmentIndex}, interactionCount: {interactionCount}");
-
+        //Debug.Log($"Interact called. dialogueSegmentIndex: {dialogueSegmentIndex}, interactionCount: {interactionCount}");
         PlayerControl player = FindObjectOfType<PlayerControl>();
-        player.canMove = false; // Freeze player during interaction
+        player.canMove = false;
         NPCMovement npcMovement = GetComponentInParent<NPCMovement>();
         npcMovement.PauseMovementInfinitely();
         NPCInteraction.IsInteracting = true;
 
-        if (dialogueSegmentIndex >= dialogueSegments.Count)
+        if (dialogueSegmentIndex >= dialogueSegments.Count) //defualt interaction if there are no more lines
         {
-            Debug.Log("[NPCInteraction] All dialogue segments exhausted. Calling HandleDefaultInteraction.");
             HandleDefaultInteraction(player, npcMovement);
             return;
         }
 
         DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
-        Debug.Log($"[NPCInteraction] Processing segment {dialogueSegmentIndex}. interactionCount: {interactionCount}");
 
-        if (interactionCount < currentSegment.lines.Count)  //never evaluates as false
+        if ((interactionCount < currentSegment.lines.Count) || (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null)) //runs regularly 
         {
             HandleDialogue(currentSegment);
-        }
-        else
-        {
-            Debug.Log($"it evaluated to false!!@!");
             if (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null)
             {
                 TriggerQuest(currentSegment.triggeredQuest);
             }
 
-            if (currentSegment.nextSegmentID != -1)
+            for (int i = 0; i < currentSegment.breakPoints.Count; i++)
             {
-                Debug.Log($"NextSegmentID was -1");
-                dialogueSegmentIndex = currentSegment.nextSegmentID;
-                interactionCount = 0;
-
-                if (dialogueSegmentIndex < dialogueSegments.Count)
+                if (currentSegment.breakPoints[i])
                 {
-                    DialogueSegment nextSegment = dialogueSegments[dialogueSegmentIndex];
-                    if (nextSegment.lines.Count > 0)
-                    {
-                        dialogueManager.ShowDialogue(npcName, nextSegment.lines[interactionCount]);
-                        interactionCount++;
-                    }
+                    MoveToNextSegment();
+                    return; 
                 }
-            }
-            else
-            {
-                MoveToNextSegment();
             }
         }
     }
 
-
-    private void HandleDialogue(DialogueSegment currentSegment)
+    private void HandleDialogue(DialogueSegment currentSegment) //regular dialogue handler
     {
         string currentLine = currentSegment.lines[interactionCount];
         dialogueManager.ShowDialogue(npcName, currentLine);
@@ -160,16 +138,14 @@ public class NPCInteraction : MonoBehaviour
 
     }
 
-    private void HandleDefaultInteraction(PlayerControl player, NPCMovement npcMovement)
+    private void HandleDefaultInteraction(PlayerControl player, NPCMovement npcMovement) //checks default interaction. If there is an active quest, it overrides it
     {
-        Debug.Log($"[NPCInteraction] HandleDefaultInteraction called for {npcName}.");
-
-        if (dialogueSegments.Count > 0)
+        if (dialogueSegments.Count > 0) 
         {
             DialogueSegment lastSegment = dialogueSegments[dialogueSegments.Count - 1];
             GameQuests quest = lastSegment.triggeredQuest;
 
-            if (quest != null && quest.IsEnabled)
+            if (quest != null && quest.IsEnabled) //there is indeed active quest
             {
                 Inventory playerInventory = FindObjectOfType<Inventory>();
                 if (playerInventory != null)
@@ -181,8 +157,8 @@ public class NPCInteraction : MonoBehaviour
                 }
             }
         }
-        dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
-        npcMovement.PauseMovementWithTimer(5f); // Optional: Add delay before resuming movement
+        dialogueManager.ShowDialogue(npcName, "That's all I have to say!"); //nothing active
+        npcMovement.PauseMovementWithTimer(5f); 
         player.canMove = true;
         IsInteracting = false;
     }
@@ -190,13 +166,11 @@ public class NPCInteraction : MonoBehaviour
 
     private void HandleQuestResponses(Inventory playerInventory, GameQuests quest, NPCMovement npcMovement)
     {
-        Debug.Log($"[HandleQuestResponses] Starting quest response handling. Quest: {quest.questTitle}, Required Item: {quest.requiredItem}, Required Amount: {quest.requiredAmount}");
-
-        // Check if player has enough items to complete the quest
+        //check if quest is fulfilled
         int playerItemCount = playerInventory.GetItemCount(quest.requiredItem);
         Debug.Log($"[HandleQuestResponses] Player has {playerItemCount} of {quest.requiredItem}.");
 
-        if (playerItemCount >= quest.requiredAmount)
+        if (playerItemCount >= quest.requiredAmount) //quest is done
         {
             // Remove items and complete the quest
             Debug.Log($"[HandleQuestResponses] Player has enough items to complete the quest. Completing quest...");
@@ -210,15 +184,12 @@ public class NPCInteraction : MonoBehaviour
             }
             dialogueManager.ShowDialogue(npcName, questCompleteResponses[0]);
         }
-        else
+        else //quest is not done
         {
-            // Show incomplete quest response
             dialogueManager.ShowDialogue(npcName, incompleteQuestResponses[0]);
         }
-
         npcMovement.PauseMovementWithTimer(5f);
     }
-
 
     private void EndInteraction()
     {
@@ -235,56 +206,43 @@ public class NPCInteraction : MonoBehaviour
 
     private void MoveToNextSegment()
     {
-        Debug.Log($"[NPCInteraction] MoveToNextSegment called. Current index: {dialogueSegmentIndex}");
-
         if (dialogueSegmentIndex < dialogueSegments.Count - 1)
         {
             dialogueSegmentIndex++;
         }
         else
         {
-            dialogueSegmentIndex = dialogueSegments.Count; // Cap the index
+            dialogueSegmentIndex = dialogueSegments.Count;
         }
 
         interactionCount = 0;
         EndInteraction();
     }
 
-
-
-
-
     private void OnResponseSelected(int responseIndex)
     {
         DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
         DialogueResponse response = currentSegment.responseOptions;
 
-        // Navigate directly to the next dialogue segment
-        if (responseIndex < response.nextSegmentIDs.Length)
+        if (responseIndex < response.nextSegmentIDs.Length) //moves to next segment: basically allows for branching dialogue
         {
-            int nextSegmentID = response.nextSegmentIDs[responseIndex];
-            if (nextSegmentID != -1)
+            int nextLineSegmentID = response.nextSegmentIDs[responseIndex];
+            if (nextLineSegmentID != -1)
             {
-                dialogueSegmentIndex = nextSegmentID;
-                interactionCount = 0; // Reset interaction count for the new segment
-
-                // Automatically display the first line of the next segment
+                dialogueSegmentIndex = nextLineSegmentID;
+                interactionCount = 0;
                 DialogueSegment nextSegment = dialogueSegments[dialogueSegmentIndex];
                 if (nextSegment.lines.Count > 0)
                 {
                     dialogueManager.ShowDialogue(npcName, nextSegment.lines[interactionCount]);
-                    interactionCount++; // Progress within the segment
+                    interactionCount++;
                 }
-                return; // Exit after transitioning
+                return;
             }
         }
-
-        // If no follow-up segment, end interaction or move to the next segment
+        //If no follow-up segment, end interaction or move to the next segment
         MoveToNextSegment();
     }
-
-
-
 
     private void TriggerQuest(GameQuests quest)
     {
