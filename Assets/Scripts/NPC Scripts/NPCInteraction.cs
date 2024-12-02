@@ -114,6 +114,7 @@ public class NPCInteraction : MonoBehaviour
         }
         else
         {
+            Debug.Log($"it evaluated to false!!@!");
             if (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null)
             {
                 TriggerQuest(currentSegment.triggeredQuest);
@@ -156,7 +157,9 @@ public class NPCInteraction : MonoBehaviour
         {
             interactionCount++;
         }
+
     }
+
     private void HandleDefaultInteraction(PlayerControl player, NPCMovement npcMovement)
     {
         Debug.Log($"[NPCInteraction] HandleDefaultInteraction called for {npcName}.");
@@ -183,8 +186,6 @@ public class NPCInteraction : MonoBehaviour
         player.canMove = true;
         IsInteracting = false;
     }
-
-
 
 
     private void HandleQuestResponses(Inventory playerInventory, GameQuests quest, NPCMovement npcMovement)
