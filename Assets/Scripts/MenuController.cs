@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class MenuController : MonoBehaviour
 {
+    [Header("References")]
+    public GameObject keybindHolder;
     public GameObject menuCanvas;
+    KeybindManager keybindManager;
+    KeyCode gameMenuKey;
 
     // Start is called before the first frame update
 
@@ -12,14 +16,15 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
+        keybindManager = keybindHolder.GetComponent<KeybindManager>();
         menuCanvas.SetActive(false); //So Menu isn't always on
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if(Input.GetKeyDown(KeyCode.Tab)) {
+        gameMenuKey = keybindManager.GetKeybind("GameMenu");
+        if(Input.GetKeyDown(gameMenuKey)) {
             
             menuCanvas.SetActive(!menuCanvas.activeSelf); //What the Canvas currently isn't
         }

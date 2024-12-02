@@ -7003,6 +7003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da140d3dd05337146a7a5e0bfd981bda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  keybindHolder: {fileID: 1317852163}
   menuCanvas: {fileID: 428453510}
 --- !u!114 &900399043
 MonoBehaviour:
@@ -11499,6 +11500,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1302072146}
   m_CullTransparentMesh: 1
+--- !u!1 &1317852163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1317852165}
+  - component: {fileID: 1317852164}
+  m_Layer: 0
+  m_Name: KeybindController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1317852164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317852163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69676dccc259f524dbb2f9b00fd0f421, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1317852165
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317852163}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 777.63916, y: 263.7971, z: -2.4320085}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1323101682
 GameObject:
   m_ObjectHideFlags: 0
@@ -12254,10 +12299,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af3bcd4ab1839f9448e531a21e4c7305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  keybindHolder: {fileID: 1317852163}
   questLogPanel: {fileID: 1966802996}
   questContent: {fileID: 1552802896}
   questTextPrefab: {fileID: 8282963673474962711, guid: 74a1a1356703a214893fa12e541346f7, type: 3}
-  toggleKey: 113
 --- !u!1 &1464405458
 GameObject:
   m_ObjectHideFlags: 0
@@ -13132,6 +13177,7 @@ MonoBehaviour:
   incompleteQuestResponses:
   - Where the fuck my apple at
   interactionText: {fileID: 1196306729}
+  keybindHolder: {fileID: 1317852163}
 --- !u!114 &1533366346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13859,6 +13905,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3
   canMove: 1
+  keybindHolder: {fileID: 1317852163}
 --- !u!50 &1677112045
 Rigidbody2D:
   serializedVersion: 4
@@ -13988,8 +14035,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27127877ddcf87b449d651444d963d81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  keybindHolder: {fileID: 1317852163}
   inventoryUI: {fileID: 1960155636}
   inventoryData: {fileID: 11400000, guid: b2ab8016512ff444fabf4ee6660f5cfe, type: 2}
+  initialItems: []
 --- !u!1 &1689877065
 GameObject:
   m_ObjectHideFlags: 0
@@ -16038,6 +16087,10 @@ PrefabInstance:
       propertyPath: m_LayerOverridePriority
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1629548838620101646, guid: 0480673ca9399884b98507654d586382, type: 3}
+      propertyPath: keybindHolder
+      value: 
+      objectReference: {fileID: 1317852163}
     - target: {fileID: 4170911573238122765, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: interactionText
       value: 
@@ -16400,3 +16453,4 @@ SceneRoots:
   - {fileID: 900399041}
   - {fileID: 1661968697}
   - {fileID: 2116854247}
+  - {fileID: 1317852165}

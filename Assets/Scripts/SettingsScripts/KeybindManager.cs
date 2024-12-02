@@ -9,9 +9,10 @@ public class KeybindManager : MonoBehaviour
     Dictionary<string, KeyCode> currentKeybinds;
     Dictionary<string, KeyCode> tempKeybinds = new Dictionary<string, KeyCode>();
     Dictionary<string, KeyCode> defaultKeybinds = new Dictionary<string, KeyCode>();
+    Dictionary<string, KeyCode> oldKeybinds = new Dictionary<string, KeyCode>();
 
-    // Start is called before the first frame update
-    void Start()
+    // putting it on awake fixes issues with keybindmanager being null on certain start calls
+    void Awake()
     {
         // initializes default keybinds
         defaultKeybinds = new Dictionary<string, KeyCode>
@@ -22,7 +23,8 @@ public class KeybindManager : MonoBehaviour
             {"MoveRight", KeyCode.D},
             {"Interact", KeyCode.E},
             {"QuestLog", KeyCode.Q},
-            {"Inventory", KeyCode.Tab}
+            {"GameMenu", KeyCode.Tab},
+            {"Inventory", KeyCode.I}
         };
 
         // loads the saved keybinds/defaults if saved keybinds do not exist.
@@ -83,6 +85,11 @@ public class KeybindManager : MonoBehaviour
         return key;
     }
 
+    public Dictionary<string, KeyCode> GetTempKeybinds()
+    {   
+        return tempKeybinds;
+    }
+
     public void UpdateKeybind(string action, KeyCode newKey)
     {
         // updates keybind for the specified action to be stored temporarily (until save or reset)
@@ -95,6 +102,7 @@ public class KeybindManager : MonoBehaviour
     public void ConfirmKeybinds()
     {
         // saves any modified keybinds
+        oldKeybinds = new Dictionary<string, KeyCode>(currentKeybinds);
         currentKeybinds = new Dictionary<string, KeyCode>(tempKeybinds);
         SaveKeybinds();
     }
@@ -122,13 +130,38 @@ public class KeybindManager : MonoBehaviour
             }
         }
 
-        // otherwise return false cuz no changes have been found
-        return false;
+        return false; // otherwise return false cuz no changes have been found
     }
 
     public void DiscardKeybindChanges()
     {  
         // reverts temp keybinds back to last saved state
         tempKeybinds = new Dictionary<string, KeyCode>(currentKeybinds);
+    }
+
+    public bool IsKeybindConflict(string action, KeyCode key)
+    {
+        // checks for instance of given keybind bound to a different action
+        foreach (var keybind in tempKeybinds)
+        {
+            if (keybind.Value == key && keybind.Key != action)
+            {
+                return true;
+            }
+        }
+        return false; // all keybinds are unique
+    }
+
+    public bool HasNewNullKeybinds()
+    {
+        foreach (var keybind in tempKeybinds)
+        {
+            string keyAction = keybind.Key;
+            if (keybind.Value == KeyCode.None && oldKeybinds[keyAction] != tempKeybinds[keyAction])
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

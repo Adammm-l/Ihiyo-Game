@@ -5,22 +5,27 @@ using TMPro;
 
 public class QuestLogManager : MonoBehaviour
 {
+    [Header("References")]
+    public GameObject keybindHolder;
     [SerializeField] private GameObject questLogPanel;
     [SerializeField] private Transform questContent;
     [SerializeField] private GameObject questTextPrefab;
-    [SerializeField] private KeyCode toggleKey = KeyCode.Q;
+    KeyCode toggleKey;
+    KeybindManager keybindManager;
+
     private bool isLogOpen = false;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        keybindManager = keybindHolder.GetComponent<KeybindManager>();
     }
 
     // Update is called once per frame
     private void Update()
     {
+        toggleKey = keybindManager.GetKeybind("QuestLog");
         if (NPCInteraction.IsInteracting) return;
 
         if (Input.GetKeyDown(toggleKey))

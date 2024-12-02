@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
 //this script basically manages all of NPC interactions and quest giving
 [System.Serializable]
 public class DialogueResponse
@@ -22,21 +25,35 @@ public class DialogueSegment
 
 public class NPCInteraction : MonoBehaviour
 {
+    [Header("Dialogue")]
     [SerializeField] private string npcName;
     [SerializeField] private List<DialogueSegment> dialogueSegments;
     [SerializeField] private List<string> questCompleteResponses;
     [SerializeField] private List<string> incompleteQuestResponses;
 
+    [Header("Interactions")]
     public static bool IsInteracting = false;
     private bool isPlayerInRange = false;
-    public GameObject interactionText; //"E to interact" text
-    private DialogueManager dialogueManager;
-
     private int interactionCount = 0;
     private int dialogueSegmentIndex = 0;
 
+    [Header("References")]
+    public GameObject interactionText; //"E to interact" text
+    public GameObject keybindHolder;
+    private DialogueManager dialogueManager;
+    KeybindManager keybindManager;
+    KeyCode interactKey;
+
     void Start()
     {
+        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+
+        TextMeshProUGUI interactionTextBox = interactionText.transform.GetComponent<TextMeshProUGUI>();
+        interactKey = keybindManager.GetKeybind("Interact");
+
+        string interactButton = interactKey.ToString();
+        interactionTextBox.text = $"\"{interactButton}\" to interact";
+
         interactionText.SetActive(false);
         dialogueManager = FindObjectOfType<DialogueManager>();
     }
@@ -45,7 +62,8 @@ public class NPCInteraction : MonoBehaviour
     {
         if (DialogueManager.IsMultipleChoiceActive) return;
 
-        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
+        interactKey = keybindManager.GetKeybind("Interact");
+        if (isPlayerInRange && Input.GetKeyDown(interactKey))
         {
             Interact();
         }

@@ -7,6 +7,12 @@ using InventoryModel;
 namespace InventoryCTRL {
 public class InventoryController : MonoBehaviour
 {
+    [Header("References")]
+    public GameObject keybindHolder;
+    KeybindManager keybindManager;
+    KeyCode inventoryKey;
+
+    [Header("Inventory")]
     [SerializeField] private UIInventory inventoryUI;
 
     [SerializeField] private InventorySO inventoryData;
@@ -14,15 +20,15 @@ public class InventoryController : MonoBehaviour
     public List<InventoryItem> initialItems = new List<InventoryItem>();
 
     public void Start() {
-
+        keybindManager = keybindHolder.GetComponent<KeybindManager>();
         PrepareUI();
 
         PrepareInventoryData();
     }
 
     public void Update() {
-
-        if (Input.GetKeyDown(KeyCode.I)) { // Open and Close the Inventory Page
+        inventoryKey = keybindManager.GetKeybind("Inventory");
+        if (Input.GetKeyDown(inventoryKey)) { // Open and Close the Inventory Page
 
             if (inventoryUI.isActiveAndEnabled == false) {
                 inventoryUI.Show();

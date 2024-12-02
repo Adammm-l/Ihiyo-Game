@@ -4,19 +4,27 @@ using UnityEngine;
 
 public class ItemPickup : MonoBehaviour
 {
+    [Header("Item Info")]
     private bool isPlayerInRange = false;
     private Item item;
+
+    [Header("References")]
+    public GameObject keybindHolder;
+    KeybindManager keybindManager;
+    KeyCode interactKey;
 
     // Start is called before the first frame update
     void Start()
     {
         item = GetComponent<Item>();
+        keybindManager = keybindHolder.GetComponent<KeybindManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E)) //pickup
+        interactKey = keybindManager.GetKeybind("Interact");
+        if (isPlayerInRange && Input.GetKeyDown(interactKey)) //pickup
         {
             Inventory playerInventory = FindObjectOfType<Inventory>();
             if (playerInventory != null && item != null)
