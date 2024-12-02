@@ -30,38 +30,21 @@ public class InventorySO : ScriptableObject
         }
     }
 
-    public void AddItem(ItemSO item, int num) {
 
-         for (int i = 0; i < inventoryItems.Count; i++) {
-
-             if(inventoryItems[i].isEmpty) {
-
-                 inventoryItems[i] = new InventoryItem {
-
-                     item = item,
-                     num = num
-                 };
-
-                 return;
-             }
-         }
-        
-     }
-
-/*
-    public int AddItem(ItemSO item, int num, List<ItemParameter> itemState = null) {
+    public int AddItem(ItemSO item, int num) {
 
         if (item.IsStackable == false) {
 
             for (int i = 0; i < inventoryItems.Count; i++) {
 
-                while (num > 0 && IsInventoryFull() == false) {
+                while (num > 0 && IsInvenFull() == false) {
 
-                    num -= AddFirstFreeItem(item, 1, itemState);
+                    //num -= AddFirstFreeItem(item, 1, itemState);
+                    num -= AddFirstFreeItem(item,1);
                 }
 
-                InformChange();
-                return num;
+                InformChange(); // Inform system about any changes made
+                return num; // Always return quantity, even if we doin't have space
             }
         }
 
@@ -72,18 +55,18 @@ public class InventorySO : ScriptableObject
         return num;
     }
 
-    private int AddFirstFreeItem(ItemSO item, int num, List<ItemParameter> itemState = null) {
+    private int AddFirstFreeItem(ItemSO item, int num) {
 
         InventoryItem newItem = new InventoryItem {
 
             item = item,
-            quantity = num,
-            itemState = new List<ItemParameter>(itemState == null ? item.DefaultParemetersList: itemState)
+            num = num,
+            //itemState = new List<ItemParameter>(itemState == null ? item.DefaultParemetersList: itemState)
         };
 
         for (int i = 0; i < inventoryItems.Count; i++) {
 
-            if (inventoryItems[i].isEmpty()) {
+            if (inventoryItems[i].isEmpty) {
 
                 inventoryItems[i] = newItem;
                 return num;
@@ -92,17 +75,18 @@ public class InventorySO : ScriptableObject
 
         return 0;
     }
-*/
-    //private bool IsInvenFull() {
 
-       // return inventoryItems.Where(item => item.isEmpty()).Any() == false;
-    //}
-/*
+    private bool IsInvenFull() {
+
+       return inventoryItems.Where(item => item.isEmpty).Any() == false;
+
+    }
+
     private int AddStackableItem(ItemSO item, int num) {
 
         for (int i = 0; i < inventoryItems.Count; i++) {
 
-            if (inventoryItems[i].isEmpty()) {
+            if (inventoryItems[i].isEmpty) {
 
                 continue;
             }
