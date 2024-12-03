@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 //this script basically manages all of NPC interactions and quest giving
 [System.Serializable]
@@ -35,12 +36,17 @@ public class NPCInteraction : MonoBehaviour
     private int interactionCount = 0;
     private int dialogueSegmentIndex = 0;
 
-    [Header("References")]
+    [Header("Managers")]
     public GameObject interactionText; //"E to interact" text
     public GameObject keybindHolder;
     private DialogueManager dialogueManager;
     KeybindManager keybindManager;
     KeyCode interactKey;
+
+    [Header("UI Elements")]
+    [SerializeField] private GameObject questNotificationSprite;
+    [SerializeField] private float notificationDuration = 3f;
+
 
     void Start()
     {
@@ -53,6 +59,7 @@ public class NPCInteraction : MonoBehaviour
         interactionTextBox.text = $"\"{interactButton}\" to interact";
 
         interactionText.SetActive(false);
+        questNotificationSprite.SetActive(false);
         dialogueManager = FindObjectOfType<DialogueManager>();
     }
 
@@ -251,9 +258,22 @@ public class NPCInteraction : MonoBehaviour
         {
             quest.IsEnabled = true;
             questManager.AcceptQuest(quest);
-            //Debug.Log($"Triggered quest: {quest.questTitle}");
+            ShowQuestNotification();
+            Debug.Log($"Triggered quest: {quest.questTitle}");
             EnableQuestItems(quest.requiredItem);
         }
+    }
+    private void ShowQuestNotification()
+    {
+        questNotificationSprite.SetActive(true);
+        StartCoroutine(HideQuestNotificationAfterDelay());
+    }
+
+    private IEnumerator HideQuestNotificationAfterDelay()
+    {
+        yield return new WaitForSeconds(notificationDuration);
+
+        questNotificationSprite.SetActive(false);
     }
 
     private void EnableQuestItems(string itemName)
