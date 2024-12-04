@@ -11,7 +11,7 @@ namespace InventoryModel {
         [SerializeField] private List<ModifierData> modifiers = new List<ModifierData>(); // Making a list of modifiers that we want to apply via eating
         public string ActionName => "Consume";
         public AudioClip actionSFX { get; private set; }
-        public bool PerformAction(GameObject character) {
+        public bool PerformAction(GameObject character, List<ItemParameter> itemState = null) {
 
             foreach (ModifierData data in modifiers) {
 
@@ -31,7 +31,7 @@ namespace InventoryModel {
 
         public string ActionName { get; }
         public AudioClip actionSFX { get; }
-        bool PerformAction(GameObject character);
+        bool PerformAction(GameObject character, List<ItemParameter> itemState);
 
     }
 

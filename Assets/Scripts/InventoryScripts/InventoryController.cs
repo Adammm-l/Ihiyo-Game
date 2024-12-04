@@ -16,6 +16,10 @@ public class InventoryController : MonoBehaviour
     [SerializeField] private UIInventory inventoryUI;
 
     [SerializeField] private InventorySO inventoryData;
+    
+    [SerializeField] private AudioClip dropSFX;
+
+    [SerializeField] AudioSource audioSource;
 
     public List<InventoryItem> initialItems = new List<InventoryItem>();
 
@@ -67,7 +71,7 @@ public class InventoryController : MonoBehaviour
                 continue;
             }
 
-            inventoryData.AddItem(item.item, item.num);
+            inventoryData.AddItem(item);
         }
     }
 
@@ -126,7 +130,7 @@ public class InventoryController : MonoBehaviour
 
         if (itemAction != null) { // Selected an interactble item
 
-            itemAction.PerformAction(gameObject);
+            itemAction.PerformAction(gameObject, null);
 
         }
 

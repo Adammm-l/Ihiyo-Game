@@ -31,7 +31,7 @@ public class InventorySO : ScriptableObject
     }
 
 
-    public int AddItem(ItemSO item, int num) {
+    public int AddItem(ItemSO item, int num, List<ItemParameter> itemState = null) {
 
         if (item.IsStack == false) {
 
@@ -39,8 +39,8 @@ public class InventorySO : ScriptableObject
 
                 while (num > 0 && IsInvenFull() == false) {
 
-                    //num -= AddFirstFreeItem(item, 1, itemState);
-                    num -= AddFirstFreeItem(item,1);
+                    num -= AddFirstFreeItem(item, 1, itemState);
+                    
                 }
 
                 InformChange(); // Inform system about any changes made
@@ -55,7 +55,7 @@ public class InventorySO : ScriptableObject
         return num;
     }
 
-    private int AddFirstFreeItem(ItemSO item, int num) {
+    private int AddFirstFreeItem(ItemSO item, int num, List<ItemParameter> itemState = null) {
 
         InventoryItem newItem = new InventoryItem {
 
