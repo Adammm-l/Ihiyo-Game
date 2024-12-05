@@ -7,8 +7,8 @@ using TMPro;
 public class ShopItem //Items in the shop and their names
 {
     public string itemName;
-    public Sprite itemIcon;
     public int itemPrice;
+    public string itemDescription;
 }
 public class MerchantTypeNPC : MonoBehaviour
 {
@@ -17,29 +17,18 @@ public class MerchantTypeNPC : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private GameObject shopUI;
-    [SerializeField] private Transform itemDisplayParent;
-    [SerializeField] private GameObject itemPrefab;
-
-    //private PlayerInventory playerInventory;
+    [SerializeField] private ShopItemUI[] itemDisplays;
 
     // Start is called before the first frame update
     void Start()
     {
         shopUI.SetActive(false);
-        //playerInventory = FindObjectOfType<PlayerInventory>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            OpenShop();
-        }
     }
 
     public void OpenShop()
@@ -55,42 +44,25 @@ public class MerchantTypeNPC : MonoBehaviour
         if (shopUI == null) return;
 
         shopUI.SetActive(false);
-        ClearShopUI();
     }
 
     private void PopulateShopUI()
     {
-        ClearShopUI();
-
-        foreach (var shopItem in shopItems)
+        for (int i = 0; i < itemDisplays.Length; i++)
         {
-            GameObject itemInstance = Instantiate(itemPrefab, itemDisplayParent);
-            ShopItemUI itemUI = itemInstance.GetComponent<ShopItemUI>();
-        }
-    }
-
-    private void ClearShopUI()
-    {
-        foreach (Transform child in itemDisplayParent)
-        {
-            Destroy(child.gameObject);
+            if (i < shopItems.Count)
+            {
+                itemDisplays[i].SetItemDetails(shopItems[i], this);
+                itemDisplays[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                itemDisplays[i].gameObject.SetActive(false); //Hide unused slots
+            }
         }
     }
 
     public void BuyItem(ShopItem item)
     {
-        //if (playerInventory == null || item == null) return;
-
-        //if (playerInventory.Currency >= item.itemPrice)
-        {
-            //playerInventory.Currency -= item.itemPrice;
-            //playerInventory.AddItem(item.itemName);
-            //Debug.Log($"Bought {item.itemName} for {item.itemPrice} currency!");
-        }
-        //else
-        {
-            //Debug.Log("Not enough currency!");
-        }
     }
-
 }

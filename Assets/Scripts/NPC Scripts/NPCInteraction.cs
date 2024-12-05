@@ -35,6 +35,7 @@ public class NPCInteraction : MonoBehaviour
     private bool isPlayerInRange = false;
     private int interactionCount = 0;
     private int dialogueSegmentIndex = 0;
+    private bool isShopOpen = false;
 
     [Header("Managers")]
     public GameObject interactionText; //"E to interact" text
@@ -97,13 +98,34 @@ public class NPCInteraction : MonoBehaviour
     {
         //Debug.Log($"Interact called. dialogueSegmentIndex: {dialogueSegmentIndex}, interactionCount: {interactionCount}");
         PlayerControl player = FindObjectOfType<PlayerControl>();
-        player.canMove = false;
         NPCMovement npcMovement = GetComponentInParent<NPCMovement>();
+        MerchantTypeNPC merchant = GetComponentInParent<MerchantTypeNPC>();
+        player.canMove = false;
         npcMovement.PauseMovementInfinitely();
         NPCInteraction.IsInteracting = true;
 
+        if (isShopOpen)
+        {
+            //Close the shop if it's already open
+            if (merchant != null)
+            {
+                merchant.CloseShop();
+                isShopOpen = false;
+                NPCInteraction.IsInteracting = false;
+                player.canMove = true;
+            }
+            return;
+        }
+
         if (dialogueSegmentIndex >= dialogueSegments.Count) //defualt interaction if there are no more lines
         {
+            if (merchant != null) //checking if the NPC can sell things
+            {
+                merchant.OpenShop();
+                isShopOpen = true;
+                NPCInteraction.IsInteracting = true;
+                return;
+            }
             HandleDefaultInteraction(player, npcMovement);
             return;
         }
