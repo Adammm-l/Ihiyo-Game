@@ -24,7 +24,9 @@ public class KeybindManager : MonoBehaviour // Terrence Akinola
             {"Interact", KeyCode.E},
             {"QuestLog", KeyCode.Q},
             {"GameMenu", KeyCode.Tab},
-            {"Inventory", KeyCode.I}
+            {"Inventory", KeyCode.I},
+            {"Map", KeyCode.M},
+            {"SwitchForm", KeyCode.T}
         };
 
         // loads the saved keybinds/defaults if saved keybinds do not exist.

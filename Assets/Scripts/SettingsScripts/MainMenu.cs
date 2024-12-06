@@ -623,6 +623,12 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             case "InventoryButton":
                 return "Inventory";
 
+            case "MapButton":
+                return "Map";
+            
+            case "SwitchFormButton":
+                return "SwitchForm";
+
             default:
                 return null;
         }

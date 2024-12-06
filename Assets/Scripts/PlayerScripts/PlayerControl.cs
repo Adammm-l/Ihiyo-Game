@@ -14,6 +14,7 @@ public class PlayerControl : MonoBehaviour
     private Animator animator;
     private LayerMask solidObjectsLayer; //Layer for Object Collision
     KeybindManager keybindManager;
+    SwitchPlayerForm switchPlayerForm;
 
     [Header("Keybinds")]
     KeyCode leftKey;
@@ -36,6 +37,7 @@ public class PlayerControl : MonoBehaviour
         rb = GetComponent<Rigidbody2D>(); //Accesses the RigidBody Component that are both attached to the same object
         animator = GetComponent<Animator>(); //Access character animation
         keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        switchPlayerForm = GetComponent<SwitchPlayerForm>();
     }
     // Update is called once per frame
     private void Update()
@@ -94,7 +96,7 @@ public class PlayerControl : MonoBehaviour
             
         }
 
-
+        moveSpeed = switchPlayerForm.GetPlayerSpeed();
         rb.velocity = moveDir.normalized * moveSpeed; //Physics Based Movement
 
         animator.SetFloat("InputX", moveDir.x);  
