@@ -4,47 +4,112 @@ using UnityEngine;
 using Cinemachine;
 using System.IO;
 
-public class SaveController : MonoBehaviour
+public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) Sotres
 {
-    
+    public const int MAX_SLOTS = 3;
+    const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
+    Vector3 defaultPlayerPosition = new Vector3(-5.5f, 1.25f, 0f);
+
     // Start is called before the first frame update
     void Start()
     {
-        saveLocation = Path.Combine(Application.persistentDataPath, "saveData.json");
-        LoadGame();
+        saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
+        Directory.CreateDirectory(saveLocation);
     }
 
-    
+    public void SaveGame() 
+    {
+        int activeSaveSlot = PlayerPrefs.GetInt(ActiveSlotKey);
+        string savePath = Path.Combine(saveLocation, $"save_{activeSaveSlot}.json");
+        
+        SaveData saveData;
+        if (File.Exists(savePath))
+        {
+            saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(savePath));
+        }
+        else
+        {
+            saveData = new SaveData(); // initialize new save data if no file exists (literally just to please the compiler)
+        }
+        saveData.playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+        saveData.mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name;
 
-    public void SaveGame() {
-        SaveData saveData = new SaveData {
+        File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
+        Debug.Log($"Saved game on slot {activeSaveSlot}.");
+    }
 
-            playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position, //Connect Player position
-
-            mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name
+    public void CreateSave(int slot, string name) 
+    {
+        string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
+        
+        SaveData saveData = new SaveData 
+        {
+            playerPosition = defaultPlayerPosition,
+            mapBoundary = "Ihi_Room",
+            saveName = name,
+            currentDay = 1,
+            isNight = false
         };
 
-        File.WriteAllText(saveLocation,JsonUtility.ToJson(saveData)); //Writes the Data to a file
+        File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
     }
 
+    public bool LoadGame(int slot) {
+        string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
+        SetSaveSlot(slot); // remember active save slot for saving ingame
+        if (File.Exists(savePath)) {
 
-    public void LoadGame() {
-        if (File.Exists(saveLocation)) {
-
-            SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(saveLocation)); //Pull Existing File Information
+            SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(savePath)); //Pull Existing File Information
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition; //Sets Value of Player Position
 
             FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D = GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
-
+            return true;
         }
+        return false;
 
-        else {
+        // else {
 
-            SaveGame(); //If there isn't a save, start at initial save point
+        //     SaveGame(); //If there isn't a save, start at initial save point
 
+        // }
+    }
+
+    public void DeleteSave(int slot)
+    {
+        string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            Debug.Log($"Deleted save in slot {slot}.");
+        }
+        else
+        {
+            Debug.Log($"No save found in slot {slot} to delete.");
         }
     }
 
+    public bool SaveExists(int slot)
+    {
+        string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
+        return File.Exists(savePath);
+    }
+
+    public SaveData GetSaveData(int slot)
+    {
+        string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
+        if (File.Exists(savePath))
+        {
+            string json = File.ReadAllText(savePath);
+            return JsonUtility.FromJson<SaveData>(json);
+        }
+        return null; // just return null if no save exists
+    }
+
+    public void SetSaveSlot(int activeSlot)
+    {
+        PlayerPrefs.SetInt(ActiveSlotKey, activeSlot);
+        PlayerPrefs.Save();
+    }
 }

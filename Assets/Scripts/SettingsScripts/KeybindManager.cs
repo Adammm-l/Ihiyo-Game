@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class KeybindManager : MonoBehaviour
+public class KeybindManager : MonoBehaviour // Terrence Akinola
 {
     [Header("Keybinds")]
     Dictionary<string, KeyCode> currentKeybinds;

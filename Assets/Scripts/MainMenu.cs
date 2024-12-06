@@ -6,27 +6,30 @@ using UnityEngine;
 using TMPro;
 using System;
 
-public class MainMenuController : MonoBehaviour
+public class MainMenuController : MonoBehaviour // Terrence Akinola
 {
     [Header("UI References")]
     public GameObject mainMenu;
+    public GameObject savesMenu;
     public GameObject settingsMenu;
     public GameObject galleryMenu;
     public GameObject dialoguePopup;
-    TextMeshProUGUI fadeText;
+    
+    TextMeshProUGUI menuTextLabel;
 
     KeybindManager keybindManager;
+    SaveController saveController;
     Coroutine currentKeybindCoroutine;
 
 
     [Header("Levels")]
-    public string newGameLevel;
-    string level;
+    public string startingScene;
 
     void Start()
     {
-        fadeText = settingsMenu.transform.Find("FadeText").GetComponent<TextMeshProUGUI>();
+        menuTextLabel = dialoguePopup.transform.Find("MenuText").GetComponent<TextMeshProUGUI>();
         keybindManager = GetComponent<KeybindManager>();
+        saveController = GetComponent<SaveController>();
         currentKeybindCoroutine = null;
         
         // allows user to click on each of the buttons listed and gives them functionality to their corresponding functions
@@ -40,20 +43,15 @@ public class MainMenuController : MonoBehaviour
         };
 
         // assign listeners to buttons (what gives each button functionality)
-        foreach (Transform child in mainMenu.transform)
+        foreach (Transform option in mainMenu.transform)
         {
-            Button button = child.GetComponent<Button>();
-            if (menuButtons.ContainsKey(child.name))
+            Button button = option.GetComponent<Button>();
+            if (menuButtons.ContainsKey(option.name))
             {
                 button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(menuButtons[child.name]);
+                button.onClick.AddListener(menuButtons[option.name]);
             }
         }
-
-        // newGameYes.onClick.AddListener(newGameDialogYesClicked);
-        // newGameNo.onClick.AddListener(newGameDialogNoClicked);
-
-        // noSavesOkayButton.onClick.AddListener(CloseNoSavesDialogue);
     }
 
     void NewGameClicked()
@@ -70,44 +68,294 @@ public class MainMenuController : MonoBehaviour
         newGameYes.onClick.RemoveAllListeners();
         newGameNo.onClick.RemoveAllListeners();
 
-        newGameYes.onClick.AddListener(newGameDialogYesClicked);
+        newGameYes.onClick.AddListener(OpenSavesMenu);
         newGameNo.onClick.AddListener(ReturnToMainMenu);
     }
 
-    void newGameDialogYesClicked()
-    {
-        SceneManager.LoadScene(newGameLevel);
-    }
     void ReturnToMainMenu()
     {
         // hides the active popup/menu and activates the main menu again
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
         GameObject exitGamePopup = dialoguePopup.transform.Find("ExitGamePopup").gameObject;
+        GameObject noSavesPopup = dialoguePopup.transform.Find("NoSavesFoundPopup").gameObject;
         mainMenu.SetActive(true);
         
         exitGamePopup.SetActive(false);
         newGamePopup.SetActive(false);
         settingsMenu.SetActive(false);
         galleryMenu.SetActive(false);
+        noSavesPopup.SetActive(false);
+        savesMenu.SetActive(false);
     }
 
     void LoadGameClicked()
     {
-        SceneManager.LoadScene(newGameLevel); // just use this for now
-        // mainMenu.SetActive(false);
+        // opens prompt to make new save if zero saves exist, otherwise opens save menu
+        bool hasSaves = false;
+        for (int i = 1; i <= 3; i++)
+        {
+            if (saveController.SaveExists(i))
+            {
+                hasSaves = true;
+                break;
+            }
+        }
+
+        if (!hasSaves)
+        {
+            OpenNewSavePopup();
+        }
+        else
+        {
+            OpenSaveSlotSelection("load");
+        }
     }
 
-    // void LoadGameSaveClicked()
-    // {
-    //     SceneManager.LoadScene(newGameLevel);
-    // }
+    void OpenNewSavePopup()
+    {
+        GameObject noSavesPopup = dialoguePopup.transform.Find("NoSavesFoundPopup").gameObject;
+        noSavesPopup.SetActive(true);
+
+        Button noSaveYes = noSavesPopup.transform.Find("Yes").GetComponent<Button>();
+        Button noSaveNo = noSavesPopup.transform.Find("No").GetComponent<Button>();
+
+        noSaveYes.onClick.RemoveAllListeners();
+        noSaveNo.onClick.RemoveAllListeners();
+
+        noSaveYes.onClick.AddListener(OpenSavesMenu);
+        noSaveNo.onClick.AddListener(ReturnToMainMenu);
+    }
+
+    void OpenSavesMenu()
+    {
+        GameObject noSavesPopup = dialoguePopup.transform.Find("NoSavesFoundPopup").gameObject; // not a param cuz it won't always be called
+        GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
+        noSavesPopup.SetActive(false);
+        newGamePopup.SetActive(false);        
+
+        int saveCount = 0;
+        for (int i = 1; i <= SaveController.MAX_SLOTS; i++) // count number of valid saves
+        {
+            if (saveController.SaveExists(i))
+            {
+                saveCount++;
+            }
+        }
+
+        if (saveCount == SaveController.MAX_SLOTS) // apparently const variables need to be called with THE WHOLE class and not an instance
+        {
+            OpenSaveSlotSelection("overwrite");
+        }
+        else
+        {
+            OpenSaveSlotSelection("save");
+        }
+    }
+
+    void UpdateSaveSlots()
+    {
+        // update text boxes for save slots
+        int slotIndex = 0;
+        foreach (Transform saveSlot in savesMenu.transform)
+        {
+            if (slotIndex > 2) // ignore the return to main menu button at the end
+            {
+                break;
+            }
+            GameObject nameLabel = saveSlot.Find("Name").gameObject;
+            GameObject dayNightLabel = saveSlot.Find("DayNight").gameObject;
+            GameObject noSavesLabel = saveSlot.Find("NoSaves").gameObject;
+            Button slotButton = saveSlot.GetComponent<Button>();
+
+            slotIndex++;
+            int currentSlot = slotIndex;
+
+            SaveData saveData = saveController.GetSaveData(currentSlot);
+            bool slotHasSave = saveData != null;
+
+            if (slotHasSave)
+            {
+                nameLabel.GetComponent<TMP_Text>().text = saveData.saveName;
+                dayNightLabel.GetComponent<TMP_Text>().text = ConvertDayNightToString(saveData.currentDay, saveData.isNight);
+            }
+
+            // if save is empty (display empty save text), otherwise display name and current day/night
+            nameLabel.SetActive(slotHasSave);
+            dayNightLabel.SetActive(slotHasSave);
+            noSavesLabel.SetActive(!slotHasSave);
+        }
+    }
+
+    string ConvertDayNightToString(int currentDay, bool isNight)
+    {
+        int lastDigit = currentDay % 10;
+        string dayNightText;
+
+        switch (lastDigit) // sup is for subscript
+        {
+            case 1:
+                dayNightText = $"{currentDay}<sup>st</sup>";
+                break;
+            case 2:
+                dayNightText = $"{currentDay}<sup>nd</sup>";
+                break;
+            case 3:
+                dayNightText = $"{currentDay}<sup>rd</sup>";
+                break;
+            default:
+                dayNightText = $"{currentDay}<sup>th</sup>";
+                break;
+        }
+        
+        if (isNight)
+        {
+            dayNightText += " Night";
+        }
+        else
+        {
+            dayNightText += " Day";
+        }
+        return dayNightText;
+    }
+
+    void OpenOverwritePopup(int currentSlot)
+    {
+        GameObject overwritePopup = dialoguePopup.transform.Find("OverwriteSavePopup").gameObject;
+        overwritePopup.SetActive(true);
+
+        Button overwriteYes = overwritePopup.transform.Find("Yes").GetComponent<Button>();
+        Button overwriteNo = overwritePopup.transform.Find("No").GetComponent<Button>();
+
+        overwriteYes.onClick.RemoveAllListeners();
+        overwriteNo.onClick.RemoveAllListeners();
+
+        overwriteYes.onClick.AddListener(() => OpenPromptForGameName(currentSlot));
+        overwriteNo.onClick.AddListener(() => overwritePopup.SetActive(false));
+
+        // perhaps text prompt informing user that they must click a file to overwrite "Click the file you would like to overwrite"
+    }
+
+    void OpenSaveSlotSelection(string action)
+    {
+        Button returnToMain = savesMenu.transform.Find("ReturnToMain").GetComponent<Button>();
+        returnToMain.onClick.RemoveAllListeners();
+        returnToMain.onClick.AddListener(ReturnToMainMenu);
+
+        UpdateSaveSlots();
+        int slotIndex = 0;
+        foreach (Transform saveSlot in savesMenu.transform) // initialize save slots
+        {
+            if (slotIndex > 2)
+            {
+                break;
+            }
+            Button slotButton = saveSlot.GetComponent<Button>();
+            slotIndex++;
+            int currentSlot = slotIndex; // apparently lambda functions capture variables by REFERENCE not value
+
+            slotButton.onClick.RemoveAllListeners();
+            slotButton.interactable = true; // just set as true by default
+
+            if (action == "save")
+            {
+                if (saveController.SaveExists(currentSlot))
+                {
+                    slotButton.onClick.AddListener(() => OpenOverwritePopup(currentSlot));
+                }
+                else
+                {
+                    slotButton.onClick.AddListener(() => OpenPromptForGameName(currentSlot));
+                }
+            }
+            if (action == "load")
+            {
+                if (saveController.SaveExists(currentSlot))
+                {
+                    slotButton.onClick.AddListener(() => LoadSave(currentSlot));
+                }
+                else
+                {
+                    slotButton.interactable = false;
+                }
+            }
+            if (action == "overwrite")
+            {
+                slotButton.onClick.AddListener(() => OpenOverwritePopup(currentSlot));
+            }
+        }
+
+        savesMenu.SetActive(true); // at the bottom instead of the top so buttons don't change when loading in
+        mainMenu.SetActive(false);
+    }
+    
+    void OpenPromptForGameName(int currentSlot)
+    {
+        GameObject namePopup = dialoguePopup.transform.Find("CreateSaveNamePopup").gameObject;
+        GameObject overwritePopup = dialoguePopup.transform.Find("OverwriteSavePopup").gameObject;
+
+        Button cancelNewSave = namePopup.transform.Find("Cancel").GetComponent<Button>();
+        Button finishedName = namePopup.transform.Find("Done").GetComponent<Button>();
+
+        TMP_InputField nameInputField = namePopup.transform.Find("NameInputField").GetComponent<TMP_InputField>();
+        namePopup.SetActive(true);
+        overwritePopup.SetActive(false);
+
+        finishedName.onClick.RemoveAllListeners();
+        cancelNewSave.onClick.RemoveAllListeners();
+        finishedName.onClick.AddListener(() => SaveEnteredName(namePopup, currentSlot, nameInputField));
+        cancelNewSave.onClick.AddListener(() => CancelNewSave(namePopup, nameInputField));
+    }
+
+    void CancelNewSave(GameObject namePopup, TMP_InputField nameInputField)
+    {
+        nameInputField.text = "";
+        namePopup.SetActive(false);
+    }
+
+    void SaveEnteredName(GameObject namePopup, int saveSlot, TMP_InputField nameInputField)
+    {
+        string enteredName = nameInputField.text.Trim();
+
+        if (string.IsNullOrEmpty(enteredName))
+        {
+            TriggerFadeMessage("Cannot save game without a name.");
+            return; // listener so i don't have to recursively call it
+        }
+
+        namePopup.SetActive(false);
+        if (saveController.SaveExists(saveSlot))
+        {
+            saveController.DeleteSave(saveSlot);
+            Debug.Log($"Save in slot {saveSlot} was overwritten with new save: {enteredName}");
+        }
+        else
+        {
+            Debug.Log($"New game saved to slot {saveSlot} with name '{enteredName}'");
+        }
+        saveController.CreateSave(saveSlot, enteredName);
+        LoadSave(saveSlot);
+    }
+
+    void LoadSave(int saveSlot)
+    {
+        // open scene and load data from save slot
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.LoadScene(startingScene);
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            saveController.LoadGame(saveSlot);
+            Debug.Log($"Loaded slot {saveSlot}.");
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+    }
 
     void SettingsClicked()
     {
         // hides the main menu and activates the settings section
         mainMenu.SetActive(false);
         settingsMenu.SetActive(true);
-        fadeText.text = "";
+        menuTextLabel.text = "";
 
         GameObject settingsButtonHolder = settingsMenu.transform.Find("SettingPanel").gameObject;
         GameObject settingsOptions = settingsMenu.transform.Find("OptionPanel").gameObject;
@@ -152,9 +400,9 @@ public class MainMenuController : MonoBehaviour
     void InitializeKeybindButtons(GameObject viewSettings)
     {
         // find buttons in viewSettings object
-        foreach (Transform child in viewSettings.transform)
+        foreach (Transform keybindObject in viewSettings.transform)
         {
-            Button button = child.GetComponentInChildren<Button>();
+            Button button = keybindObject.GetComponentInChildren<Button>();
 
             // set button text based on keybind
             string keybind = GetButtonKeybind(button);
@@ -186,10 +434,10 @@ public class MainMenuController : MonoBehaviour
     IEnumerator StartKeybindUpdate(string action, Button keyButton)
     {
         // check if another button is pressed simultaneously
-        if (IsOtherButtonPressed(keyButton))
+        Button pressedButton = GetOtherPressedButton(keyButton);
+        if (pressedButton != null) // realized i didn't need an entire other function to do basically the same thing
         {
             Debug.Log("Another button was pressed.");
-            Button pressedButton = GetOtherPressedButton(keyButton);
             CancelKeybindUpdate(pressedButton);
 
             // stop currentKeybind coroutine before starting it again
@@ -242,25 +490,6 @@ public class MainMenuController : MonoBehaviour
 
             yield return null; // waits for next frame before checking again
         }
-    }
-
-    bool IsOtherButtonPressed(Button currentButton)
-    {
-        GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
-        Button[] keybindButtons = viewSettings.GetComponentsInChildren<Button>();
-
-        foreach (Button button in keybindButtons)
-        {
-            if (button == currentButton)
-            {
-                continue; // ignore actively pushed button
-            }
-            if (!button.interactable)
-            {
-                return true; // other button was pressed
-            }
-        }
-        return false;
     }
 
     Button GetOtherPressedButton(Button currentButton)
@@ -422,13 +651,13 @@ public class MainMenuController : MonoBehaviour
 
     IEnumerator FadeMessage(string message)
     {
-        fadeText.text = message;
-        fadeText.alpha = 1f; // still don't get why floats need fs on them
+        menuTextLabel.text = message;
+        menuTextLabel.alpha = 1f; // still don't get why floats need fs on them
 
         float duration = 2f;
-        while (fadeText.alpha > 0)
+        while (menuTextLabel.alpha > 0)
         {
-            fadeText.alpha -= Time.deltaTime / duration;
+            menuTextLabel.alpha -= Time.deltaTime / duration;
             yield return null;
         }
     }
@@ -480,12 +709,12 @@ public class MainMenuController : MonoBehaviour
     {
         // activates the settings pop up to reset/confirm changes made and continues based off user response
         GameObject settingsPopup = dialoguePopup.transform.Find("SettingsPopup").gameObject;
-        TextMeshProUGUI popupText = settingsPopup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI popupTextLabel = settingsPopup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 
         // creates pop up text depending on which button was clicked
         if (action == "reset")
         {
-            popupText.text = "Would you like to restore all settings to default?";
+            popupTextLabel.text = "Would you like to restore all settings to default?";
             settingsPopup.SetActive(true);
         }
         
@@ -494,16 +723,15 @@ public class MainMenuController : MonoBehaviour
             if (keybindManager.HasKeybindChanged())
             {
                 // prompt user to save keybinds if at least one keybind has changed
-                popupText.text = "You have unsaved changes. Are you sure you want to exit?";
+                popupTextLabel.text = "You have unsaved changes. Are you sure you want to exit?";
                 settingsPopup.SetActive(true);
             }
             else if (keybindManager.HasNewNullKeybinds())
             {
-                popupText.text = "You have at least one unbound keybind. Are you sure you want to exit?";
+                popupTextLabel.text = "You have at least one unbound keybind. Are you sure you want to exit?";
                 settingsPopup.SetActive(true);
             }
 
-            // also note to implement conflict stuff
             // if there's no conflict or unsaved changes, just return to the main menu
             else
             {
@@ -515,7 +743,7 @@ public class MainMenuController : MonoBehaviour
         {
             if (keybindManager.HasKeybindChanged())
             {
-                popupText.text = "Would you like to save all changes?";
+                popupTextLabel.text = "Would you like to save all changes?";
                 settingsPopup.SetActive(true);
             }
 
@@ -605,9 +833,9 @@ public class MainMenuController : MonoBehaviour
     void RefreshKeybindButtons()
     {
         Transform viewSettings = settingsMenu.transform.Find("ViewSettings");
-        foreach (Transform child in viewSettings)
+        foreach (Transform keybindObject in viewSettings)
         {
-            Button button = child.GetComponentInChildren<Button>();
+            Button button = keybindObject.GetComponentInChildren<Button>();
             string keybind = GetButtonKeybind(button);
             string updatedKeyString;
             KeyCode key = keybindManager.GetKeybind(keybind);
@@ -632,7 +860,7 @@ public class MainMenuController : MonoBehaviour
 
         Button galleryBack = galleryMenu.transform.Find("Back").GetComponent<Button>();
         Button galleryNext = galleryMenu.transform.Find("Next").GetComponent<Button>();
-        Button returnToMain = galleryMenu.transform.Find("MainMenu").GetComponent<Button>();
+        Button returnToMain = galleryMenu.transform.Find("ReturnToMain").GetComponent<Button>();
 
         // assign listeners to gallery buttons
         // galleryBack.onClick.AddListener();
@@ -661,5 +889,6 @@ public class MainMenuController : MonoBehaviour
     void ExitGame()
     {
         Application.Quit(); // closes game
+        Debug.Log("Closed Game."); // can't actually close game in editor
     }
 }
