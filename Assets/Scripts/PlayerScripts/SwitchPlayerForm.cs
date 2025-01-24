@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// Terrence
 public class SwitchPlayerForm : MonoBehaviour
 {
     public bool isGhost = false;

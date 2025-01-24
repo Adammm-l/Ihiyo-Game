@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using System.IO;
-
+// Terrence and Edwin (Eri)
 public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) Sotres
 {
     public const int MAX_SLOTS = 3;

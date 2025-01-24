@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-
+// All NPCScripts Section done by Adam
 public class DialogueManager : MonoBehaviour
 {
 

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// Sound Scripts Section by Eri (Edwin)
 public class AudioManager : MonoBehaviour
 {
     [Header("---------- Audio Source ----------")] //Label for Clarity

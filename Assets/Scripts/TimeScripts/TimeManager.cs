@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+// Adam
 public class TimeManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timeDisplay;

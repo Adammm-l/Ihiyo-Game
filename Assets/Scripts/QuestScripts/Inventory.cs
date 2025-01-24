@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// Quest Scripts Section done by Adam
 public class Inventory : MonoBehaviour
 {
     private Dictionary<string, int> items = new Dictionary<string, int>();

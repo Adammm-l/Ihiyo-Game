@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+// Eri (Edwin)
 public class PlayerControl : MonoBehaviour
 {
     [Header("Attributes")]
@@ -22,7 +22,7 @@ public class PlayerControl : MonoBehaviour
     KeyCode upKey;
     KeyCode downKey;
     
-    AudioManager audioManager; // Var needed so that we can incoporate SFX for our player 11 lines added so far
+    AudioManager audioManager; // Var needed so that we can incoporate SFX for our player 
 
   
 

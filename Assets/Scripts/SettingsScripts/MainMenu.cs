@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using TMPro;
 using System;
-
+//Terrence
 public class MainMenuController : MonoBehaviour // Terrence Akinola
 {
     [Header("UI References")]

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// Eri (Edwin)
 public class FullscreenScript : MonoBehaviour
 {
 

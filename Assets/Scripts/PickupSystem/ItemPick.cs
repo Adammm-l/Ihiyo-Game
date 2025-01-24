@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using InventoryModel;
-
+// Pickup System done by Eri (Edwin)
 public class ItemPick : MonoBehaviour
 {
     [field: SerializeField]

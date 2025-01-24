@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+// All Inventory Scripts Section done by Eri (Edwin)
 namespace InventoryModel {
 
     [CreateAssetMenu] // Allow for easy customization on our end without needing major changes to code over time
