@@ -5,7 +5,7 @@ title: Home
 
 # Welcome to Ihiyo
 
-This is the homepage for our CS 426 Senior Project in Computer Science, Spring 2025, at UNR, CSE Department.
+This is the homepage for Group 17's CS 426 Senior Project in Computer Science, Spring 2025, at UNR, CSE Department.
 
 ## Instructors: 
 - David Feil-Seifer
