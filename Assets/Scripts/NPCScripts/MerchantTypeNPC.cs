@@ -17,24 +17,37 @@ public class MerchantTypeNPC : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private GameObject shopUI;
-    [SerializeField] private ShopItemUI[] itemDisplays;
+    [SerializeField] private ShopItemUI itemPrefab;
+    [SerializeField] private Transform itemContainer;
 
-    // Start is called before the first frame update
+    private List<ShopItemUI> itemDisplays = new List<ShopItemUI>();
+
     void Start()
     {
         shopUI.SetActive(false);
+        CreateItemDisplays();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void CreateItemDisplays()
     {
-        
+        // Clear existing displays
+        foreach (var display in itemDisplays)
+        {
+            if (display != null) Destroy(display.gameObject);
+        }
+        itemDisplays.Clear();
+
+        // Create new displays
+        foreach (var item in shopItems)
+        {
+            ShopItemUI newDisplay = Instantiate(itemPrefab, itemContainer);
+            itemDisplays.Add(newDisplay);
+        }
     }
 
     public void OpenShop()
     {
         if (shopUI == null) return;
-
         shopUI.SetActive(true);
         PopulateShopUI();
     }
@@ -42,27 +55,18 @@ public class MerchantTypeNPC : MonoBehaviour
     public void CloseShop()
     {
         if (shopUI == null) return;
-
         shopUI.SetActive(false);
     }
 
     private void PopulateShopUI()
     {
-        for (int i = 0; i < itemDisplays.Length; i++)
+        for (int i = 0; i < shopItems.Count; i++)
         {
-            if (i < shopItems.Count)
+            if (i < itemDisplays.Count)
             {
                 itemDisplays[i].SetItemDetails(shopItems[i], this);
                 itemDisplays[i].gameObject.SetActive(true);
             }
-            else
-            {
-                itemDisplays[i].gameObject.SetActive(false); //Hide unused slots
-            }
         }
-    }
-
-    public void BuyItem(ShopItem item)
-    {
     }
 }

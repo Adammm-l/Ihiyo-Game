@@ -7,11 +7,6 @@ using static UnityEditor.Progress;
 
 public class ShopItemUI : MonoBehaviour
 {
-    [Header("Item Details (Text Fields)")]
-    [SerializeField] private string itemName;
-    [SerializeField] private string itemPrice;
-    [SerializeField] private string itemDescription;
-
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemPriceText;
@@ -33,17 +28,18 @@ public class ShopItemUI : MonoBehaviour
     }
     public void SetItemDetails(ShopItem item, MerchantTypeNPC merchantNPC)
     {
+        Debug.Log($"Setting item: {item.itemName}");
+        Debug.Log($"TextMeshPro components: Name={itemNameText != null}, Price={itemPriceText != null}, Desc={itemDescriptionText != null}");
+        Debug.Log($"Current text values - Name: '{itemNameText.text}', Price: '{itemPriceText.text}', Desc: '{itemDescriptionText.text}'");
+
         currentItem = item;
         merchant = merchantNPC;
 
-        itemName = item.itemName;
-        itemPrice = item.itemPrice.ToString();
-        itemDescription = item.itemDescription;
+        itemNameText.text = item.itemName;
+        itemPriceText.text = $"Price: {item.itemPrice}";
+        itemDescriptionText.text = item.itemDescription;
 
-        if (itemNameText != null) itemNameText.text = itemName;
-        if (itemPriceText != null) itemPriceText.text = $"Price: {itemPrice}";
-        if (itemDescriptionText != null) itemDescriptionText.text = itemDescription;
-
+        Debug.Log($"After setting - Name: '{itemNameText.text}', Price: '{itemPriceText.text}', Desc: '{itemDescriptionText.text}'");
     }
 
 }
