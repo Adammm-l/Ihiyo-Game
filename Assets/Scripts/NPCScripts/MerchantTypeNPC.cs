@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 [System.Serializable]
 public class ShopItem //Items in the shop and their names
@@ -26,6 +27,11 @@ public class MerchantTypeNPC : MonoBehaviour
     {
         shopUI.SetActive(false);
         CreateItemDisplays();
+
+        foreach (Transform child in itemContainer)
+        {
+            Debug.Log($"Child name: {child.name}, Components: {string.Join(", ", child.GetComponents<Component>().Select(c => c.GetType().Name))}");
+        }
     }
 
     private void CreateItemDisplays()
@@ -66,6 +72,22 @@ public class MerchantTypeNPC : MonoBehaviour
             {
                 itemDisplays[i].SetItemDetails(shopItems[i], this);
                 itemDisplays[i].gameObject.SetActive(true);
+            }
+        }
+    }
+
+    public void BuyItem(ShopItem item)
+    {
+        if (CurrencyManager.Instance != null)
+        {
+            if (CurrencyManager.Instance.SpendCurrency(item.itemPrice))
+            {
+                Debug.Log($"Bought {item.itemName} for {item.itemPrice} coins");
+                //Add inventory logic
+            }
+            else
+            {
+                Debug.Log("Not enough currency!");
             }
         }
     }

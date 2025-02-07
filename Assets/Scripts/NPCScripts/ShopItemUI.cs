@@ -11,35 +11,42 @@ public class ShopItemUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemPriceText;
     [SerializeField] private TextMeshProUGUI itemDescriptionText;
+    [SerializeField] private Button buyButton;
 
     private ShopItem currentItem;
     private MerchantTypeNPC merchant;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        if (buyButton != null)
+        {
+            buyButton.onClick.AddListener(OnBuyClicked);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void SetItemDetails(ShopItem item, MerchantTypeNPC merchantNPC)
     {
-        Debug.Log($"Setting item: {item.itemName}");
-        Debug.Log($"TextMeshPro components: Name={itemNameText != null}, Price={itemPriceText != null}, Desc={itemDescriptionText != null}");
-        Debug.Log($"Current text values - Name: '{itemNameText.text}', Price: '{itemPriceText.text}', Desc: '{itemDescriptionText.text}'");
-
         currentItem = item;
         merchant = merchantNPC;
 
-        itemNameText.text = item.itemName;
-        itemPriceText.text = $"Price: {item.itemPrice}";
-        itemDescriptionText.text = item.itemDescription;
-
-        Debug.Log($"After setting - Name: '{itemNameText.text}', Price: '{itemPriceText.text}', Desc: '{itemDescriptionText.text}'");
+        if (itemNameText != null) itemNameText.text = item.itemName;
+        if (itemPriceText != null) itemPriceText.text = $"${item.itemPrice}";
+        if (itemDescriptionText != null) itemDescriptionText.text = item.itemDescription;
     }
 
+    private void OnBuyClicked()
+    {
+        if (merchant != null)
+        {
+            merchant.BuyItem(currentItem);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (buyButton != null)
+        {
+            buyButton.onClick.RemoveListener(OnBuyClicked);
+        }
+    }
 }
