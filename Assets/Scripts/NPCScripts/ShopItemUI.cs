@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using static UnityEditor.Progress;
-
+//adam
 public class ShopItemUI : MonoBehaviour
 {
     [Header("UI References")]
@@ -18,35 +15,43 @@ public class ShopItemUI : MonoBehaviour
 
     private void Start()
     {
-        if (buyButton != null)
-        {
-            buyButton.onClick.AddListener(OnBuyClicked);
-        }
+        buyButton.onClick.AddListener(OnBuyClicked);
+        CurrencyManager.Instance.OnCurrencyChanged += OnCurrencyChanged;
     }
 
     public void SetItemDetails(ShopItem item, MerchantTypeNPC merchantNPC)
     {
         currentItem = item;
         merchant = merchantNPC;
+        itemNameText.text = item.itemName;
+        itemPriceText.text = $"Buy: ${item.itemPrice}";
+        itemDescriptionText.text = item.itemDescription;
+        UpdateButtonState();
+    }
 
-        if (itemNameText != null) itemNameText.text = item.itemName;
-        if (itemPriceText != null) itemPriceText.text = $"${item.itemPrice}";
-        if (itemDescriptionText != null) itemDescriptionText.text = item.itemDescription;
+    private void UpdateButtonState()
+    { 
+        bool canAfford = CurrencyManager.Instance.GetCurrentCurrency() >= currentItem.itemPrice;
+        Image buttonImage = buyButton.GetComponent<Image>();
+        Color buttonColor = buttonImage.color;
+        buttonColor.a = canAfford ? 1f : 0.5f;
+        buttonImage.color = buttonColor;
+        buyButton.interactable = canAfford;
     }
 
     private void OnBuyClicked()
     {
-        if (merchant != null)
-        {
-            merchant.BuyItem(currentItem);
-        }
+        merchant.BuyItem(currentItem);
     }
 
     private void OnDestroy()
     {
-        if (buyButton != null)
-        {
-            buyButton.onClick.RemoveListener(OnBuyClicked);
-        }
+        buyButton.onClick.RemoveListener(OnBuyClicked);
+        CurrencyManager.Instance.OnCurrencyChanged -= OnCurrencyChanged;
+    }
+
+    private void OnCurrencyChanged(int newAmount)
+    {
+        UpdateButtonState();
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-
+//adam
 //this script basically manages all of NPC interactions and quest giving
 [System.Serializable]
 public class DialogueResponse
@@ -47,6 +47,7 @@ public class NPCInteraction : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private GameObject questNotificationSprite;
     [SerializeField] private float notificationDuration = 3f;
+    [SerializeField] private TextMeshProUGUI BoughtItemText;
 
 
     void Start()
@@ -310,5 +311,18 @@ public class NPCInteraction : MonoBehaviour
                 //Debug.Log($"Enabled item: {itemName}");
             }
         }
+    }
+
+    public void ShowPurchaseNotification(string itemName, int amount)
+    {
+        BoughtItemText.text = $"Bought {amount}x {itemName}";
+        BoughtItemText.gameObject.SetActive(true);
+        StartCoroutine(HidePurchaseNotification());
+    }
+
+    private IEnumerator HidePurchaseNotification()
+    {
+        yield return new WaitForSeconds(notificationDuration);
+        BoughtItemText.gameObject.SetActive(false);
     }
 }

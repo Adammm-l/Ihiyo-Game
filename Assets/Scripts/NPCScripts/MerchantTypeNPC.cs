@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
-
+//adam
 [System.Serializable]
 public class ShopItem //Items in the shop and their names
 {
@@ -27,23 +27,18 @@ public class MerchantTypeNPC : MonoBehaviour
     {
         shopUI.SetActive(false);
         CreateItemDisplays();
-
-        foreach (Transform child in itemContainer)
-        {
-            Debug.Log($"Child name: {child.name}, Components: {string.Join(", ", child.GetComponents<Component>().Select(c => c.GetType().Name))}");
-        }
     }
 
     private void CreateItemDisplays()
     {
-        // Clear existing displays
+        //Clear existing displays
         foreach (var display in itemDisplays)
         {
             if (display != null) Destroy(display.gameObject);
         }
         itemDisplays.Clear();
 
-        // Create new displays
+        //Create new displays
         foreach (var item in shopItems)
         {
             ShopItemUI newDisplay = Instantiate(itemPrefab, itemContainer);
@@ -78,17 +73,12 @@ public class MerchantTypeNPC : MonoBehaviour
 
     public void BuyItem(ShopItem item)
     {
-        if (CurrencyManager.Instance != null)
+        if (CurrencyManager.Instance.SpendCurrency(item.itemPrice))
         {
-            if (CurrencyManager.Instance.SpendCurrency(item.itemPrice))
-            {
-                Debug.Log($"Bought {item.itemName} for {item.itemPrice} coins");
-                //Add inventory logic
-            }
-            else
-            {
-                Debug.Log("Not enough currency!");
-            }
+            Debug.Log($"Successfully bought {item.itemName} for {item.itemPrice}");
         }
+
+        NPCInteraction npcInteraction = GetComponent<NPCInteraction>(); //notification box
+        npcInteraction.ShowPurchaseNotification(item.itemName, 1);
     }
 }
