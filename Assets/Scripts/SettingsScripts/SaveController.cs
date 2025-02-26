@@ -64,16 +64,22 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition; //Sets Value of Player Position
 
-            FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D = GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
+            PolygonCollider2D savedMapBoundary = GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
+
+            FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D = savedMapBoundary;
+
+            MapController_Dynamic.Instance?.GenerateMap(savedMapBoundary);
+
             return true;
         }
-        return false;
 
-        // else {
+        else {
 
-        //     SaveGame(); //If there isn't a save, start at initial save point
+             SaveGame(); //If there isn't a save, start at initial save point
+             MapController_Dynamic.Instance?.GenerateMap();
+             return false;
 
-        // }
+         }
     }
 
     public void DeleteSave(int slot)

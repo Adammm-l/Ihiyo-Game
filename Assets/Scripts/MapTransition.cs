@@ -29,6 +29,8 @@ public class MapTransition : MonoBehaviour
         if (collision.gameObject.CompareTag("Player")) { //If the camera bounds touch the Player
             confiner.m_BoundingShape2D = mapBound; // Swap out new camera bounds
             UpdatePlayerPosition(collision.gameObject); //Teleports Player to new scene
+
+            MapController_Dynamic.Instance?.UpdateCurrentArea(mapBound.name);
         }
     }
 
