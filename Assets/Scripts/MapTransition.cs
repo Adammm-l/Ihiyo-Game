@@ -17,10 +17,12 @@ public class MapTransition : MonoBehaviour
 
     enum Direction { Up, Down, Left, Right }
 
-    
+   
+    private static bool camExists;
 
     private void Awake() { //Runs Script when loaded
         confiner = FindObjectOfType<CinemachineConfiner>();
+        
 
     }
 

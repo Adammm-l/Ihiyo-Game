@@ -12,6 +12,7 @@ public class KeybindManager : MonoBehaviour // Terrence Akinola
     Dictionary<string, KeyCode> oldKeybinds = new Dictionary<string, KeyCode>();
 
     // putting it on awake fixes issues with keybindmanager being null on certain start calls
+    private static bool keybindExists; // All instances of this Player references the exact same variable
     void Awake()
     {
         // initializes default keybinds
@@ -166,4 +167,16 @@ public class KeybindManager : MonoBehaviour // Terrence Akinola
         }
         return false;
     }
+
+    void Start() {
+        if(!keybindExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
+
+            keybindExists = true;
+            DontDestroyOnLoad(transform.gameObject);
+        }
+
+        else { // Eliminate Duplicate Objects
+            Destroy(gameObject);
+        }
+}
 }

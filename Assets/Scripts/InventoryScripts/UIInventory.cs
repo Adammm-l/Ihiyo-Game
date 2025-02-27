@@ -24,12 +24,25 @@ public class UIInventory : MonoBehaviour
 
     public event Action<int,int> OnSwapItems; // For when we swap items in inventory
 
+    private static bool invenExists; // All instances of this Player references the exact same variable
+
     private void Awake() {
 
         Hide();
         mouseFollower.Toggle(false); // Make the Mouse Cursor invisible at first since we don't wanna see it outside of menus
         itemDesc.ResetDescription();
 
+    }
+
+    void Start() {
+        if(!invenExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
+            invenExists = true;
+            DontDestroyOnLoad(transform.gameObject);
+        }
+
+        else { // Eliminate Duplicate Objects
+            Destroy(gameObject);
+        }
     }
 
     public void InitializeInvenUI(int intSize) {
@@ -194,5 +207,6 @@ public class UIInventory : MonoBehaviour
 
     
 }
+
 
 }

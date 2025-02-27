@@ -23,12 +23,7 @@ public class InventoryController : MonoBehaviour
 
     public List<InventoryItem> initialItems = new List<InventoryItem>();
 
-    public void Start() {
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
-        PrepareUI();
-
-        PrepareInventoryData();
-    }
+    private static bool invenExists; // All instances of this Player references the exact same variable
 
     public void Update() {
         inventoryKey = keybindManager.GetKeybind("Inventory");
@@ -49,6 +44,14 @@ public class InventoryController : MonoBehaviour
             }
         }
     }
+    void Start() {
+        keybindManager = FindObjectOfType<KeybindManager>();
+
+        if (keybindManager == null) {
+            Debug.LogError("KeybindManager not found in the scene! Ensure it's added to the scene.");
+    }
+}
+
 
     public void PrepareUI() {
 

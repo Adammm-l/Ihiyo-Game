@@ -39,6 +39,7 @@ public class MapController_Dynamic : MonoBehaviour
         }
 
         mapsAreas = MapBounds.GetComponentsInChildren<PolygonCollider2D>();
+        DontDestroyOnLoad(transform.gameObject);
     }
 
     // Generate Map

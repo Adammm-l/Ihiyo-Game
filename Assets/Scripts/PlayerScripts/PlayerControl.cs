@@ -13,6 +13,7 @@ public class PlayerControl : MonoBehaviour
     private Vector2 moveDir;
     private Animator animator;
     private LayerMask solidObjectsLayer; //Layer for Object Collision
+    private static bool playerExists; // All instances of this Player references the exact same variable
     KeybindManager keybindManager;
     SwitchPlayerForm switchPlayerForm;
 
@@ -38,6 +39,20 @@ public class PlayerControl : MonoBehaviour
         animator = GetComponent<Animator>(); //Access character animation
         keybindManager = keybindHolder.GetComponent<KeybindManager>();
         switchPlayerForm = GetComponent<SwitchPlayerForm>();
+
+        if(!playerExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
+
+            playerExists = true;
+            DontDestroyOnLoad(transform.gameObject);
+        }
+
+        else { // Eliminate Duplicate Objects
+            Destroy(gameObject);
+        }
+
+        
+
+        
     }
     // Update is called once per frame
     private void Update()
