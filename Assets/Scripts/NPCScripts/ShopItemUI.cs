@@ -15,8 +15,9 @@ public class ShopItemUI : MonoBehaviour
 
     private void Start()
     {
-        buyButton.onClick.AddListener(OnBuyClicked);
+        //buyButton.onClick.AddListener(OnBuyClicked);
         CurrencyManager.Instance.OnCurrencyChanged += OnCurrencyChanged;
+        Debug.Log($"ShopItemUI Start called for {gameObject.name}");
     }
 
     public void SetItemDetails(ShopItem item, MerchantTypeNPC merchantNPC)
