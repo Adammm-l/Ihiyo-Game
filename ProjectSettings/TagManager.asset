@@ -7,6 +7,10 @@ TagManager:
   - Item
   - Audio
   - Inventory
+  - Wall
+  - Floor
+  - Decor
+  - NPC
   layers:
   - Default
   - TransparentFX
