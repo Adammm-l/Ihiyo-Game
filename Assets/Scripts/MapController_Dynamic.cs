@@ -26,6 +26,20 @@ public class MapController_Dynamic : MonoBehaviour
     private Dictionary<string, RectTransform> uiAreas = new Dictionary<string, RectTransform>(); // Map each PC2 to its corresponding Rect Transform
 
     public static MapController_Dynamic Instance { get; private set; } // Access this script from other scripts easily
+    private static bool mapExists; // All instances of this Player references the exact same variable
+
+    void Start() {
+
+        if(!mapExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
+
+            mapExists = true;
+            DontDestroyOnLoad(transform.gameObject);
+        }
+
+        else { // Eliminate Duplicate Objects
+            Destroy(gameObject);
+        }
+    }
 
     private void Awake()
     {

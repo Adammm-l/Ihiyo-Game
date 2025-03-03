@@ -7,12 +7,21 @@ public class TabController : MonoBehaviour
 {
     public Image[] tabImages;
     public GameObject[] pages;
-
+    private static bool tabExists; // All instances of this Player references the exact same variable
 
     // Start is called before the first frame update
     void Start()
     {
         ActivateTab(0); //Start Menu at Same Page
+        if(!tabExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
+
+            tabExists = true;
+            DontDestroyOnLoad(transform.gameObject);
+        }
+
+        else { // Eliminate Duplicate Objects
+            Destroy(gameObject);
+        }
     }
 
 
