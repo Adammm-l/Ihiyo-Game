@@ -16,10 +16,14 @@ public class DialogueResponse
 public class DialogueSegment
 {
     public List<string> lines;
-    public List<bool> breakPoints; 
+    public List<bool> breakPoints;
     public DialogueResponse responseOptions;
     public GameQuests triggeredQuest;
     public bool triggerQuestAfterSegment = false;
+    // Add item reward fields
+    public bool giveItemAfterSegment = false;
+    public string itemToGive;
+    public int itemAmount = 1;
 }
 
 public class NPCInteraction : MonoBehaviour
@@ -27,8 +31,6 @@ public class NPCInteraction : MonoBehaviour
     [Header("Dialogue")]
     [SerializeField] private string npcName;
     [SerializeField] private List<DialogueSegment> dialogueSegments;
-    [SerializeField] private List<string> questCompleteResponses;
-    [SerializeField] private List<string> incompleteQuestResponses;
 
     [Header("Interactions")]
     public static bool IsInteracting = false;
@@ -36,6 +38,8 @@ public class NPCInteraction : MonoBehaviour
     private int interactionCount = 0;
     private int dialogueSegmentIndex = 0;
     private bool isShopOpen = false;
+
+    [Header("Quest Settings")]
 
     [Header("Managers")]
     public GameObject interactionText; //"E to interact" text
@@ -133,7 +137,9 @@ public class NPCInteraction : MonoBehaviour
 
         DialogueSegment currentSegment = dialogueSegments[dialogueSegmentIndex];
 
-        if ((interactionCount < currentSegment.lines.Count) || (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null)) //runs regularly 
+        if ((interactionCount < currentSegment.lines.Count) ||
+            (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null) ||
+            (currentSegment.giveItemAfterSegment && !string.IsNullOrEmpty(currentSegment.itemToGive))) //runs regularly 
         {
             HandleDialogue(currentSegment);
             if (currentSegment.triggerQuestAfterSegment && currentSegment.triggeredQuest != null)
@@ -141,15 +147,38 @@ public class NPCInteraction : MonoBehaviour
                 TriggerQuest(currentSegment.triggeredQuest);
             }
 
+            if (currentSegment.giveItemAfterSegment && !string.IsNullOrEmpty(currentSegment.itemToGive)) //gives the item to player if active
+            {
+                GiveItemToPlayer(currentSegment.itemToGive, currentSegment.itemAmount);
+            }
+
             for (int i = 0; i < currentSegment.breakPoints.Count; i++)
             {
                 if (currentSegment.breakPoints[i])
                 {
                     MoveToNextSegment();
-                    return; 
+                    return;
                 }
             }
         }
+    }
+
+    private void GiveItemToPlayer(string itemName, int amount)
+    {
+        Inventory playerInventory = FindObjectOfType<Inventory>();
+        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+
+        for (int i = 0; i < amount; i++)
+        {
+            playerInventory.AddItem(itemName);
+
+            // Update quest progress when item is given
+            if (questManager != null)
+            {
+                questManager.UpdateQuestProgress(itemName);
+            }
+        }
+        //Debug.Log($"Gave player {amount}x {itemName}");
     }
 
     private void HandleDialogue(DialogueSegment currentSegment) //regular dialogue handler
@@ -170,29 +199,109 @@ public class NPCInteraction : MonoBehaviour
 
     private void HandleDefaultInteraction(PlayerControl player, NPCMovement npcMovement) //checks default interaction. If there is an active quest, it overrides it
     {
-        if (dialogueSegments.Count > 0) 
+        // First check if this NPC has given any active quests
+        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+        if (questManager != null)
         {
-            DialogueSegment lastSegment = dialogueSegments[dialogueSegments.Count - 1];
-            GameQuests quest = lastSegment.triggeredQuest;
-
-            if (quest != null && quest.IsEnabled) //there is indeed active quest
+            foreach (GameQuests quest in questManager.GetActiveQuests())
             {
-                Inventory playerInventory = FindObjectOfType<Inventory>();
-                if (playerInventory != null)
+                // Check if the quest was given by this NPC (referenced in dialogueSegments)
+                bool questGivenByThisNPC = false;
+                foreach (DialogueSegment segment in dialogueSegments)
                 {
-                    HandleQuestResponses(playerInventory, quest, npcMovement);
+                    if (segment.triggeredQuest != null && segment.triggeredQuest.questTitle == quest.questTitle)
+                    {
+                        questGivenByThisNPC = true;
+                        break;
+                    }
+                }
+
+                if (questGivenByThisNPC)
+                {
+                    // This NPC gave the quest but it's incomplete
+                    string response = !string.IsNullOrEmpty(quest.incompleteResponse)
+                        ? quest.incompleteResponse
+                        : "You haven't completed my task yet.";
+
+                    dialogueManager.ShowDialogue(npcName, response);
+                    npcMovement.PauseMovementWithTimer(5f);
                     player.canMove = true;
                     IsInteracting = false;
                     return;
                 }
             }
         }
-        dialogueManager.ShowDialogue(npcName, "That's all I have to say!"); //nothing active
-        npcMovement.PauseMovementWithTimer(5f); 
+
+        // Then check if this NPC can complete quests from other NPCs
+        CheckForCompletableQuests(player, npcMovement);
+    }
+
+    private void CheckForCompletableQuests(PlayerControl player, NPCMovement npcMovement)
+    {
+        // Get all active quests
+        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+        Inventory playerInventory = FindObjectOfType<Inventory>();
+
+        if (questManager == null || playerInventory == null)
+        {
+            // No quest manager
+            dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
+            npcMovement.PauseMovementWithTimer(5f);
+            player.canMove = true;
+            IsInteracting = false;
+            return;
+        }
+
+        // Check all active quests
+        foreach (GameQuests quest in questManager.GetActiveQuests())
+        {
+            // Check if this NPC can complete this quest
+            if (quest.completionNPC == npcName)
+            {
+                int playerItemCount = playerInventory.GetItemCount(quest.requiredItem);
+
+                if (playerItemCount >= quest.requiredAmount)
+                {
+                    // Player has the required items for this quest
+                    playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
+                    questManager.CompleteQuest(quest);
+                    Debug.Log($"[CheckForCompletableQuests] Quest completed: {quest.questTitle}");
+
+                    // Use quest-specific complete response or default
+                    string response = !string.IsNullOrEmpty(quest.completeResponse)
+                        ? quest.completeResponse
+                        : "Thank you for bringing this to me!";
+
+                    dialogueManager.ShowDialogue(npcName, response);
+
+                    npcMovement.PauseMovementWithTimer(5f);
+                    player.canMove = true;
+                    IsInteracting = false;
+                    return;
+                }
+                else
+                {
+                    // Player doesn't have the required items
+                    string response = !string.IsNullOrEmpty(quest.incompleteResponse)
+                        ? quest.incompleteResponse
+                        : "You don't have what I need yet.";
+
+                    dialogueManager.ShowDialogue(npcName, response);
+
+                    npcMovement.PauseMovementWithTimer(5f);
+                    player.canMove = true;
+                    IsInteracting = false;
+                    return;
+                }
+            }
+        }
+
+        // No matching quests found
+        dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
+        npcMovement.PauseMovementWithTimer(5f);
         player.canMove = true;
         IsInteracting = false;
     }
-
 
     private void HandleQuestResponses(Inventory playerInventory, GameQuests quest, NPCMovement npcMovement)
     {
@@ -212,11 +321,20 @@ public class NPCInteraction : MonoBehaviour
                 questManager.CompleteQuest(quest);
                 Debug.Log($"[HandleQuestResponses] Quest completed: {quest.questTitle}");
             }
-            dialogueManager.ShowDialogue(npcName, questCompleteResponses[0]);
+
+            string response = !string.IsNullOrEmpty(quest.completeResponse)
+                ? quest.completeResponse
+                : "Thank you for bringing this to me!";
+
+            dialogueManager.ShowDialogue(npcName, response);
         }
         else //quest is not done
         {
-            dialogueManager.ShowDialogue(npcName, incompleteQuestResponses[0]);
+            string response = !string.IsNullOrEmpty(quest.incompleteResponse)
+                ? quest.incompleteResponse
+                : "You don't have what I need yet.";
+
+            dialogueManager.ShowDialogue(npcName, response);
         }
         npcMovement.PauseMovementWithTimer(5f);
     }
@@ -286,18 +404,6 @@ public class NPCInteraction : MonoBehaviour
             EnableQuestItems(quest.requiredItem);
         }
     }
-    private void ShowQuestNotification()
-    {
-        questNotificationSprite.SetActive(true);
-        StartCoroutine(HideQuestNotificationAfterDelay());
-    }
-
-    private IEnumerator HideQuestNotificationAfterDelay()
-    {
-        yield return new WaitForSeconds(notificationDuration);
-
-        questNotificationSprite.SetActive(false);
-    }
 
     private void EnableQuestItems(string itemName)
     {
@@ -313,6 +419,8 @@ public class NPCInteraction : MonoBehaviour
         }
     }
 
+
+    //===== Notification stuffs - DONT TOUCH ======
     public void ShowPurchaseNotification(string itemName, int amount)
     {
         BoughtItemText.text = $"Bought {amount}x {itemName}";
@@ -324,5 +432,18 @@ public class NPCInteraction : MonoBehaviour
     {
         yield return new WaitForSeconds(notificationDuration);
         BoughtItemText.gameObject.SetActive(false);
+    }
+
+    private void ShowQuestNotification()
+    {
+        questNotificationSprite.SetActive(true);
+        StartCoroutine(HideQuestNotificationAfterDelay());
+    }
+
+    private IEnumerator HideQuestNotificationAfterDelay()
+    {
+        yield return new WaitForSeconds(notificationDuration);
+
+        questNotificationSprite.SetActive(false);
     }
 }
