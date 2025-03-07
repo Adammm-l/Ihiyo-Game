@@ -11,6 +11,8 @@ TagManager:
   - Floor
   - Decor
   - NPC
+  - WavePoint
+  - SaveButton
   layers:
   - Default
   - TransparentFX

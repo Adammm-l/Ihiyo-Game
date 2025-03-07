@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using System.IO;
+using UnityEngine.UI;
+
 // Terrence and Edwin (Eri)
 public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) Sotres
 {
@@ -10,12 +12,24 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
     Vector3 defaultPlayerPosition = new Vector3(-5.5f, 1.25f, 0f);
+    //private static bool saveExists; // All instances of this Player references the exact same variable
 
     // Start is called before the first frame update
     void Start()
     {
         saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
         Directory.CreateDirectory(saveLocation);
+        DontDestroyOnLoad(transform.gameObject);
+  
+
+        Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
+        if (saveButton != null) {
+            saveButton.onClick.AddListener(SaveGame);
+            Debug.Log("Button Reconnected!");
+        }
+        else {
+            Debug.LogError("Button not found");
+        }
     }
 
     public void SaveGame() 

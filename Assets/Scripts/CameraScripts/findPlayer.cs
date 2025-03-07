@@ -8,6 +8,9 @@ public class findPlayer : MonoBehaviour
 {
     private CinemachineVirtualCamera playerCamera;
     // Start is called before the first frame update
+    void Start() {
+        DontDestroyOnLoad(transform.gameObject);
+    }
 
     private void Awake() {
         playerCamera = GetComponent<CinemachineVirtualCamera>();

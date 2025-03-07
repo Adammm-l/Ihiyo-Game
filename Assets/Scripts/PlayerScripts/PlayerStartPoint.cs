@@ -8,11 +8,12 @@ public class PlayerStartPoint : MonoBehaviour
     //private findPlayer theCam;
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         //thePlayer = FindObjectOfType<PlayerControl>();
         GameObject thePlayer = GameObject.FindGameObjectWithTag("Player");
-        thePlayer.transform.position = new Vector3(transform.position.x,transform.position.y,thePlayer.transform.position.z); // Set the player's location 
+        thePlayer.transform.position = new Vector3(transform.position.x,transform.position.y,thePlayer.transform.position.z); // Set the player's location
+
 
         //theCam = FindObjectOfType<findPlayer>();
         //theCam.transform.position = new Vector3(transform.position.x, transform.position.y, theCam.transform.position.z);
