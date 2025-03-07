@@ -21,14 +21,17 @@ public class GameQuests
     public int requiredAmount;       //The quantity needed to complete the quest
     public int currentAmount;       //The current quantity the player has aquired
 
-    public string completionNPC;
-    public string questGiverNPC;
-    public string completeResponse;
-    public string incompleteResponse;
+    public string completionNPC;       //The name of the NPC that can complete this quest
+
+    // Quest giver NPC responses
+    public string giverIncompleteResponse;  //Response when the quest-giver is asked about an incomplete quest
+
+    // Completion NPC responses
+    public string completionCompleteResponse;    //Response when the completion NPC completes the quest
+    public string completionIncompleteResponse;  //Response when the completion NPC is asked about an incomplete quest
 
     public bool IsQuestCompleted()
     {
         return currentAmount >= requiredAmount;
     }
 }
-

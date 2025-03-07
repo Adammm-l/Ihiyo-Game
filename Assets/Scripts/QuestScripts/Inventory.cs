@@ -8,14 +8,15 @@ public class Inventory : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
+
     public void AddItem(string itemName)
     {
         if (items.ContainsKey(itemName))
@@ -28,6 +29,13 @@ public class Inventory : MonoBehaviour
         }
 
         Debug.Log($"Added {itemName}. Total: {items[itemName]}");
+
+        // Update quest progress when an item is added
+        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+        if (questManager != null)
+        {
+            questManager.UpdateQuestProgress(itemName);
+        }
     }
 
     public int GetItemCount(string itemName)

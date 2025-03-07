@@ -2910,9 +2910,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -2935,9 +2935,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -2959,9 +2959,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -2985,9 +2985,9 @@ MonoBehaviour:
       requiredAmount: 1
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 1
     giveItemAfterSegment: 0
     itemToGive: 
@@ -3156,9 +3156,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -3180,9 +3180,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -9043,9 +9043,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -9069,9 +9069,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -9094,9 +9094,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -9120,9 +9120,9 @@ MonoBehaviour:
       requiredAmount: 0
       currentAmount: 0
       completionNPC: 
-      questGiverNPC: 
-      completeResponse: 
-      incompleteResponse: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
@@ -9144,10 +9144,10 @@ MonoBehaviour:
       requiredItem: talktodad
       requiredAmount: 1
       currentAmount: 0
-      completionNPC: Mom
-      questGiverNPC: 
-      completeResponse: compl response
-      incompleteResponse: incompl response
+      completionNPC: Dad
+      giverIncompleteResponse: giver incomplete
+      completionCompleteResponse: completion complete
+      completionIncompleteResponse: completion incomplete
     triggerQuestAfterSegment: 1
     giveItemAfterSegment: 1
     itemToGive: talktodad

@@ -39,8 +39,6 @@ public class NPCInteraction : MonoBehaviour
     private int dialogueSegmentIndex = 0;
     private bool isShopOpen = false;
 
-    [Header("Quest Settings")]
-
     [Header("Managers")]
     public GameObject interactionText; //"E to interact" text
     public GameObject keybindHolder;
@@ -122,6 +120,63 @@ public class NPCInteraction : MonoBehaviour
             return;
         }
 
+        // Check for quests first - HIGHEST PRIORITY
+        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+        if (questManager != null)
+        {
+            Inventory playerInventory = FindObjectOfType<Inventory>();
+            if (playerInventory != null)
+            {
+                bool handledQuest = false;
+
+                // First priority: Check if this NPC is a completion NPC for any active quest
+                foreach (GameQuests quest in questManager.GetActiveQuests())
+                {
+                    if (quest.completionNPC == npcName)
+                    {
+                        HandleQuestResponses(playerInventory, quest, npcMovement);
+                        player.canMove = true;
+                        IsInteracting = false;
+                        return; // Exit immediately after handling quest
+                    }
+                }
+
+                // Second priority: Check if this NPC gave a quest to another NPC
+                if (dialogueSegments.Count > 0)
+                {
+                    foreach (DialogueSegment segment in dialogueSegments)
+                    {
+                        if (segment.triggerQuestAfterSegment && segment.triggeredQuest != null)
+                        {
+                            GameQuests questGiven = segment.triggeredQuest;
+
+                            // Find if this quest is active
+                            foreach (GameQuests activeQuest in questManager.GetActiveQuests())
+                            {
+                                if (activeQuest.questTitle == questGiven.questTitle)
+                                {
+                                    // This NPC gave the quest but another NPC completes it
+                                    if (!string.IsNullOrEmpty(activeQuest.completionNPC) && activeQuest.completionNPC != npcName)
+                                    {
+                                        string incompleteResponse = !string.IsNullOrEmpty(activeQuest.giverIncompleteResponse)
+                                            ? activeQuest.giverIncompleteResponse
+                                            : "Have you completed that task yet?";
+
+                                        dialogueManager.ShowDialogue(npcName, incompleteResponse);
+                                        npcMovement.PauseMovementWithTimer(5f);
+                                        player.canMove = true;
+                                        IsInteracting = false;
+                                        return; // Exit immediately after handling quest
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Continue with regular dialogue if no quest responses were triggered
         if (dialogueSegmentIndex >= dialogueSegments.Count) //defualt interaction if there are no more lines
         {
             if (merchant != null) //checking if the NPC can sell things
@@ -166,17 +221,9 @@ public class NPCInteraction : MonoBehaviour
     private void GiveItemToPlayer(string itemName, int amount)
     {
         Inventory playerInventory = FindObjectOfType<Inventory>();
-        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
-
         for (int i = 0; i < amount; i++)
         {
             playerInventory.AddItem(itemName);
-
-            // Update quest progress when item is given
-            if (questManager != null)
-            {
-                questManager.UpdateQuestProgress(itemName);
-            }
         }
         //Debug.Log($"Gave player {amount}x {itemName}");
     }
@@ -194,110 +241,70 @@ public class NPCInteraction : MonoBehaviour
         {
             interactionCount++;
         }
-
     }
 
     private void HandleDefaultInteraction(PlayerControl player, NPCMovement npcMovement) //checks default interaction. If there is an active quest, it overrides it
     {
-        // First check if this NPC has given any active quests
         PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
         if (questManager != null)
         {
-            foreach (GameQuests quest in questManager.GetActiveQuests())
+            Inventory playerInventory = FindObjectOfType<Inventory>();
+            if (playerInventory != null)
             {
-                // Check if the quest was given by this NPC (referenced in dialogueSegments)
-                bool questGivenByThisNPC = false;
-                foreach (DialogueSegment segment in dialogueSegments)
+                // First priority: Check for quests this NPC should complete
+                foreach (GameQuests quest in questManager.GetActiveQuests())
                 {
-                    if (segment.triggeredQuest != null && segment.triggeredQuest.questTitle == quest.questTitle)
+                    if (quest.completionNPC == npcName)
                     {
-                        questGivenByThisNPC = true;
-                        break;
+                        HandleQuestResponses(playerInventory, quest, npcMovement);
+                        player.canMove = true;
+                        IsInteracting = false;
+                        return;
                     }
                 }
 
-                if (questGivenByThisNPC)
+                // Second priority: Check for quests this NPC gave (even if another NPC completes them)
+                if (dialogueSegments.Count > 0)
                 {
-                    // This NPC gave the quest but it's incomplete
-                    string response = !string.IsNullOrEmpty(quest.incompleteResponse)
-                        ? quest.incompleteResponse
-                        : "You haven't completed my task yet.";
+                    foreach (DialogueSegment segment in dialogueSegments)
+                    {
+                        if (segment.triggerQuestAfterSegment && segment.triggeredQuest != null)
+                        {
+                            GameQuests questGiven = segment.triggeredQuest;
 
-                    dialogueManager.ShowDialogue(npcName, response);
-                    npcMovement.PauseMovementWithTimer(5f);
-                    player.canMove = true;
-                    IsInteracting = false;
-                    return;
+                            // Find if this quest is active
+                            foreach (GameQuests activeQuest in questManager.GetActiveQuests())
+                            {
+                                if (activeQuest.questTitle == questGiven.questTitle)
+                                {
+                                    // This NPC gave this quest, but don't handle completion if another NPC is designated
+                                    if (string.IsNullOrEmpty(activeQuest.completionNPC) || activeQuest.completionNPC == npcName)
+                                    {
+                                        // This NPC is also the completion NPC
+                                        HandleQuestResponses(playerInventory, activeQuest, npcMovement);
+                                    }
+                                    else
+                                    {
+                                        // This NPC gave the quest but another NPC completes it
+                                        // Show the quest giver's incomplete response
+                                        string incompleteResponse = !string.IsNullOrEmpty(activeQuest.giverIncompleteResponse)
+                                            ? activeQuest.giverIncompleteResponse
+                                            : "Have you completed that task yet?";
+
+                                        dialogueManager.ShowDialogue(npcName, incompleteResponse);
+                                    }
+                                    player.canMove = true;
+                                    IsInteracting = false;
+                                    return;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        // Then check if this NPC can complete quests from other NPCs
-        CheckForCompletableQuests(player, npcMovement);
-    }
-
-    private void CheckForCompletableQuests(PlayerControl player, NPCMovement npcMovement)
-    {
-        // Get all active quests
-        PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
-        Inventory playerInventory = FindObjectOfType<Inventory>();
-
-        if (questManager == null || playerInventory == null)
-        {
-            // No quest manager
-            dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
-            npcMovement.PauseMovementWithTimer(5f);
-            player.canMove = true;
-            IsInteracting = false;
-            return;
-        }
-
-        // Check all active quests
-        foreach (GameQuests quest in questManager.GetActiveQuests())
-        {
-            // Check if this NPC can complete this quest
-            if (quest.completionNPC == npcName)
-            {
-                int playerItemCount = playerInventory.GetItemCount(quest.requiredItem);
-
-                if (playerItemCount >= quest.requiredAmount)
-                {
-                    // Player has the required items for this quest
-                    playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
-                    questManager.CompleteQuest(quest);
-                    Debug.Log($"[CheckForCompletableQuests] Quest completed: {quest.questTitle}");
-
-                    // Use quest-specific complete response or default
-                    string response = !string.IsNullOrEmpty(quest.completeResponse)
-                        ? quest.completeResponse
-                        : "Thank you for bringing this to me!";
-
-                    dialogueManager.ShowDialogue(npcName, response);
-
-                    npcMovement.PauseMovementWithTimer(5f);
-                    player.canMove = true;
-                    IsInteracting = false;
-                    return;
-                }
-                else
-                {
-                    // Player doesn't have the required items
-                    string response = !string.IsNullOrEmpty(quest.incompleteResponse)
-                        ? quest.incompleteResponse
-                        : "You don't have what I need yet.";
-
-                    dialogueManager.ShowDialogue(npcName, response);
-
-                    npcMovement.PauseMovementWithTimer(5f);
-                    player.canMove = true;
-                    IsInteracting = false;
-                    return;
-                }
-            }
-        }
-
-        // No matching quests found
-        dialogueManager.ShowDialogue(npcName, "That's all I have to say!");
+        dialogueManager.ShowDialogue(npcName, "That's all I have to say!"); //nothing active
         npcMovement.PauseMovementWithTimer(5f);
         player.canMove = true;
         IsInteracting = false;
@@ -309,32 +316,53 @@ public class NPCInteraction : MonoBehaviour
         int playerItemCount = playerInventory.GetItemCount(quest.requiredItem);
         Debug.Log($"[HandleQuestResponses] Player has {playerItemCount} of {quest.requiredItem}.");
 
+        bool isCompletionNPC = (quest.completionNPC == npcName);
+
         if (playerItemCount >= quest.requiredAmount) //quest is done
         {
-            // Remove items and complete the quest
-            Debug.Log($"[HandleQuestResponses] Player has enough items to complete the quest. Completing quest...");
-            playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
-
-            PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
-            if (questManager != null)
+            // Only completion NPC can actually complete the quest
+            if (isCompletionNPC || string.IsNullOrEmpty(quest.completionNPC))
             {
-                questManager.CompleteQuest(quest);
-                Debug.Log($"[HandleQuestResponses] Quest completed: {quest.questTitle}");
+                // Remove items and complete the quest
+                Debug.Log($"[HandleQuestResponses] Player has enough items to complete the quest. Completing quest...");
+                playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
+
+                PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
+                if (questManager != null)
+                {
+                    questManager.CompleteQuest(quest);
+                    Debug.Log($"[HandleQuestResponses] Quest completed: {quest.questTitle}");
+                }
+
+                // Use completion NPC's complete response or default
+                string completeResponse = !string.IsNullOrEmpty(quest.completionCompleteResponse)
+                    ? quest.completionCompleteResponse
+                    : "Thank you for completing this task!";
+
+                dialogueManager.ShowDialogue(npcName, completeResponse);
             }
-
-            string response = !string.IsNullOrEmpty(quest.completeResponse)
-                ? quest.completeResponse
-                : "Thank you for bringing this to me!";
-
-            dialogueManager.ShowDialogue(npcName, response);
         }
         else //quest is not done
         {
-            string response = !string.IsNullOrEmpty(quest.incompleteResponse)
-                ? quest.incompleteResponse
-                : "You don't have what I need yet.";
+            string incompleteResponse;
 
-            dialogueManager.ShowDialogue(npcName, response);
+            // Different response based on if this is the quest giver or the completion NPC
+            if (isCompletionNPC)
+            {
+                // This is the completion NPC
+                incompleteResponse = !string.IsNullOrEmpty(quest.completionIncompleteResponse)
+                    ? quest.completionIncompleteResponse
+                    : "I'm waiting for you to complete this task.";
+            }
+            else
+            {
+                // This is the quest giver
+                incompleteResponse = !string.IsNullOrEmpty(quest.giverIncompleteResponse)
+                    ? quest.giverIncompleteResponse
+                    : "Have you completed that task yet?";
+            }
+
+            dialogueManager.ShowDialogue(npcName, incompleteResponse);
         }
         npcMovement.PauseMovementWithTimer(5f);
     }
@@ -350,7 +378,6 @@ public class NPCInteraction : MonoBehaviour
         NPCInteraction.IsInteracting = false;
         dialogueManager.HideDialogue();
     }
-
 
     private void MoveToNextSegment()
     {
@@ -398,9 +425,16 @@ public class NPCInteraction : MonoBehaviour
         if (questManager != null)
         {
             quest.IsEnabled = true;
+
+            // If completionNPC is empty, it means the quest needs to be delivered back to this NPC
+            if (string.IsNullOrEmpty(quest.completionNPC))
+            {
+                quest.completionNPC = npcName;
+            }
+
             questManager.AcceptQuest(quest);
             ShowQuestNotification();
-            Debug.Log($"Triggered quest: {quest.questTitle}");
+            Debug.Log($"Triggered quest: {quest.questTitle} to be completed by {quest.completionNPC}");
             EnableQuestItems(quest.requiredItem);
         }
     }
@@ -418,7 +452,6 @@ public class NPCInteraction : MonoBehaviour
             }
         }
     }
-
 
     //===== Notification stuffs - DONT TOUCH ======
     public void ShowPurchaseNotification(string itemName, int amount)
