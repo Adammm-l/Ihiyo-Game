@@ -2,10 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using UnityEngine;
 using TMPro;
 using System;
-//Terrence
+using UnityEditor;
+
+// disable all popups when returning to main menu
+// focus is not directed to save title when naming save
+// focus is not directed to pop up ever
+// focus is always directed to first save button, not first ENABLED save button
+// can't navigate to menu on save/load screens if not on center (ui fix)
+// focus get transfered to disabled button on hover
+// disable transfering of focus to disabled buttons
+
+// fix video settings
+
 public class MainMenuController : MonoBehaviour // Terrence Akinola
 {
     [Header("UI References")]
@@ -15,24 +27,63 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     public GameObject galleryMenu;
     public GameObject dialoguePopup;
     
+    GameObject lastSelectedButton;
+    VolumeSettings volumeSettings;
+    EventSystem eventSystem;
     TextMeshProUGUI menuTextLabel;
 
     KeybindManager keybindManager;
     SaveController saveController;
     Coroutine currentKeybindCoroutine;
-
+    Button[] modifiableButtons;
 
     [Header("Levels")]
     public string startingScene;
 
     void Start()
     {
+        eventSystem = EventSystem.current;
+        
         menuTextLabel = dialoguePopup.transform.Find("MenuText").GetComponent<TextMeshProUGUI>();
         keybindManager = GetComponent<KeybindManager>();
         saveController = GetComponent<SaveController>();
+        volumeSettings = GetComponent<VolumeSettings>();
         currentKeybindCoroutine = null;
-        
-        // allows user to click on each of the buttons listed and gives them functionality to their corresponding functions
+
+        lastSelectedButton = mainMenu.transform.GetChild(1).gameObject;
+        GameObject cover = mainMenu.transform.parent.gameObject;
+        if (cover != null)
+        {
+            Button[] buttons = cover.GetComponentsInChildren<Button>(true);
+            Dictionary<Button, Color> originalDisabledColors = new Dictionary<Button, Color>();
+            ColorBlock buttonColors = new ColorBlock
+            {
+                normalColor = new Color(0.75f, 0.75f, 0.75f),
+                highlightedColor = Color.white,
+                pressedColor = new Color(0.5f, 0.5f, 0.5f),
+                selectedColor = Color.white,
+                disabledColor = new Color(0.45f, 0.45f, 0.45f),
+                colorMultiplier = 1f,
+                fadeDuration = 0.1f
+            };
+
+            // apply colors to all buttons
+            foreach (Button button in buttons)
+            {
+                button.colors = buttonColors;
+                originalDisabledColors[button] = button.colors.disabledColor;
+                AddButtonEventTriggers(buttons, button, originalDisabledColors);
+                AddHoverEventTriggers(button);
+            }
+
+            Slider[] sliders = settingsMenu.GetComponentsInChildren<Slider>(true);
+            foreach (Slider slider in sliders)
+            {
+                AddHoverEventTriggers(slider);
+            }
+        }
+
+        // assign listeners to buttons (what gives each button functionality)
         Dictionary<string, UnityEngine.Events.UnityAction> menuButtons = new Dictionary<string, UnityEngine.Events.UnityAction>()
         {
             {"NewGame", NewGameClicked},
@@ -42,7 +93,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             {"ExitGame", ExitGameClicked}
         };
 
-        // assign listeners to buttons (what gives each button functionality)
         foreach (Transform option in mainMenu.transform)
         {
             Button button = option.GetComponent<Button>();
@@ -54,12 +104,329 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         }
     }
 
+    void Update()
+    {
+        HandleKeyboardNavigation();
+        if (eventSystem.currentSelectedGameObject != null && eventSystem.currentSelectedGameObject != lastSelectedButton)
+        {
+            lastSelectedButton = eventSystem.currentSelectedGameObject;
+        }
+
+        if (eventSystem.currentSelectedGameObject == null && Input.GetMouseButtonDown(0))
+        {
+            if (lastSelectedButton != null)
+            {
+                eventSystem.SetSelectedGameObject(lastSelectedButton);
+            }
+            else
+            {
+                SelectFirstButton();
+            }
+        }
+    }
+
+   void AddHoverEventTriggers(Selectable selectable)
+    {
+        EventTrigger eventTrigger = selectable.gameObject.GetComponent<EventTrigger>();
+        if (eventTrigger == null)
+        {
+            eventTrigger = selectable.gameObject.AddComponent<EventTrigger>();
+        }
+
+        // create PointerEnter event for mouse hover
+        EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry();
+        pointerEnterEntry.eventID = EventTriggerType.PointerEnter;
+        pointerEnterEntry.callback.AddListener((data) => OnButtonHover(selectable));
+        eventTrigger.triggers.Add(pointerEnterEntry);
+    }
+
+    void OnButtonHover(Selectable hoveredSelectable)
+    {
+        // set the hovered selectable (changed from button)
+        eventSystem.SetSelectedGameObject(hoveredSelectable.gameObject);
+        lastSelectedButton = hoveredSelectable.gameObject;
+    }
+
+    void HandleKeyboardNavigation()
+    {
+        bool arrowKeyIsPressed = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow);
+
+        if (arrowKeyIsPressed)
+        {
+            List<string> buttonNames = new List<string>() {null, "AudioButton", "VideoButton", "ControlsButton"};
+            if (buttonNames.Contains(eventSystem.currentSelectedGameObject.name)) // if focus on menu button, switch to first button on tab after keyboard press
+            {
+                SelectFirstButton();
+            }
+        }
+        
+        if (settingsMenu.activeSelf)
+        {
+            GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
+            GameObject videoSettings = settingsMenu.transform.Find("VideoSettings").gameObject;
+            GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) // shift + tab: move to the previous tab
+                {
+                    SwitchToPreviousTab(audioSettings, videoSettings, controlsSettings);
+                }
+                else // tab: move to the next tab
+                {
+                    SwitchToNextTab(audioSettings, videoSettings, controlsSettings);
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) // go back to the previous menu
+        {
+            GoBack();
+        }
+    }
+
+    void SwitchToNextTab(GameObject audioSettings, GameObject videoSettings, GameObject controlsSettings)
+    {
+        
+        GameObject settingsButtonHolder = settingsMenu.transform.Find("SettingPanel").gameObject;
+        Button audioButton = settingsButtonHolder.transform.Find("AudioButton").GetComponent<Button>();
+        Button videoButton = settingsButtonHolder.transform.Find("VideoButton").GetComponent<Button>();
+        Button controlsButton = settingsButtonHolder.transform.Find("ControlsButton").GetComponent<Button>();
+
+        GameObject activeTab = GetActiveTab(audioSettings, videoSettings, controlsSettings);
+        Button[] settingsButtons = {audioButton, videoButton, controlsButton};
+        
+        if (activeTab == audioSettings)
+        {
+            SetActiveSettingTab(videoSettings, videoButton, settingsButtons);
+        }
+        else if (activeTab == videoSettings)
+        {
+            SetActiveSettingTab(controlsSettings, controlsButton, settingsButtons);
+        }
+        else if (activeTab == controlsSettings)
+        {
+            SetActiveSettingTab(audioSettings, audioButton, settingsButtons);
+        }
+    }
+
+    void SwitchToPreviousTab(GameObject audioSettings, GameObject videoSettings, GameObject controlsSettings)
+    {
+        GameObject settingsButtonHolder = settingsMenu.transform.Find("SettingPanel").gameObject;
+        Button audioButton = settingsButtonHolder.transform.Find("AudioButton").GetComponent<Button>();
+        Button videoButton = settingsButtonHolder.transform.Find("VideoButton").GetComponent<Button>();
+        Button controlsButton = settingsButtonHolder.transform.Find("ControlsButton").GetComponent<Button>();
+
+        Button[] settingsButtons = {audioButton, videoButton, controlsButton};
+        GameObject activeTab = GetActiveTab(audioSettings, videoSettings, controlsSettings); // get currently active tab
+
+        // determine previous tab based on the current tab
+        if (activeTab == audioSettings)
+        {
+            SetActiveSettingTab(controlsSettings, controlsButton, settingsButtons);
+        }
+        else if (activeTab == videoSettings)
+        {
+            SetActiveSettingTab(audioSettings, audioButton, settingsButtons);
+        }
+        else if (activeTab == controlsSettings)
+        {
+            SetActiveSettingTab(videoSettings, videoButton, settingsButtons);
+        }
+    }
+
+    GameObject GetActiveTab(GameObject audioSettings, GameObject videoSettings, GameObject controlsSettings)
+    {
+        if (audioSettings.activeSelf)
+        {
+            return audioSettings;
+        }
+        else if (videoSettings.activeSelf)
+        {
+            return videoSettings;
+        }
+        else if (controlsSettings.activeSelf)
+        {
+            return controlsSettings;
+        }
+
+        return null; // couldn't find active tab
+    }
+
+    void SelectFirstButton()
+    {
+        GameObject firstButton = null;
+
+        if (mainMenu.activeSelf)
+        {
+            firstButton = mainMenu.transform.GetChild(1).gameObject;
+        }
+        else if (savesMenu.activeSelf)
+        {
+            firstButton = SelectFirstEnabledSaveButton();
+        }
+        else if (settingsMenu.activeSelf)
+        {
+            if (settingsMenu.transform.GetChild(2).gameObject.activeSelf) // audio tab
+            {
+                firstButton = settingsMenu.transform.Find("AudioSettings/MasterVolume/MasterSlider").gameObject;
+            }
+            if (settingsMenu.transform.GetChild(4).gameObject.activeSelf) // controls tab
+            {
+                firstButton = settingsMenu.transform.Find("ControlsSettings/UpKeybind/UpButton").gameObject;
+            }
+        }
+        else if (galleryMenu.activeSelf)
+        {
+            firstButton = galleryMenu.transform.Find("ReturnToMain").gameObject;
+        }
+        else
+        {
+            SelectDialogueButton();
+            return;
+        }
+    
+        eventSystem.SetSelectedGameObject(firstButton);
+        lastSelectedButton = firstButton; // update the last selected button
+    }
+
+    GameObject SelectFirstEnabledSaveButton()
+    {
+        foreach (Transform saveSlot in savesMenu.transform)
+        {
+            Button slotButton = saveSlot.GetComponent<Button>();
+            if (slotButton.interactable)
+            {
+                eventSystem.SetSelectedGameObject(slotButton.gameObject);
+                return slotButton.gameObject;
+            }
+        }
+        return null;
+    }
+
+    void SelectDialogueButton()
+    {
+        foreach (Transform popUp in dialoguePopup.transform)
+        {
+            if (popUp.name == "MenuText")
+            {
+                continue;
+            }
+
+            if (popUp.gameObject.activeSelf)
+            {
+                Transform firstButton = popUp.GetChild(1); // ignore first child because it will always be text
+                eventSystem.SetSelectedGameObject(firstButton.gameObject);
+                return;
+            }
+        }
+    }
+
+    void GoBack()
+    {
+        if (dialoguePopup.activeSelf)
+        {
+            ReturnToMainMenu();
+        }
+        else if (settingsMenu.activeSelf)
+        {
+            ReturnToMainMenu();
+        }
+        else if (savesMenu.activeSelf)
+        {
+            ReturnToMainMenu();
+        }
+        else if (galleryMenu.activeSelf)
+        {
+            ReturnToMainMenu();
+        }
+    }
+
+    void AddButtonEventTriggers(Button[] buttons, Button button, Dictionary<Button, Color> originalDisabledColors) // fixes being able to hover over other buttons when holding down one button
+    {
+        EventTrigger eventTrigger = button.gameObject.GetComponent<EventTrigger>();
+        if (eventTrigger == null)
+        {
+            eventTrigger = button.gameObject.AddComponent<EventTrigger>();
+        }
+
+        // create PointerDown event for mouse
+        EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry();
+        pointerDownEntry.eventID = EventTriggerType.PointerDown;
+        pointerDownEntry.callback.AddListener((data) => OnButtonPressed(buttons, button));
+        eventTrigger.triggers.Add(pointerDownEntry);
+
+        // create PointerUp event for mouse
+        EventTrigger.Entry pointerUpEntry = new EventTrigger.Entry();
+        pointerUpEntry.eventID = EventTriggerType.PointerUp;
+        pointerUpEntry.callback.AddListener((data) => OnButtonReleased(buttons, button, originalDisabledColors));
+        eventTrigger.triggers.Add(pointerUpEntry);
+    }
+
+    void OnButtonPressed(Button[] buttons, Button pressedButton)
+    {
+        // store interactable buttons in modifiableButtons
+        List<Button> interactableButtons = new List<Button>();
+        foreach (Button button in buttons)
+        {
+            if (button != null && button.interactable && button != pressedButton)
+            {
+                interactableButtons.Add(button);
+            }
+        }
+        modifiableButtons = interactableButtons.ToArray();
+
+        // return early if the pressed button is not interactable
+        if (!pressedButton.interactable)
+        {
+            return;
+        }
+
+        // disable all other buttons
+        foreach (Button button in modifiableButtons)
+        {
+            button.interactable = false;
+
+            // change disabled color to match normal color
+            ColorBlock colors = button.colors;
+            colors.disabledColor = colors.normalColor;
+            button.colors = colors;
+        }
+        Debug.Log($"{pressedButton.name} is pressed.");
+    }
+
+    void OnButtonReleased(Button[] buttons, Button releasedButton, Dictionary<Button, Color> originalDisabledColors)
+    {
+        // re-enable buttons stored in modifiableButtons
+        if (modifiableButtons != null)
+        {
+            foreach (Button button in modifiableButtons)
+            {
+                if (button != null)
+                {
+                    button.interactable = true;
+
+                    // restore the original disabled color
+                    if (originalDisabledColors.ContainsKey(button))
+                    {
+                        ColorBlock colors = button.colors;
+                        colors.disabledColor = originalDisabledColors[button];
+                        button.colors = colors;
+                    }
+                }
+            }
+        }
+        Debug.Log($"{releasedButton.name} is released.");
+    }
+
     void NewGameClicked()
     {
         // activates the new game popup, and assigns functionality to the yes/no buttons
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
         mainMenu.SetActive(false);
         newGamePopup.SetActive(true);
+
+        SelectFirstButton();
 
         Button newGameYes = newGamePopup.transform.Find("Yes").GetComponent<Button>();
         Button newGameNo = newGamePopup.transform.Find("No").GetComponent<Button>();
@@ -86,6 +453,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         galleryMenu.SetActive(false);
         noSavesPopup.SetActive(false);
         savesMenu.SetActive(false);
+
+        SelectFirstButton();
     }
 
     void LoadGameClicked()
@@ -104,6 +473,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         if (!hasSaves)
         {
             OpenNewSavePopup();
+            SelectFirstButton();
         }
         else
         {
@@ -131,7 +501,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         GameObject noSavesPopup = dialoguePopup.transform.Find("NoSavesFoundPopup").gameObject; // not a param cuz it won't always be called
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
         noSavesPopup.SetActive(false);
-        newGamePopup.SetActive(false);        
+        newGamePopup.SetActive(false);
 
         int saveCount = 0;
         for (int i = 1; i <= SaveController.MAX_SLOTS; i++) // count number of valid saves
@@ -241,7 +611,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         returnToMain.onClick.RemoveAllListeners();
         returnToMain.onClick.AddListener(ReturnToMainMenu);
 
-        UpdateSaveSlots();
         int slotIndex = 0;
         foreach (Transform saveSlot in savesMenu.transform) // initialize save slots
         {
@@ -286,6 +655,9 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
         savesMenu.SetActive(true); // at the bottom instead of the top so buttons don't change when loading in
         mainMenu.SetActive(false);
+
+        UpdateSaveSlots();
+        SelectFirstButton();
     }
     
     void OpenPromptForGameName(int currentSlot)
@@ -300,8 +672,11 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         namePopup.SetActive(true);
         overwritePopup.SetActive(false);
 
+        eventSystem.SetSelectedGameObject(nameInputField.gameObject);
+
         finishedName.onClick.RemoveAllListeners();
         cancelNewSave.onClick.RemoveAllListeners();
+        
         finishedName.onClick.AddListener(() => SaveEnteredName(namePopup, currentSlot, nameInputField));
         cancelNewSave.onClick.AddListener(() => CancelNewSave(namePopup, nameInputField));
     }
@@ -361,32 +736,36 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         GameObject settingsOptions = settingsMenu.transform.Find("OptionPanel").gameObject;
 
         Button audioButton = settingsButtonHolder.transform.Find("AudioButton").GetComponent<Button>();
-        Button viewButton = settingsButtonHolder.transform.Find("ViewButton").GetComponent<Button>();
-        Button accessibilityButton = settingsButtonHolder.transform.Find("AccessibilityButton").GetComponent<Button>();
+        Button videoButton = settingsButtonHolder.transform.Find("VideoButton").GetComponent<Button>();
+        Button controlsButton = settingsButtonHolder.transform.Find("ControlsButton").GetComponent<Button>();
 
         Button resetButton = settingsOptions.transform.Find("Reset").GetComponent<Button>();
         Button exitButton = settingsOptions.transform.Find("Exit").GetComponent<Button>();
         Button saveButton = settingsOptions.transform.Find("Save").GetComponent<Button>();
 
         GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
-        GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
-        GameObject accessibilitySettings = settingsMenu.transform.Find("AccessibilitySettings").gameObject;
+        GameObject videoSettings = settingsMenu.transform.Find("VideoSettings").gameObject;
+        GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
 
-        Button[] settingsButtons = {audioButton, viewButton, accessibilityButton};
+        Button[] settingsButtons = {audioButton, videoButton, controlsButton};
 
-        InitializeKeybindButtons(viewSettings);
+        InitializeKeybindButtons(controlsSettings);
 
         // set default "panel" and button (will be audio since it's the first)
         SetActiveSettingTab(audioSettings.gameObject, audioButton, settingsButtons);
+        if (volumeSettings != null) // update sliders
+        {
+            volumeSettings.LoadVolume();
+        }
 
         // reassign listeners to settings buttons to avoid issues
         audioButton.onClick.RemoveAllListeners();
-        viewButton.onClick.RemoveAllListeners();
-        accessibilityButton.onClick.RemoveAllListeners();
+        videoButton.onClick.RemoveAllListeners();
+        controlsButton.onClick.RemoveAllListeners();
 
         audioButton.onClick.AddListener(() => SetActiveSettingTab(audioSettings, audioButton, settingsButtons)); // lambda expression, allows a parameter to pass through the function
-        viewButton.onClick.AddListener(() => SetActiveSettingTab(viewSettings, viewButton, settingsButtons));
-        accessibilityButton.onClick.AddListener(() => SetActiveSettingTab(accessibilitySettings, accessibilityButton, settingsButtons));
+        videoButton.onClick.AddListener(() => SetActiveSettingTab(videoSettings, videoButton, settingsButtons));
+        controlsButton.onClick.AddListener(() => SetActiveSettingTab(controlsSettings, controlsButton, settingsButtons));
 
         resetButton.onClick.RemoveAllListeners();
         exitButton.onClick.RemoveAllListeners();
@@ -397,10 +776,10 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         saveButton.onClick.AddListener(() => OpenSettingsPopup("save"));
     }
 
-    void InitializeKeybindButtons(GameObject viewSettings)
+    void InitializeKeybindButtons(GameObject controlsSettings)
     {
-        // find buttons in viewSettings object
-        foreach (Transform keybindObject in viewSettings.transform)
+        // find buttons in videoSettings object
+        foreach (Transform keybindObject in controlsSettings.transform)
         {
             Button button = keybindObject.GetComponentInChildren<Button>();
 
@@ -494,8 +873,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
     Button GetOtherPressedButton(Button currentButton)
     {
-        GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
-        Button[] keybindButtons = viewSettings.GetComponentsInChildren<Button>();
+        GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
+        Button[] keybindButtons = controlsSettings.GetComponentsInChildren<Button>();
 
         foreach (Button button in keybindButtons)
         {
@@ -514,9 +893,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     void CancelKeybindUpdate(Button keyButton)
     {
         keyButton.interactable = true;
-        Color defaultColor = Color.white;
-
-        ResetButtonStyle(keyButton, Color.white);
+        Color defaultColor = new Color(0.75f, 0.75f, 0.75f);
+        ResetButtonStyle(keyButton, defaultColor);
     }
 
     void OpenConflictPopup(Button keyButton, KeyCode newKey)
@@ -539,7 +917,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         CancelKeybindUpdate(keyButton);
         ReturnToSettingsPage();
 
-        GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
+        GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
         Transform actionHolder = keyButton.transform.parent.GetChild(0);
         string buttonAction = actionHolder.name;
         
@@ -551,7 +929,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         {
             keybindManager.UpdateKeybind(buttonAction, newKey);
             RemoveDuplicateKeys(keyButton, newKey);
-            InitializeKeybindButtons(viewSettings);
+            InitializeKeybindButtons(controlsSettings);
         }
     }
 
@@ -638,11 +1016,11 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     {
         // deactivate all settings panels
         settingsMenu.transform.Find("AudioSettings").gameObject.SetActive(false);
-        settingsMenu.transform.Find("ViewSettings").gameObject.SetActive(false);
-        settingsMenu.transform.Find("AccessibilitySettings").gameObject.SetActive(false);
+        settingsMenu.transform.Find("VideoSettings").gameObject.SetActive(false);
+        settingsMenu.transform.Find("ControlsSettings").gameObject.SetActive(false);
         
-        GameObject viewSettings = settingsMenu.transform.Find("ViewSettings").gameObject;
-        Button[] keybindButtons = viewSettings.GetComponentsInChildren<Button>();
+        GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
+        Button[] keybindButtons = controlsSettings.GetComponentsInChildren<Button>();
         foreach (Button button in keybindButtons)
         {
             CancelKeybindUpdate(button);
@@ -653,6 +1031,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
         // update button states
         UpdateButtonStates(activeButton, buttons);
+        SelectFirstButton();
     }
 
     IEnumerator FadeMessage(string message)
@@ -698,7 +1077,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     {
         // updates button style depending on state of the button
         ColorBlock colors = button.colors;
-        Color defaultColor = Color.white;
+        Color defaultColor = new Color(0.75f, 0.75f, 0.75f);
 
         if (isActive)
         {
@@ -726,7 +1105,17 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         
         if (action == "exit")
         {
+            bool unsavedChanges = false;
             if (keybindManager.HasKeybindChanged())
+            {
+                unsavedChanges = true;
+            }
+            if (volumeSettings != null && volumeSettings.HasSliderChanged())
+            {
+                unsavedChanges = true;
+            }
+
+            if (unsavedChanges)
             {
                 // prompt user to save keybinds if at least one keybind has changed
                 popupTextLabel.text = "You have unsaved changes. Are you sure you want to exit?";
@@ -747,13 +1136,22 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
         if (action == "save")
         {
+            bool hasChangesToSave = false;
+
             if (keybindManager.HasKeybindChanged())
+            {
+                hasChangesToSave = true;
+            }
+            if (volumeSettings != null && volumeSettings.HasSliderChanged())
+            {
+                hasChangesToSave = true;
+            }
+
+            if (hasChangesToSave)
             {
                 popupTextLabel.text = "Would you like to save all changes?";
                 settingsPopup.SetActive(true);
             }
-
-            // return to settings menu if there are no changes
             else
             {
                 GameObject noChangesPopup = dialoguePopup.transform.Find("NoChangesPopup").gameObject;
@@ -803,6 +1201,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                 {
                     keybindManager.ResetKeybinds();
                     RefreshKeybindButtons(); // visually resets the keybinds
+                    volumeSettings.resetSliderValues();
+
                     TriggerFadeMessage("Settings have been reset to default.");
                     Debug.Log("Settings have been reset to default.");
                 }
@@ -829,8 +1229,17 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                     // saves changes to keybinds without exiting
                     keybindManager.ConfirmKeybinds();
                     RefreshKeybindButtons();
+
+                    if (volumeSettings != null)
+                    {
+                        volumeSettings.SetMasterVol();
+                        volumeSettings.SetMusicVol();
+                        volumeSettings.SetSFXVol();
+                        volumeSettings.SaveCurrentSliderValues();
+                    }
                     TriggerFadeMessage("Changes have been saved.");
                     Debug.Log("Changes have been saved.");
+
                 }
                 break;
         }
@@ -838,8 +1247,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
     void RefreshKeybindButtons()
     {
-        Transform viewSettings = settingsMenu.transform.Find("ViewSettings");
-        foreach (Transform keybindObject in viewSettings)
+        Transform controlsSettings = settingsMenu.transform.Find("ControlsSettings");
+        foreach (Transform keybindObject in controlsSettings)
         {
             Button button = keybindObject.GetComponentInChildren<Button>();
             string keybind = GetButtonKeybind(button);
@@ -881,6 +1290,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         // opens popup prompting user to exit game
         GameObject exitGamePopup = dialoguePopup.transform.Find("ExitGamePopup").gameObject;
         exitGamePopup.SetActive(true);
+        
+        SelectFirstButton();
 
         Button exitGameYes = exitGamePopup.transform.Find("Yes").GetComponent<Button>();
         Button exitGameNo = exitGamePopup.transform.Find("No").GetComponent<Button>();

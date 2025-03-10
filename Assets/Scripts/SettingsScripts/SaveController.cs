@@ -20,16 +20,6 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
         Directory.CreateDirectory(saveLocation);
         DontDestroyOnLoad(transform.gameObject);
-  
-
-        Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
-        if (saveButton != null) {
-            saveButton.onClick.AddListener(SaveGame);
-            Debug.Log("Button Reconnected!");
-        }
-        else {
-            Debug.LogError("Button not found");
-        }
     }
 
     public void SaveGame() 
@@ -72,6 +62,16 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     public bool LoadGame(int slot) {
         string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
         SetSaveSlot(slot); // remember active save slot for saving ingame
+
+        Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
+        if (saveButton != null) {
+            saveButton.onClick.AddListener(SaveGame);
+            Debug.Log("Button Reconnected!");
+        }
+        else {
+            Debug.LogError("Button not found");
+        }
+        
         if (File.Exists(savePath)) {
 
             SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(savePath)); //Pull Existing File Information

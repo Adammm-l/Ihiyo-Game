@@ -60,6 +60,8 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
+  - guid: 052f61fea17fddf4dbae11dafc5a281f
+    name: master
   - guid: 59609de779fe0494f952afa15570fe50
     name: music
   - guid: fa9238a8a39fd4b4593793425a54a896
@@ -119,6 +121,7 @@ AudioMixerSnapshotController:
   m_FloatValues:
     7b8aaa969b147074ea78043d331e5ba2: 0
     59609de779fe0494f952afa15570fe50: -14.816608
+    052f61fea17fddf4dbae11dafc5a281f: 0
   m_TransitionOverrides: {}
 --- !u!243 &3844234373002104393
 AudioMixerGroupController:

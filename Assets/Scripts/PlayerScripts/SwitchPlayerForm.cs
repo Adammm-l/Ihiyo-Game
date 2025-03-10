@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// Terrence
+using Cinemachine;
+
 public class SwitchPlayerForm : MonoBehaviour
 {
     public bool isGhost = false;
+    public bool isPossessing = false;
 
     [Header("Ghost Properties")]
     public float ghostSpeed = 3f;
-    public float ghostOpacity = 0.5f;
+    public Color ghostColor = new Color(0.5f, 0.8f, 1f, 0.5f);
     public LayerMask ghostLayer;
+    public LayerMask ghostPossessableLayer;
+    public float possessRange = 3f;
 
     [Header("Physical Properties")]
     public float physicalSpeed = 2f;
@@ -17,12 +21,19 @@ public class SwitchPlayerForm : MonoBehaviour
 
     [Header("References")]
     public GameObject keybindHolder;
+    public CinemachineVirtualCamera cmVirtualCamera;
     Rigidbody rb;
     Collider playerCollider;
+    PlayerControl playerMovement;
 
     [Header("Keybinds")]
     KeybindManager keybindManager;
     KeyCode switchForm;
+    KeyCode possessKey = KeyCode.P;
+
+    GameObject possessedObject;
+    Renderer[] possessableRenderers;
+    Color[] originalColors;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +41,10 @@ public class SwitchPlayerForm : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerRenderer = GetComponent<Renderer>();
         playerCollider = GetComponent<Collider>();
+
         keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        playerMovement = GetComponent<PlayerControl>();
+        UpdatePossessableObjects();
     }
 
     // Update is called once per frame
@@ -40,6 +54,20 @@ public class SwitchPlayerForm : MonoBehaviour
         if (Input.GetKeyDown(switchForm))
         {
             ToggleForm();
+        }
+
+        if (isGhost && !isPossessing) // handle possessing objects
+        {
+            HighlightPossessableObjects();
+
+            if (Input.GetKeyDown(possessKey))
+            {
+                TryPossessObject();
+            }
+        }
+        else if (isPossessing && Input.GetKeyDown(possessKey)) // handle releasing possessed objects
+        {
+            ReleaseObject();
         }
     }
 
@@ -67,27 +95,146 @@ public class SwitchPlayerForm : MonoBehaviour
             return physicalSpeed;
         }
     }
+
     void EnterGhostForm()
     {
         Debug.Log("Swapping to Ghost Form");
-        Color color = playerRenderer.material.color;
-        color.a = ghostOpacity; // modify transparency
-        playerRenderer.material.color = color;
+        playerRenderer.material.color = ghostColor;
 
-        Physics.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("Default"), true);
+        Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("GhostPassable"), true);
+        UpdatePossessableObjects();
     }
 
     void EnterPhysicalForm()
     {
         Debug.Log("Returning to Physical Form");
-        
-        Color color = playerRenderer.material.color;
-        color.a = 1f; // reset transparency
-        playerRenderer.material.color = color;  
+        playerRenderer.material.color = Color.white;
 
-        // enables collision with passable objects again
-        int playerLayer = LayerMask.NameToLayer("Player");
-        int ghostLayer = LayerMask.NameToLayer("GhostPassable");
-        Physics.IgnoreLayerCollision(playerLayer, ghostLayer, false);
+        Physics2D.IgnoreLayerCollision(gameObject.layer, LayerMask.NameToLayer("GhostPassable"), false);
+        ResetPossessableObjectColors();
+        ReleaseObject();
     }
+
+    void UpdatePossessableObjects()
+    {
+        // find objects on the ghostPossessable layer
+        Collider2D[] possessableColliders = Physics2D.OverlapCircleAll(transform.position, possessRange, ghostPossessableLayer);
+        possessableRenderers = new Renderer[possessableColliders.Length];
+        originalColors = new Color[possessableColliders.Length];
+
+        for (int i = 0; i < possessableColliders.Length; i++)
+        {
+            possessableRenderers[i] = possessableColliders[i].GetComponent<Renderer>();
+            if (possessableRenderers[i] != null)
+            {
+                originalColors[i] = possessableRenderers[i].material.color;
+            }
+        }
+    }
+
+    void HighlightPossessableObjects()
+    {
+        if (possessableRenderers != null)
+        {
+            foreach (Renderer renderer in possessableRenderers)
+            {
+                if (renderer != null)
+                {
+                    renderer.material.color = Color.Lerp(originalColors[System.Array.IndexOf(possessableRenderers, renderer)], ghostColor, 0.5f); // apply blue tint
+                }
+            }
+        }
+    }
+
+    void ResetPossessableObjectColors()
+    {
+        if (possessableRenderers != null && originalColors != null)
+        {
+            for (int i = 0; i < possessableRenderers.Length; i++)
+            {
+                if (possessableRenderers[i] != null)
+                {
+                    possessableRenderers[i].material.color = originalColors[i]; // reset to original color
+                }
+            }
+        }
+    }
+
+    void TryPossessObject()
+    {
+        Collider2D[] possessableColliders = Physics2D.OverlapCircleAll(transform.position, possessRange, ghostPossessableLayer);
+        if (possessableColliders.Length > 0)
+        {
+            // possess first object in range
+            possessedObject = possessableColliders[0].gameObject;
+            isPossessing = true;
+
+            if (cmVirtualCamera != null)
+            {
+                cmVirtualCamera.Follow = possessedObject.transform; // switch camera focus to the possessed object
+                Debug.Log($"Possessed {possessedObject.name}. Camera target set to {possessedObject.name}");
+            }
+            else
+            {
+                Debug.LogError("CinemachineVirtualCamera not assigned.");
+            }
+
+            // disable player movement
+            if (playerMovement != null)
+            {
+                playerMovement.enabled = false;
+            }
+
+            // enable movement for possessed object
+            PossessedObjectMovement possessedMovement = possessedObject.GetComponent<PossessedObjectMovement>();
+            if (possessedMovement == null)
+            {
+                possessedMovement = possessedObject.AddComponent<PossessedObjectMovement>();
+            }
+            possessedMovement.enabled = true;
+        }
+        else
+        {
+            Debug.Log("No possessable objects in range.");
+        }
+    }
+
+    void ReleaseObject()
+    {
+        if (possessedObject != null)
+        {
+            if (cmVirtualCamera != null)
+            {
+                cmVirtualCamera.Follow = transform; // switch camera focus back to the player
+                Debug.Log($"Released {possessedObject.name}. Camera target reset to player.");
+            }
+            else
+            {
+                Debug.LogError("CinemachineVirtualCamera not assigned.");
+            }
+
+            // re-enable player movement
+            if (playerMovement != null)
+            {
+                playerMovement.enabled = true;
+            }
+
+            // disable movement for possessed object
+            PossessedObjectMovement possessedMovement = possessedObject.GetComponent<PossessedObjectMovement>();
+            if (possessedMovement != null)
+            {
+                possessedMovement.enabled = false;
+            }
+
+            possessedObject = null;
+            isPossessing = false;
+        }
+    }
+
+    // void OnDrawGizmosSelected()
+    // {
+    //     // draw the possess range in the editor
+    //     Gizmos.color = Color.blue;
+    //     Gizmos.DrawWireSphere(transform.position, possessRange);
+    // }
 }
