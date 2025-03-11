@@ -519,7 +519,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - Is there something you would like to purchase?
     - 
@@ -536,9 +543,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
-  questCompleteResponses: []
-  incompleteQuestResponses: []
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   interactionText: {fileID: 1108672924}
   keybindHolder: {fileID: 200205733}
   questNotificationSprite: {fileID: 827341235}
@@ -822,7 +834,7 @@ GameObject:
   - component: {fileID: 212959590}
   m_Layer: 0
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1238,17 +1250,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98dc644649049004eab532ae53fa4fa3, type: 3}
---- !u!114 &499787623 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3109213459458446445, guid: 98dc644649049004eab532ae53fa4fa3, type: 3}
-  m_PrefabInstance: {fileID: 499787622}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &522286797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1350,107 +1351,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3a4c3e592bbd7b4a865696c150f20c2, type: 3}
---- !u!1001 &562144614
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4173504495247770607, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: timeDisplay
-      value: 
-      objectReference: {fileID: 499787623}
-    - target: {fileID: 8804992988702309487, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-      propertyPath: m_Name
-      value: TimeManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
 --- !u!1001 &585845692
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2488,7 +2388,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - "Scary? Oh dear, maybe it\u2019s all those ghost stories you like to listen
       to."
@@ -2507,7 +2414,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - The floorboards?
     - Maybe they were just saying goodnight to you!
@@ -2525,7 +2439,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - Weird? Well, new places always feel that way at first.
     - "But maybe if you give it a chance, it won\u2019t feel so strange anymore."
@@ -2544,7 +2465,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - "I know it\u2019s not easy, sweetie. Moving is hard for all of us, but it\u2019ll
       get better."
@@ -2563,7 +2491,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - Some fruit would do us good... we need apples.
     - I need you to go to the market and get some for me. Here... this should be
@@ -2581,7 +2516,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - 'Not very far. '
     - 'Just straight down the road from our house! The town is small so you shouldn''t
@@ -2602,7 +2544,14 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   - lines:
     - "That\u2019s my boy. Thank you, Ihiyo. And remember, be careful and don\u2019t
       wander off too much. The market can be a busy place, even here."
@@ -2620,11 +2569,14 @@ MonoBehaviour:
       requiredItem: Apple
       requiredAmount: 1
       currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
     triggerQuestAfterSegment: 1
-  questCompleteResponses:
-  - Thanks for the apple
-  incompleteQuestResponses:
-  - You do not have my apple yet
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
   interactionText: {fileID: 190299204}
   keybindHolder: {fileID: 200205733}
   questNotificationSprite: {fileID: 827341235}
@@ -2732,6 +2684,60 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 710e91ab147d6c0468f6e15aa62161f1, type: 3}
+--- !u!1 &938302336
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 938302338}
+  - component: {fileID: 938302337}
+  m_Layer: 0
+  m_Name: Lighting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &938302337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938302336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162a82fef8c4bd246905276e8929c86a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dayColor: {r: 1, g: 1, b: 1, a: 1}
+  nightColor: {r: 0.3, g: 0.3, b: 0.7, a: 1}
+  eveningColor: {r: 1, g: 0.7, b: 0.5, a: 1}
+  morningColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+  tagsToAffect:
+  - Decor
+  - Wall
+  - Floor
+  - NPC
+  - Player
+--- !u!4 &938302338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938302336}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.27521402, y: -15.867474, z: -0.2914842}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1054717284
 GameObject:
   m_ObjectHideFlags: 0
@@ -3022,19 +3028,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 17.11715
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -14.3234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3121158047409662029, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3242,19 +3248,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 17.11715
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -14.3234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8164155207536167614, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -3756,7 +3762,7 @@ GameObject:
   - component: {fileID: 1371496589}
   m_Layer: 0
   m_Name: Decor_NO
-  m_TagString: Untagged
+  m_TagString: Decor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4137,7 +4143,7 @@ GameObject:
   - component: {fileID: 1541999754}
   m_Layer: 2
   m_Name: Flooring
-  m_TagString: Untagged
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8033,7 +8039,7 @@ GameObject:
   - component: {fileID: 1602417236}
   m_Layer: 0
   m_Name: Decor
-  m_TagString: Untagged
+  m_TagString: Decor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11112,7 +11118,6 @@ SceneRoots:
   - {fileID: 1882827228}
   - {fileID: 2140845768}
   - {fileID: 499787622}
-  - {fileID: 562144614}
   - {fileID: 1143126379}
   - {fileID: 625298734}
   - {fileID: 1287553321}
@@ -11121,3 +11126,4 @@ SceneRoots:
   - {fileID: 827341233}
   - {fileID: 42917014}
   - {fileID: 1054717286}
+  - {fileID: 938302338}

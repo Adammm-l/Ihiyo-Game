@@ -13,6 +13,7 @@ TagManager:
   - NPC
   - WavePoint
   - SaveButton
+  - TimeDisplay
   layers:
   - Default
   - TransparentFX

@@ -154,7 +154,7 @@ Transform:
   m_GameObject: {fileID: 37000291}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.09, y: -0.43, z: 0.04522042}
+  m_LocalPosition: {x: 0.15, y: -14.97, z: 0.04522042}
   m_LocalScale: {x: 4, y: 4, z: 0.14}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -300,10 +300,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2d761717cde1c4f8c3d0a395fe490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints: []
-  movementSpeed: 1.3
+  waypoints:
+  - {fileID: 302787494}
+  - {fileID: 1461468007}
+  - {fileID: 2026337681}
+  - {fileID: 233473573}
+  - {fileID: 174267448}
+  movementSpeed: 1.5
   loop: 1
-  waitTime: 2
+  waitTime: 3
 --- !u!212 &37000299
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -383,14 +388,14 @@ RectTransform:
   m_GameObject: {fileID: 141385853}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.015, y: 0.015, z: 0.015}
+  m_LocalScale: {x: 0.03, y: 0.03, z: 0.015}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 428958794}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.12, y: 0.57}
+  m_AnchoredPosition: {x: 2.13, y: 0.99}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &141385855
@@ -418,7 +423,7 @@ MonoBehaviour:
     Pick Up'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -1591303727919942190, guid: 6e153ec49b33922409d02c387275f612, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -645,6 +650,68 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &174267447
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 174267448}
+  m_Layer: 6
+  m_Name: DadWaypoint5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &174267448
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174267447}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -15.5, y: -130.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 616294318}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &233473572
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 233473573}
+  m_Layer: 6
+  m_Name: DadWaypoint4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &233473573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 233473572}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 60.3, y: -130.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 616294318}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &245335053 stripped
 MonoBehaviour:
@@ -2426,7 +2493,7 @@ GameObject:
   m_Component:
   - component: {fileID: 302787494}
   m_Layer: 6
-  m_Name: Waypoint3
+  m_Name: DadWaypoint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2441,7 +2508,7 @@ Transform:
   m_GameObject: {fileID: 302787493}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 63.3, y: -57.4, z: 0}
+  m_LocalPosition: {x: -11.7, y: -105.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2816,17 +2883,6 @@ Canvas:
   m_SortingLayerID: -1820675181
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &463855276 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4173504495247770607, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
-  m_PrefabInstance: {fileID: 8476359034635874346}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8adce25ee74c34e84d1dcdd3b24a8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &463855277 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 593847850696167924, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
@@ -2893,7 +2949,7 @@ MonoBehaviour:
   npcName: Dad
   dialogueSegments:
   - lines:
-    - Good morning Ihiyo!
+    - Good morning! You're up early
     - Were you having a bad dream last night? I heard you twisting and turning
     breakPoints: 
     responseOptions:
@@ -3247,6 +3303,9 @@ Transform:
   - {fileID: 1099833779}
   - {fileID: 302787494}
   - {fileID: 1461468007}
+  - {fileID: 2026337681}
+  - {fileID: 233473573}
+  - {fileID: 174267448}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &648612822 stripped
@@ -4511,7 +4570,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &922092320
 Transform:
   m_ObjectHideFlags: 0
@@ -4891,7 +4950,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 162a82fef8c4bd246905276e8929c86a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeManager: {fileID: 463855276}
   dayColor: {r: 1, g: 1, b: 1, a: 1}
   nightColor: {r: 0.2, g: 0.2, b: 0.6, a: 1}
   eveningColor: {r: 1, g: 0.7, b: 0.5, a: 1}
@@ -9146,7 +9204,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1461468007}
   m_Layer: 6
-  m_Name: Waypoint4
+  m_Name: DadWaypoint2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9161,7 +9219,7 @@ Transform:
   m_GameObject: {fileID: 1461468006}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -35.1, y: -14.2, z: 0}
+  m_LocalPosition: {x: 21.4, y: -105.9, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9412,9 +9470,9 @@ MonoBehaviour:
       requiredAmount: 1
       currentAmount: 0
       completionNPC: Dad
-      giverIncompleteResponse: giver incomplete
-      completionCompleteResponse: completion complete
-      completionIncompleteResponse: completion incomplete
+      giverIncompleteResponse: Have you said good morning to your Dad yet?
+      completionCompleteResponse: Oh, Ihiyo!
+      completionIncompleteResponse: '-'
     triggerQuestAfterSegment: 1
     giveItemAfterSegment: 1
     itemToGive: talktodad
@@ -10340,6 +10398,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df82968d288998e44b45dfd350492a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2026337680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2026337681}
+  m_Layer: 6
+  m_Name: DadWaypoint3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2026337681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026337680}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 53.7, y: -106.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 616294318}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2099431450
 GameObject:
   m_ObjectHideFlags: 0
@@ -10591,9 +10680,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1317852163}
     - target: {fileID: 4170911573238122765, guid: 0480673ca9399884b98507654d586382, type: 3}
+      propertyPath: itemName
+      value: Wallet
+      objectReference: {fileID: 0}
+    - target: {fileID: 4170911573238122765, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: interactionText
       value: 
       objectReference: {fileID: 141385853}
+    - target: {fileID: 4972774484509594231, guid: 0480673ca9399884b98507654d586382, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3ce32c5796f324bdf9d07fb98949da6c, type: 3}
     - target: {fileID: 4972774484509594231, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_SortingLayer
       value: 2
@@ -10604,7 +10701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5353783478915415794, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_Name
-      value: AppleSprite
+      value: WalletSprite
       objectReference: {fileID: 0}
     - target: {fileID: 5353783478915415794, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_Layer
@@ -10616,19 +10713,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 86.6
+      value: 227.8
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.4
+      value: -68.1
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalPosition.z
@@ -11092,6 +11193,10 @@ PrefabInstance:
     - target: {fileID: 4409358820435724390, guid: 5b6b2745e52fb2a4e8f5ac870064e272, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4409358820435724390, guid: 5b6b2745e52fb2a4e8f5ac870064e272, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 6144963932162664963, guid: 5b6b2745e52fb2a4e8f5ac870064e272, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12443,11 +12548,15 @@ PrefabInstance:
       objectReference: {fileID: 2113880545}
     - target: {fileID: 4173504495247770607, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
       propertyPath: secondsPerMinute
-      value: 0.1
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 8804992988702309487, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
       propertyPath: m_Name
       value: TimeManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8804992988702309487, guid: 9c85795c117edd941a353a2f83ce2b95, type: 3}
+      propertyPath: m_TagString
+      value: TimeDisplay
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

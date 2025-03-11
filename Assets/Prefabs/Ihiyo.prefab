@@ -270,13 +270,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGhost: 0
+  isPossessing: 0
   ghostSpeed: 3.5
-  ghostOpacity: 0.75
+  ghostColor: {r: 0.5, g: 0.8, b: 1, a: 0.5}
   ghostLayer:
     serializedVersion: 2
     m_Bits: 512
+  ghostPossessableLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  possessRange: 3
   physicalSpeed: 3
   keybindHolder: {fileID: 0}
+  cmVirtualCamera: {fileID: 0}
 --- !u!114 &6752730750945174089
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,15 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-// Adam
+//Adam
 public class TimeManager : MonoBehaviour
 {
+    // Singleton instance
+    public static TimeManager Instance { get; private set; }
+
     [SerializeField] private TextMeshProUGUI timeDisplay;
     [SerializeField] private float secondsPerMinute = 1f;
 
     private int gameHour = 8;
     private int gameMinute = 0;
     private float timer = 0f;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnEnable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        if (timeDisplay == null)
+        {
+            TextMeshProUGUI[] textComponents = FindObjectsOfType<TextMeshProUGUI>();
+            foreach (var text in textComponents)
+            {
+                if (text.gameObject.name.Contains("TimeDisplay") || text.CompareTag("TimeDisplay"))
+                {
+                    timeDisplay = text;
+                    break;
+                }
+            }
+        }
+    }
 
     // Start is called before the first frame update
     private void Start()
@@ -63,6 +105,11 @@ public class TimeManager : MonoBehaviour
         timeDisplay.text = formattedTime;
     }
 
+    public void SetTimeDisplay(TextMeshProUGUI display)
+    {
+        timeDisplay = display;
+    }
+
     //Public getter methods
     public int GetHour()
     {
@@ -82,4 +129,3 @@ public class TimeManager : MonoBehaviour
         return $"{displayHour:D2}:{gameMinute:D2} {period}";
     }
 }
-
