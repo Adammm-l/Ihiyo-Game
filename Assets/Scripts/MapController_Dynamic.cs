@@ -29,16 +29,6 @@ public class MapController_Dynamic : MonoBehaviour
     private static bool mapExists; // All instances of this Player references the exact same variable
 
     void Start() {
-
-        if(!mapExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
-
-            mapExists = true;
-            DontDestroyOnLoad(transform.gameObject);
-        }
-
-        else { // Eliminate Duplicate Objects
-            Destroy(gameObject);
-        }
     }
 
     private void Awake()
