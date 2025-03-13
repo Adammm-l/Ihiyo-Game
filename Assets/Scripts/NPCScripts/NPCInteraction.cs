@@ -94,6 +94,13 @@ public class NPCInteraction : MonoBehaviour
             isPlayerInRange = false;
             interactionText.SetActive(false);
             dialogueManager.HideDialogue();
+
+            // Resume NPC movement when player walks away
+            NPCMovement npcMovement = GetComponentInParent<NPCMovement>();
+            if (npcMovement != null)
+            {
+                npcMovement.ResumeMovement();
+            }
         }
     }
 
@@ -163,7 +170,8 @@ public class NPCInteraction : MonoBehaviour
                                             : "Have you completed that task yet?";
 
                                         dialogueManager.ShowDialogue(npcName, incompleteResponse);
-                                        npcMovement.PauseMovementWithTimer(5f);
+                                        // NPC stays in place for quest responses
+                                        npcMovement.PauseMovementInfinitely();
                                         player.canMove = true;
                                         IsInteracting = false;
                                         return; // Exit immediately after handling quest
@@ -305,7 +313,7 @@ public class NPCInteraction : MonoBehaviour
         }
 
         dialogueManager.ShowDialogue(npcName, "That's all I have to say!"); //nothing active
-        npcMovement.PauseMovementWithTimer(5f);
+        npcMovement.PauseMovementWithTimer(5f); // For default interaction, NPC walks away after 5 seconds
         player.canMove = true;
         IsInteracting = false;
     }
@@ -364,7 +372,8 @@ public class NPCInteraction : MonoBehaviour
 
             dialogueManager.ShowDialogue(npcName, incompleteResponse);
         }
-        npcMovement.PauseMovementWithTimer(5f);
+        // NPC stays in place for quest responses instead of walking away
+        npcMovement.PauseMovementInfinitely();
     }
 
     private void EndInteraction()

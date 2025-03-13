@@ -154,7 +154,7 @@ Transform:
   m_GameObject: {fileID: 37000291}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.15, y: -14.97, z: 0.04522042}
+  m_LocalPosition: {x: -0.21, y: -14.91, z: 0.04522042}
   m_LocalScale: {x: 4, y: 4, z: 0.14}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -656,7 +656,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 144.512, w: 13.895734}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &141385856
@@ -3119,7 +3119,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &428958795
@@ -3504,13 +3504,119 @@ MonoBehaviour:
       requiredItem: Wallet
       requiredAmount: 1
       currentAmount: 0
+      completionNPC: Dad
+      giverIncompleteResponse: Do you have my wallet yet?
+      completionCompleteResponse: Oh, you found it!
+      completionIncompleteResponse: Do you have my wallet yet?
+    triggerQuestAfterSegment: 1
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 1
+  - lines:
+    - I think your mom wants you to get some groceries from the market.
+    - 'Here is some money for that. I know it is not alot but we are pretty tight
+      on cash since we came to Choloma.  '
+    - I promise after I get settled down with my new job, I will get you an unforgettable
+      gift.
+    - Sounds good?
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Dad, I don't like this town, something feels very wrong.
+      - What kind of gift?! Tell me!!!
+      - Okay! I can't wait!
+      nextSegmentIDs: 050000000600000007000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
       completionIncompleteResponse: 
-    triggerQuestAfterSegment: 1
+    triggerQuestAfterSegment: 0
     giveItemAfterSegment: 0
     itemToGive: 
+    itemAmount: 0
+  - lines:
+    - I know, I'm sorry, Ihiyo. But we have to, this is the only place that will
+      give me work.
+    - 'Give it some time. It''s probably just the new environment that you''re not
+      used to. '
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ..
+      nextSegmentIDs: 07000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - It is a surprise. I know moving to a new place can be hard.
+    - Please try to get used to it for me. This was the only place that would offer
+      me a job.
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ..
+      nextSegmentIDs: 07000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Okay. Anyways, I have to head to work now. Talk to your Mom. She will tell
+      you what you need.
+    - Be safe out there!
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Bye, Dad!
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: Grocery List
+      questDescription: Talk to Mom to know what groceries we need
+      isCompleted: 0
+      requiredItem: talktomom
+      requiredAmount: 1
+      currentAmount: 0
+      completionNPC: Mom
+      giverIncompleteResponse: Heading out to work!
+      completionCompleteResponse: Do you remember what we do every night before bed?
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 1
+    giveItemAfterSegment: 1
+    itemToGive: talktomom
     itemAmount: 1
   interactionText: {fileID: 1249025117}
   keybindHolder: {fileID: 1317852163}
@@ -5594,6 +5700,7 @@ MonoBehaviour:
   - Wall
   - NPC
   - Player
+  - Item
   playerTag: Player
   affectPlayer: 1
 --- !u!1 &1045795343
@@ -10355,6 +10462,162 @@ MonoBehaviour:
     giveItemAfterSegment: 1
     itemToGive: talktodad
     itemAmount: 1
+  - lines:
+    - 'Something we always do. '
+    - Since the day you were born.
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Brush my teeth?
+      - Go to sleep?
+      nextSegmentIDs: 0600000006000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Yes, but something else. The prayer.
+    - 'Last night.. we forgot. '
+    - Listen to me. We have never forgotten before. Not once. Do you understand?
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ..Yeah?
+      nextSegmentIDs: 07000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - That prayer isn't just words, baby. It's important.
+    - 'It keeps you safe. '
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Safe from what?
+      - Mom, you're scaring me.
+      nextSegmentIDs: 0800000008000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - '...The Ixtab- '
+    - ..
+    - 'Things we don''t want here. Things that wait for a moment like this. '
+    - You don't need to know. You just need to trust me. We can't forget again. Ever.
+    - ..
+    - Listen, I need you to run to the market for me.
+    - We need 3 apples.
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Huh? Right now?
+      - The Ixta- what?
+      nextSegmentIDs: 090000000a000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - 'Do you want apple pie? Yes, right now. '
+    - Sorry..
+    - You'll be fine. Just go quickly and come straight back. Don't talk to strangers.
+      Okay?
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Yes, Mom
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Stop.
+    - Do not worry about it. We won't forget the prayer again.
+    - Don't be gone for too long, come straight back. And don't talk to strangers
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Okay Mom, I got it.
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
   interactionText: {fileID: 1196306729}
   keybindHolder: {fileID: 1317852163}
   questNotificationSprite: {fileID: 1213010047}
@@ -11676,6 +11939,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5353783478915415794, guid: 0480673ca9399884b98507654d586382, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11690,11 +11957,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 227.8
+      value: 321.9
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -68.1
+      value: -9.1
       objectReference: {fileID: 0}
     - target: {fileID: 6721233162724895226, guid: 0480673ca9399884b98507654d586382, type: 3}
       propertyPath: m_LocalPosition.z
