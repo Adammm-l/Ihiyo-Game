@@ -239,7 +239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 1
+    m_Mode: 3
     m_WrapAround: 1
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -360,7 +360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -795,10 +795,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1767715788}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 33339179}
-  m_Toggle: {fileID: 33339177}
 --- !u!224 &33339179
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1665,12 +1661,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1632750192}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1956,12 +1952,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1416026134}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2725,10 +2721,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 209616137}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 199547984}
-  m_Toggle: {fileID: 199547982}
 --- !u!224 &199547984
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3410,10 +3402,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 609818130}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 220208822}
-  m_Toggle: {fileID: 220208820}
 --- !u!224 &220208822
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4019,7 +4007,7 @@ MonoBehaviour:
   m_text: Name Your Save
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -1591303727919942190, guid: 6e153ec49b33922409d02c387275f612, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4082,7 +4070,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -338.75867, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &242832310
@@ -4406,10 +4394,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1462758201}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 273404166}
-  m_Toggle: {fileID: 273404164}
 --- !u!224 &273404166
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6080,10 +6064,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1914762284}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 378517677}
-  m_Toggle: {fileID: 378517675}
 --- !u!224 &378517677
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7083,11 +7063,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 1851766468}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -7758,10 +7738,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1922415515}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 528216446}
-  m_Toggle: {fileID: 528216444}
 --- !u!224 &528216446
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8907,10 +8883,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 442628279}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 627619892}
-  m_Toggle: {fileID: 627619894}
 --- !u!114 &627619894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11175,12 +11147,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1863555793}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -11628,10 +11600,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
+    m_SelectOnDown: {fileID: 1347062814}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
@@ -13903,10 +13875,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 617508179}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 928276127}
-  m_Toggle: {fileID: 928276125}
 --- !u!224 &928276127
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14833,10 +14801,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1593788092}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1025534365}
-  m_Toggle: {fileID: 1025534363}
 --- !u!224 &1025534365
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15337,7 +15301,7 @@ MonoBehaviour:
   m_text: Cancel
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -1591303727919942190, guid: 6e153ec49b33922409d02c387275f612, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -15400,7 +15364,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1105045095
@@ -15737,10 +15701,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1716611653}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1119827513}
-  m_Toggle: {fileID: 1119827511}
 --- !u!224 &1119827513
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15841,10 +15801,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1490952672}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1121427130}
-  m_Toggle: {fileID: 1121427128}
 --- !u!224 &1121427130
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16154,10 +16110,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 991899555}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1148623900}
-  m_Toggle: {fileID: 1148623898}
 --- !u!224 &1148623900
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16403,11 +16355,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 1214842691}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -18013,12 +17965,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1157535644}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -18356,10 +18308,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 2095967369}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1228086529}
-  m_Toggle: {fileID: 1228086527}
 --- !u!224 &1228086529
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18460,10 +18408,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 668507282}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1240546573}
-  m_Toggle: {fileID: 1240546571}
 --- !u!224 &1240546573
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19029,10 +18973,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1650541842}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1298668782}
-  m_Toggle: {fileID: 1298668780}
 --- !u!224 &1298668782
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19208,10 +19148,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1710158163}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1303422458}
-  m_Toggle: {fileID: 1303422456}
 --- !u!224 &1303422458
 RectTransform:
   m_ObjectHideFlags: 0
@@ -19637,7 +19573,7 @@ MonoBehaviour:
   m_text: Done
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -1591303727919942190, guid: 6e153ec49b33922409d02c387275f612, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -19700,7 +19636,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1334915062
@@ -19839,12 +19775,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 794431750}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 2009914094}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -20553,11 +20489,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 106204123}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -20818,7 +20754,7 @@ MonoBehaviour:
   m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -1591303727919942190, guid: 6e153ec49b33922409d02c387275f612, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -20881,7 +20817,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1433312652
@@ -20944,10 +20880,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1885368076}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1438042764}
-  m_Toggle: {fileID: 1438042766}
 --- !u!114 &1438042766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21074,10 +21006,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1937511502}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1442942417}
-  m_Toggle: {fileID: 1442942415}
 --- !u!224 &1442942417
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22500,10 +22428,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 901661626}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1508658939}
-  m_Toggle: {fileID: 1508658937}
 --- !u!224 &1508658939
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23068,10 +22992,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 736874761}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1579149135}
-  m_Toggle: {fileID: 1579149133}
 --- !u!224 &1579149135
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23697,10 +23617,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1602038090}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1606326817}
-  m_Toggle: {fileID: 1606326815}
 --- !u!224 &1606326817
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23775,12 +23691,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 1944773102}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -24220,10 +24136,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 217847877}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1618572231}
-  m_Toggle: {fileID: 1618572229}
 --- !u!224 &1618572231
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24298,11 +24210,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 76786849}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -24757,7 +24669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 1
+    m_Mode: 3
     m_WrapAround: 1
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -25696,10 +25608,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 810811042}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1730198509}
-  m_Toggle: {fileID: 1730198507}
 --- !u!224 &1730198509
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27632,12 +27540,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
+    m_SelectOnRight: {fileID: 474372687}
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
@@ -27903,11 +27811,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 775784071}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -28050,10 +27958,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 2113471043}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1871649411}
-  m_Toggle: {fileID: 1871649409}
 --- !u!224 &1871649411
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28288,10 +28192,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 796204293}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1885544956}
-  m_Toggle: {fileID: 1885544954}
 --- !u!224 &1885544956
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28366,10 +28266,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 798748909}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1887432626}
-  m_Toggle: {fileID: 1887432628}
 --- !u!114 &1887432628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29486,11 +29382,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 1608103380}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -30654,10 +30550,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 62766923}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 1982546713}
-  m_Toggle: {fileID: 1982546711}
 --- !u!224 &1982546713
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30994,11 +30886,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 4
     m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
+    m_SelectOnUp: {fileID: 794431750}
     m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnLeft: {fileID: 1347062814}
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
@@ -31499,7 +31391,7 @@ MonoBehaviour:
   m_text: Enter Name
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -1591303727919942190, guid: 6e153ec49b33922409d02c387275f612, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -31562,7 +31454,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &2029580759
@@ -32600,10 +32492,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1839283526}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 2129432748}
-  m_Toggle: {fileID: 2129432746}
 --- !u!224 &2129432748
 RectTransform:
   m_ObjectHideFlags: 0

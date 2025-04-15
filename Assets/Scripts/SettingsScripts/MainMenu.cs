@@ -8,13 +8,11 @@ using TMPro;
 using System;
 using UnityEditor;
 
-// disable all popups when returning to main menu
-// focus is not directed to save title when naming save
-// focus is not directed to pop up ever
-// focus is always directed to first save button, not first ENABLED save button
-// can't navigate to menu on save/load screens if not on center (ui fix)
-// focus get transfered to disabled button on hover
-// disable transfering of focus to disabled buttons
+// can't navigate to menu on save/load screens if not on center (ui fix) - can't get this to happen anymore so i think it's fixed?
+
+// issue with settings using keyboard only when changing keybind
+// sliders in audio section don't revert to old status when asked to remove changes
+// keybind still waits for input when conflict popup is up
 
 // fix video settings
 
@@ -31,6 +29,9 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     VolumeSettings volumeSettings;
     EventSystem eventSystem;
     TextMeshProUGUI menuTextLabel;
+
+    List<Selectable> disabledSelectables = new List<Selectable>();
+    Dictionary<Selectable, ColorBlock> originalSelectableColors = new Dictionary<Selectable, ColorBlock>();
 
     KeybindManager keybindManager;
     SaveController saveController;
@@ -143,8 +144,64 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     void OnButtonHover(Selectable hoveredSelectable)
     {
         // set the hovered selectable (changed from button)
-        eventSystem.SetSelectedGameObject(hoveredSelectable.gameObject);
-        lastSelectedButton = hoveredSelectable.gameObject;
+        if (hoveredSelectable.interactable)
+        {
+            eventSystem.SetSelectedGameObject(hoveredSelectable.gameObject);
+            lastSelectedButton = hoveredSelectable.gameObject;
+        }
+    }
+
+    void DisableButtonsOutsidePopup(GameObject popup)
+    {
+        disabledSelectables.Clear();
+        originalSelectableColors.Clear();
+        
+        // get all selectable elements in scene
+        Selectable[] allSelectables = FindObjectsOfType<Selectable>();
+        
+        foreach (Selectable selectable in allSelectables)
+        {
+            if (!selectable.interactable)
+            {
+                continue;
+            }
+            
+            if (selectable.transform.IsChildOf(popup.transform))
+            {
+                continue;
+            }
+                
+            disabledSelectables.Add(selectable);
+            originalSelectableColors.Add(selectable, selectable.colors);
+            
+            // make selectable appear enabled but disable it
+            ColorBlock colors = selectable.colors;
+            Color enabledColor = colors.normalColor;
+            
+            colors.disabledColor = enabledColor;
+            selectable.colors = colors;
+
+            selectable.interactable = false;
+        }
+    }
+
+    void RestoreDisabledButtons()
+    {
+        foreach (Selectable selectable in disabledSelectables)
+        {
+            if (selectable != null)
+            {
+                // restore original state and colors
+                selectable.interactable = true;
+                if (originalSelectableColors.ContainsKey(selectable))
+                {
+                    selectable.colors = originalSelectableColors[selectable];
+                }
+            }
+        }
+
+        disabledSelectables.Clear();
+        originalSelectableColors.Clear();
     }
 
     void HandleKeyboardNavigation()
@@ -324,21 +381,80 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
     void GoBack()
     {
-        if (dialoguePopup.activeSelf)
+        // check if any popup is active
+        bool popupActive = false;
+        GameObject activePopup = null;
+        
+        foreach (Transform popup in dialoguePopup.transform)
         {
-            ReturnToMainMenu();
+            if (popup.name == "MenuText")
+                continue;
+                
+            if (popup.gameObject.activeSelf)
+            {
+                popupActive = true;
+                activePopup = popup.gameObject;
+                break;
+            }
         }
-        else if (settingsMenu.activeSelf)
+        
+        // if popup is active, return to previous menu
+        if (popupActive && activePopup != null)
         {
-            ReturnToMainMenu();
+            if (activePopup.name == "NewGamePopup" || activePopup.name == "ExitGamePopup" || activePopup.name == "NoSavesFoundPopup")
+            {
+                RestoreDisabledButtons();
+                activePopup.SetActive(false);
+                
+                // if we're in the main menu, just close the popup
+                if (mainMenu.activeSelf)
+                {
+                    SelectFirstButton();
+                }
+                else
+                {
+                    ReturnToMainMenu();
+                }
+            }
+            else if (activePopup.name == "OverwriteSavePopup")
+            {
+                // return to save menu
+                RestoreDisabledButtons();
+                activePopup.SetActive(false);
+                SelectFirstEnabledSaveButton();
+            }
+            else if (activePopup.name == "CreateSaveNamePopup")
+            {
+                // return to save menu
+                RestoreDisabledButtons();
+                activePopup.SetActive(false);
+                SelectFirstEnabledSaveButton();
+            }
+            else if (activePopup.name == "SettingsPopup" || activePopup.name == "NoChangesPopup" || activePopup.name == "ConflictPopup")
+            {
+                ReturnToSettingsPage();
+            }
+            else
+            {
+                RestoreDisabledButtons();
+                activePopup.SetActive(false);
+                SelectFirstButton();
+            }
         }
-        else if (savesMenu.activeSelf)
+        else
         {
-            ReturnToMainMenu();
-        }
-        else if (galleryMenu.activeSelf)
-        {
-            ReturnToMainMenu();
+            if (settingsMenu.activeSelf)
+            {
+                OpenSettingsPopup("exit");
+            }
+            else if (savesMenu.activeSelf)
+            {
+                ReturnToMainMenu();
+            }
+            else if (galleryMenu.activeSelf)
+            {
+                ReturnToMainMenu();
+            }
         }
     }
 
@@ -419,14 +535,41 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         Debug.Log($"{releasedButton.name} is released.");
     }
 
+    void FocusOnPopup(GameObject popup)
+    {
+        DisableButtonsOutsidePopup(popup);
+
+        if (popup == null || !popup.activeSelf)
+            return;
+            
+        // find first button in popup
+        Button firstButton = null;
+        foreach (Transform child in popup.transform)
+        {
+            Button button = child.GetComponent<Button>();
+            if (button != null && button.interactable)
+            {
+                firstButton = button;
+                break;
+            }
+        }
+        
+        if (firstButton != null)
+        {
+            // set focus to the first button
+            eventSystem.SetSelectedGameObject(firstButton.gameObject);
+            lastSelectedButton = firstButton.gameObject;
+        }
+    }
+
     void NewGameClicked()
     {
         // activates the new game popup, and assigns functionality to the yes/no buttons
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
         mainMenu.SetActive(false);
         newGamePopup.SetActive(true);
-
-        SelectFirstButton();
+        
+        FocusOnPopup(newGamePopup);
 
         Button newGameYes = newGamePopup.transform.Find("Yes").GetComponent<Button>();
         Button newGameNo = newGamePopup.transform.Find("No").GetComponent<Button>();
@@ -441,17 +584,26 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
     void ReturnToMainMenu()
     {
+        RestoreDisabledButtons();
+
         // hides the active popup/menu and activates the main menu again
-        GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
-        GameObject exitGamePopup = dialoguePopup.transform.Find("ExitGamePopup").gameObject;
-        GameObject noSavesPopup = dialoguePopup.transform.Find("NoSavesFoundPopup").gameObject;
         mainMenu.SetActive(true);
         
-        exitGamePopup.SetActive(false);
-        newGamePopup.SetActive(false);
+        // disable all popups in dialoguePopup
+        foreach (Transform popup in dialoguePopup.transform)
+        {
+            // skip the MenuText object since it's not a popup
+            if (popup.name == "MenuText")
+            {
+                continue;
+            }
+                
+            popup.gameObject.SetActive(false);
+        }
+        
+        // disable all other menus
         settingsMenu.SetActive(false);
         galleryMenu.SetActive(false);
-        noSavesPopup.SetActive(false);
         savesMenu.SetActive(false);
 
         SelectFirstButton();
@@ -473,7 +625,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         if (!hasSaves)
         {
             OpenNewSavePopup();
-            SelectFirstButton();
         }
         else
         {
@@ -485,6 +636,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     {
         GameObject noSavesPopup = dialoguePopup.transform.Find("NoSavesFoundPopup").gameObject;
         noSavesPopup.SetActive(true);
+
+        FocusOnPopup(noSavesPopup);
 
         Button noSaveYes = noSavesPopup.transform.Find("Yes").GetComponent<Button>();
         Button noSaveNo = noSavesPopup.transform.Find("No").GetComponent<Button>();
@@ -500,6 +653,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     {
         GameObject noSavesPopup = dialoguePopup.transform.Find("NoSavesFoundPopup").gameObject; // not a param cuz it won't always be called
         GameObject newGamePopup = dialoguePopup.transform.Find("NewGamePopup").gameObject;
+        
+        RestoreDisabledButtons();
         noSavesPopup.SetActive(false);
         newGamePopup.SetActive(false);
 
@@ -593,6 +748,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         GameObject overwritePopup = dialoguePopup.transform.Find("OverwriteSavePopup").gameObject;
         overwritePopup.SetActive(true);
 
+        FocusOnPopup(overwritePopup);
+
         Button overwriteYes = overwritePopup.transform.Find("Yes").GetComponent<Button>();
         Button overwriteNo = overwritePopup.transform.Find("No").GetComponent<Button>();
 
@@ -600,9 +757,17 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         overwriteNo.onClick.RemoveAllListeners();
 
         overwriteYes.onClick.AddListener(() => OpenPromptForGameName(currentSlot));
-        overwriteNo.onClick.AddListener(() => overwritePopup.SetActive(false));
+        overwriteNo.onClick.AddListener(() => returnFromOverwritePopup(overwritePopup));
 
         // perhaps text prompt informing user that they must click a file to overwrite "Click the file you would like to overwrite"
+    }
+
+    void returnFromOverwritePopup(GameObject overwritePopup)
+    {
+        RestoreDisabledButtons();
+        overwritePopup.SetActive(false);
+        SelectFirstButton();
+        SelectFirstEnabledSaveButton();
     }
 
     void OpenSaveSlotSelection(string action)
@@ -669,8 +834,12 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         Button finishedName = namePopup.transform.Find("Done").GetComponent<Button>();
 
         TMP_InputField nameInputField = namePopup.transform.Find("NameInputField").GetComponent<TMP_InputField>();
-        namePopup.SetActive(true);
+
+        RestoreDisabledButtons();
         overwritePopup.SetActive(false);
+
+        namePopup.SetActive(true);
+        DisableButtonsOutsidePopup(namePopup);
 
         eventSystem.SetSelectedGameObject(nameInputField.gameObject);
 
@@ -683,8 +852,11 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
     void CancelNewSave(GameObject namePopup, TMP_InputField nameInputField)
     {
+        RestoreDisabledButtons();
+
         nameInputField.text = "";
         namePopup.SetActive(false);
+        SelectFirstButton();
     }
 
     void SaveEnteredName(GameObject namePopup, int saveSlot, TMP_InputField nameInputField)
@@ -697,6 +869,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             return; // listener so i don't have to recursively call it
         }
 
+        RestoreDisabledButtons();
         namePopup.SetActive(false);
         if (saveController.SaveExists(saveSlot))
         {
@@ -902,6 +1075,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         GameObject conflictPopup = dialoguePopup.transform.Find("ConflictPopup").gameObject;
         conflictPopup.SetActive(true);
 
+        FocusOnPopup(conflictPopup);
+
         Button conflictYes = conflictPopup.transform.Find("Yes").GetComponent<Button>();
         Button conflictNo = conflictPopup.transform.Find("No").GetComponent<Button>();
 
@@ -1101,6 +1276,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         {
             popupTextLabel.text = "Would you like to restore all settings to default?";
             settingsPopup.SetActive(true);
+            FocusOnPopup(settingsPopup);
         }
         
         if (action == "exit")
@@ -1120,11 +1296,13 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                 // prompt user to save keybinds if at least one keybind has changed
                 popupTextLabel.text = "You have unsaved changes. Are you sure you want to exit?";
                 settingsPopup.SetActive(true);
+                FocusOnPopup(settingsPopup);
             }
             else if (keybindManager.HasNewNullKeybinds())
             {
                 popupTextLabel.text = "You have at least one unbound keybind. Are you sure you want to exit?";
                 settingsPopup.SetActive(true);
+                FocusOnPopup(settingsPopup);
             }
 
             // if there's no conflict or unsaved changes, just return to the main menu
@@ -1151,11 +1329,13 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             {
                 popupTextLabel.text = "Would you like to save all changes?";
                 settingsPopup.SetActive(true);
+                FocusOnPopup(settingsPopup);
             }
             else
             {
                 GameObject noChangesPopup = dialoguePopup.transform.Find("NoChangesPopup").gameObject;
                 noChangesPopup.SetActive(true);
+                FocusOnPopup(noChangesPopup);
 
                 Button settingsOkay = noChangesPopup.transform.Find("Okay").GetComponent<Button>();
                 settingsOkay.onClick.RemoveAllListeners();
@@ -1178,6 +1358,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
     void ReturnToSettingsPage()
     {
+        RestoreDisabledButtons();
+
         GameObject noChangesPopup = dialoguePopup.transform.Find("NoChangesPopup").gameObject;
         GameObject settingsPopup = dialoguePopup.transform.Find("SettingsPopup").gameObject;
         GameObject conflictPopup = dialoguePopup.transform.Find("ConflictPopup").gameObject;
@@ -1185,6 +1367,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         settingsPopup.SetActive(false);
         noChangesPopup.SetActive(false);
         conflictPopup.SetActive(false);
+
+        SelectFirstButton();
     }
 
     void SettingsChange(string action, string choice)
@@ -1291,7 +1475,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         GameObject exitGamePopup = dialoguePopup.transform.Find("ExitGamePopup").gameObject;
         exitGamePopup.SetActive(true);
         
-        SelectFirstButton();
+        FocusOnPopup(exitGamePopup);
 
         Button exitGameYes = exitGamePopup.transform.Find("Yes").GetComponent<Button>();
         Button exitGameNo = exitGamePopup.transform.Find("No").GetComponent<Button>();
