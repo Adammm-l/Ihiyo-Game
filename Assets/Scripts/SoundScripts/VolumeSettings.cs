@@ -58,14 +58,14 @@ public class VolumeSettings : MonoBehaviour
 
     public void SetMasterVol()
     {
-        float volume = musicSlider.value;
+        float volume = masterSlider.value; // should probably set the right slider
         settingsMixer.SetFloat("master", Mathf.Log10(volume)*20);
         PlayerPrefs.SetFloat("masterVolume", volume);
     }
 
 // Load up previous sound volume that was set
     public void LoadVolume() {
-        
+        masterSlider.value = PlayerPrefs.GetFloat("masterVolume");
         musicSlider.value = PlayerPrefs.GetFloat("musicVolume"); // Set initial value
         sfxSlider.value = PlayerPrefs.GetFloat("sfxVolume"); // Set initial value
 
@@ -95,5 +95,14 @@ public class VolumeSettings : MonoBehaviour
         masterSlider.value = 0.5f;
         musicSlider.value = 0.5f;
         sfxSlider.value = 0.5f;
+    }
+
+    public void RevertSliderChanges()
+    {
+        LoadVolume();
+        
+        SetMasterVol();
+        SetMusicVol();
+        SetSFXVol();
     }
 }

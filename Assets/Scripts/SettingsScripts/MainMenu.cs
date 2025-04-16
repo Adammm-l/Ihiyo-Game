@@ -10,10 +10,8 @@ using UnityEditor;
 
 // can't navigate to menu on save/load screens if not on center (ui fix) - can't get this to happen anymore so i think it's fixed?
 
-// issue with settings using keyboard only when changing keybind
-// sliders in audio section don't revert to old status when asked to remove changes
-// keybind still waits for input when conflict popup is up
-
+// controls menu: does not highlight button on release
+// make escape key release key
 // fix video settings
 
 public class MainMenuController : MonoBehaviour // Terrence Akinola
@@ -1008,16 +1006,33 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     {
         bool isKeySet = false;
         keyButton.interactable = false;
+        bool ignoreNextKeyPress = true;
 
         UpdateButtonStyle(keyButton, keyButton.interactable);
 
         // waits until a key is pressed and assigned
         while (!isKeySet)
         {
+            // check if conflict popup is active
+            GameObject conflictPopup = dialoguePopup.transform.Find("ConflictPopup").gameObject;
+            if (conflictPopup.activeSelf)
+            {
+                yield break;
+            }
+            
             if (Input.GetKeyDown(KeyCode.Mouse0)) // ignore key press if it's just the left mouse button
             {
                 break;
             }
+            
+            // skip first frame to ignore enter key
+            if (ignoreNextKeyPress)
+            {
+                ignoreNextKeyPress = false;
+                yield return null;
+                continue;
+            }
+            
             foreach (KeyCode key in Enum.GetValues(typeof(KeyCode)))
             {
                 // checks if current key is pressed down and updates keybind
@@ -1027,8 +1042,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                     if (keybindManager.IsKeybindConflict(action, key))
                     {
                         OpenConflictPopup(keyButton, key);
-                        yield return null; // literally fixed everything breaking (inputs not properly registering)
-                        break;
+                        yield break;
                     }
 
                     keybindManager.UpdateKeybind(action, key);
@@ -1067,11 +1081,26 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     {
         keyButton.interactable = true;
         Color defaultColor = new Color(0.75f, 0.75f, 0.75f);
-        ResetButtonStyle(keyButton, defaultColor);
+        
+        // reset button colors to default
+        ColorBlock colors = keyButton.colors;
+        colors.normalColor = defaultColor;
+        keyButton.colors = colors;
+        
+        // refresh button
+        keyButton.gameObject.SetActive(false);
+        keyButton.gameObject.SetActive(true);
     }
 
     void OpenConflictPopup(Button keyButton, KeyCode newKey)
     {
+        // stop current keybind coroutine if running
+        if (currentKeybindCoroutine != null)
+        {
+            StopCoroutine(currentKeybindCoroutine);
+            currentKeybindCoroutine = null;
+        }
+
         GameObject conflictPopup = dialoguePopup.transform.Find("ConflictPopup").gameObject;
         conflictPopup.SetActive(true);
 
@@ -1083,68 +1112,76 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         conflictYes.onClick.RemoveAllListeners();
         conflictNo.onClick.RemoveAllListeners();
 
-        conflictYes.onClick.AddListener(() => resolveConflict("yes", keyButton, newKey));
-        conflictNo.onClick.AddListener(() => resolveConflict("no", keyButton, newKey));
+        string buttonAction = GetButtonKeybind(keyButton);
+        
+        conflictYes.onClick.AddListener(() => resolveConflict(buttonAction, newKey, keyButton));  
+        conflictNo.onClick.AddListener(() => ignoreKeybindChange(keyButton));
     }
 
-    void resolveConflict(string action, Button keyButton, KeyCode newKey)
+    void resolveConflict(string buttonAction, KeyCode newKey, Button keyButton)
+    {
+        // apply original conflicting key
+        keybindManager.UpdateKeybind(buttonAction, newKey);
+        keyButton.GetComponentInChildren<TextMeshProUGUI>().text = newKey.ToString();
+        
+        CancelKeybindUpdate(keyButton);
+        RemoveDuplicateKeys(keyButton, newKey);
+        RefreshAllKeybindButtons();
+        
+        ReturnToSettingsPage();
+    }
+
+    void ignoreKeybindChange(Button keyButton)
     {
         CancelKeybindUpdate(keyButton);
         ReturnToSettingsPage();
+    }
 
+    void RefreshAllKeybindButtons()
+    {
         GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
-        Transform actionHolder = keyButton.transform.parent.GetChild(0);
-        string buttonAction = actionHolder.name;
         
-        if (action == "no")
+        foreach (Transform keybindObject in controlsSettings.transform)
         {
-            return;
-        }
-        if (action == "yes")
-        {
-            keybindManager.UpdateKeybind(buttonAction, newKey);
-            RemoveDuplicateKeys(keyButton, newKey);
-            InitializeKeybindButtons(controlsSettings);
+            Button button = keybindObject.GetComponentInChildren<Button>();
+            if (button != null)
+            {
+                string keybind = GetButtonKeybind(button);
+                if (keybind != null)
+                {
+                    KeyCode key = keybindManager.GetKeybind(keybind);
+                    string displayText = (key == KeyCode.None) ? "Not Bound" : key.ToString();
+                    button.GetComponentInChildren<TextMeshProUGUI>().text = displayText;
+                }
+            }
         }
     }
 
     void RemoveDuplicateKeys(Button keyButton, KeyCode originalKey)
     {
+        string originalAction = GetButtonKeybind(keyButton);
         Dictionary<string, KeyCode> keybinds = keybindManager.GetTempKeybinds();
         List<string> actionsToUnbind = new List<string>();
 
+        // find all actions that use same key
         foreach (var keybind in keybinds)
         {
-            string action = keybind.Key; // i can't tell you how confusing it is to have keys not represents keys
+            string action = keybind.Key;
             KeyCode key = keybind.Value;
 
-            // add action to list if keys match (duplicate)
-            if (key == originalKey)
+            // add action to list if keys match (dupe) and it's not the original action
+            if (key == originalKey && action != originalAction)
             {
                 actionsToUnbind.Add(action);
             }
         }
 
-        // remove all keys aside from original key
+        // unbind all duplicate actions
         foreach (string action in actionsToUnbind)
         {
-            string originalAction = GetButtonKeybind(keyButton);
-            if (action != originalAction)
-            {
-                keybindManager.UpdateKeybind(action, KeyCode.None);
-                Debug.Log($"Duplicate key '{originalKey}' removed from action '{action}'.");
-            }
+            keybindManager.UpdateKeybind(action, KeyCode.None);
+            Debug.Log($"Duplicate key '{originalKey}' removed from action '{action}'.");
         }
-    }
-
-    void ResetButtonStyle(Button button, Color defaultColor)
-    {
-        // reset modified colors to default
-        ColorBlock colors = button.colors;
-        colors.normalColor = defaultColor;
-        
-        button.colors = colors;
-        button.interactable = true;
     }
 
     string GetButtonKeybind(Button button)
@@ -1400,6 +1437,12 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                     {
                         keybindManager.DiscardKeybindChanges();
                     }
+                    
+                    // Revert audio slider changes
+                    if (volumeSettings != null && volumeSettings.HasSliderChanged())
+                    {
+                        volumeSettings.RevertSliderChanges();
+                    }
 
                     // otherwise just returns to menu
                     ReturnToMainMenu();
@@ -1423,7 +1466,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                     }
                     TriggerFadeMessage("Changes have been saved.");
                     Debug.Log("Changes have been saved.");
-
                 }
                 break;
         }
