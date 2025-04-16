@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine;
 using TMPro;
 using System;
@@ -10,8 +11,6 @@ using UnityEditor;
 
 // can't navigate to menu on save/load screens if not on center (ui fix) - can't get this to happen anymore so i think it's fixed?
 
-// controls menu: does not highlight button on release
-// make escape key release key
 // fix video settings
 
 public class MainMenuController : MonoBehaviour // Terrence Akinola
@@ -28,13 +27,18 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     EventSystem eventSystem;
     TextMeshProUGUI menuTextLabel;
 
-    List<Selectable> disabledSelectables = new List<Selectable>();
-    Dictionary<Selectable, ColorBlock> originalSelectableColors = new Dictionary<Selectable, ColorBlock>();
-
     KeybindManager keybindManager;
     SaveController saveController;
     Coroutine currentKeybindCoroutine;
     Button[] modifiableButtons;
+    
+    List<Selectable> disabledSelectables = new List<Selectable>();
+    Dictionary<Selectable, ColorBlock> originalSelectableColors = new Dictionary<Selectable, ColorBlock>();
+
+
+    bool cursorWasVisible;
+    Vector3 lastMousePosition;
+    Vector2 offScreenPosition = new Vector2(-1000, -1000);
 
     [Header("Levels")]
     public string startingScene;
@@ -42,6 +46,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     void Start()
     {
         eventSystem = EventSystem.current;
+        cursorWasVisible = Cursor.visible;
+        lastMousePosition = Input.mousePosition;
         
         menuTextLabel = dialoguePopup.transform.Find("MenuText").GetComponent<TextMeshProUGUI>();
         keybindManager = GetComponent<KeybindManager>();
@@ -106,11 +112,47 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     void Update()
     {
         HandleKeyboardNavigation();
-        if (eventSystem.currentSelectedGameObject != null && eventSystem.currentSelectedGameObject != lastSelectedButton)
+        
+        // Track mouse movement
+        if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+        {
+            // Mouse moved - make cursor visible and reset position
+            Cursor.visible = true;
+            lastMousePosition = Input.mousePosition;
+        }
+        
+        // Hide cursor and move off-screen when using keyboard
+        if (eventSystem.currentSelectedGameObject != null && 
+            (Input.GetKeyDown(KeyCode.UpArrow) || 
+            Input.GetKeyDown(KeyCode.DownArrow) || 
+            Input.GetKeyDown(KeyCode.LeftArrow) || 
+            Input.GetKeyDown(KeyCode.RightArrow) ||
+            Input.GetKeyDown(KeyCode.Tab) ||
+            Input.GetKeyDown(KeyCode.Return)))
+        {
+            cursorWasVisible = Cursor.visible;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Confined;
+            Mouse.current.WarpCursorPosition(offScreenPosition);
+        }
+        
+        // Restore cursor when mouse moves
+        if (Cursor.visible == false && 
+            (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0))
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            Mouse.current.WarpCursorPosition(lastMousePosition);
+        }
+
+        // Existing selection tracking
+        if (eventSystem.currentSelectedGameObject != null && 
+            eventSystem.currentSelectedGameObject != lastSelectedButton)
         {
             lastSelectedButton = eventSystem.currentSelectedGameObject;
         }
 
+        // Handle case when no UI element is selected
         if (eventSystem.currentSelectedGameObject == null && Input.GetMouseButtonDown(0))
         {
             if (lastSelectedButton != null)
@@ -215,13 +257,24 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             }
         }
         
+        bool isRebinding = false;
         if (settingsMenu.activeSelf)
         {
             GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
             GameObject videoSettings = settingsMenu.transform.Find("VideoSettings").gameObject;
             GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
 
-            if (Input.GetKeyDown(KeyCode.Tab))
+            foreach (Transform keybindObject in controlsSettings.transform)
+            {
+                Button button = keybindObject.GetComponentInChildren<Button>();
+                if (button != null && !button.interactable)
+                {
+                    isRebinding = true;
+                    break;
+                }
+            }
+
+            if (!isRebinding && Input.GetKeyDown(KeyCode.Tab))
             {
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) // shift + tab: move to the previous tab
                 {
@@ -234,7 +287,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) // go back to the previous menu
+        if (!isRebinding && Input.GetKeyDown(KeyCode.Escape)) // go back to the previous menu
         {
             GoBack();
         }
@@ -1090,6 +1143,10 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         // refresh button
         keyButton.gameObject.SetActive(false);
         keyButton.gameObject.SetActive(true);
+
+        // highlight button on release
+        eventSystem.SetSelectedGameObject(keyButton.gameObject);
+        lastSelectedButton = keyButton.gameObject;
     }
 
     void OpenConflictPopup(Button keyButton, KeyCode newKey)
@@ -1128,13 +1185,19 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         RemoveDuplicateKeys(keyButton, newKey);
         RefreshAllKeybindButtons();
         
-        ReturnToSettingsPage();
+        ReturnToSettingsPage(keyButton.gameObject);
+
+        eventSystem.SetSelectedGameObject(keyButton.gameObject);
+        lastSelectedButton = keyButton.gameObject;
     }
 
     void ignoreKeybindChange(Button keyButton)
     {
         CancelKeybindUpdate(keyButton);
-        ReturnToSettingsPage();
+        ReturnToSettingsPage(keyButton.gameObject);
+
+        eventSystem.SetSelectedGameObject(keyButton.gameObject);
+        lastSelectedButton = keyButton.gameObject;
     }
 
     void RefreshAllKeybindButtons()
@@ -1304,6 +1367,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
     void OpenSettingsPopup(string action)
     {
+        GameObject returnButton = eventSystem.currentSelectedGameObject;
+
         // activates the settings pop up to reset/confirm changes made and continues based off user response
         GameObject settingsPopup = dialoguePopup.transform.Find("SettingsPopup").gameObject;
         TextMeshProUGUI popupTextLabel = settingsPopup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -1376,7 +1441,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
                 Button settingsOkay = noChangesPopup.transform.Find("Okay").GetComponent<Button>();
                 settingsOkay.onClick.RemoveAllListeners();
-                settingsOkay.onClick.AddListener(ReturnToSettingsPage);
+                settingsOkay.onClick.AddListener(() => ReturnToSettingsPage(returnButton));
                 return;
             }
         }
@@ -1389,11 +1454,11 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         settingsNo.onClick.RemoveAllListeners();
 
         // assign listeners to yes/no buttons
-        settingsYes.onClick.AddListener(() => SettingsChange(action, "yes"));
-        settingsNo.onClick.AddListener(() => SettingsChange(action, "no"));
+        settingsYes.onClick.AddListener(() => SettingsChange(action, "yes", returnButton));
+        settingsNo.onClick.AddListener(() => SettingsChange(action, "no", returnButton));
     }
 
-    void ReturnToSettingsPage()
+    void ReturnToSettingsPage(GameObject buttonToFocus = null) // optional parameter
     {
         RestoreDisabledButtons();
 
@@ -1405,16 +1470,25 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         noChangesPopup.SetActive(false);
         conflictPopup.SetActive(false);
 
-        SelectFirstButton();
+        if (buttonToFocus != null && buttonToFocus.activeInHierarchy)
+        {
+            eventSystem.SetSelectedGameObject(buttonToFocus);
+            lastSelectedButton = buttonToFocus;
+        }
+        else
+        {
+            SelectFirstButton();
+        }
     }
 
-    void SettingsChange(string action, string choice)
+    void SettingsChange(string action, string choice, GameObject returnButton)
     {
         // functionality for buttons in settings pop up
         Debug.Log($"{action}, {choice}");
-        ReturnToSettingsPage();
+        ReturnToSettingsPage(returnButton);
 
         // different cases for settings button presses
+        GameObject buttonToSelect = lastSelectedButton;
         switch (action)
         {
             case "reset":
@@ -1438,7 +1512,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                         keybindManager.DiscardKeybindChanges();
                     }
                     
-                    // Revert audio slider changes
+                    // revert audio slider changes
                     if (volumeSettings != null && volumeSettings.HasSliderChanged())
                     {
                         volumeSettings.RevertSliderChanges();
@@ -1468,6 +1542,15 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                     Debug.Log("Changes have been saved.");
                 }
                 break;
+        }
+        if (buttonToSelect != null && buttonToSelect.activeInHierarchy)
+        {
+            eventSystem.SetSelectedGameObject(buttonToSelect);
+            lastSelectedButton = buttonToSelect;
+        }
+        else
+        {
+            SelectFirstButton();
         }
     }
 
