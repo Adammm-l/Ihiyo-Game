@@ -25,35 +25,43 @@ public class InventoryController : MonoBehaviour
 
     private static bool invenExists; // All instances of this Player references the exact same variable
 
-    public void Update() {
-        inventoryKey = keybindManager.GetKeybind("Inventory");
-        if (Input.GetKeyDown(inventoryKey)) { // Open and Close the Inventory Page
+        public void Update()
+        {
+            inventoryKey = keybindManager.GetKeybind("Inventory");
+            if (Input.GetKeyDown(inventoryKey))
+            {
+                if (inventoryUI.isActiveAndEnabled == false)
+                {
+                    inventoryUI.Show();
 
-            if (inventoryUI.isActiveAndEnabled == false) {
-                inventoryUI.Show();
+                    // Add this line to explicitly reset selection
+                    inventoryUI.ResetSelect();
 
-                foreach(var item in inventoryData.GetCurrentInventoryState()) {
-
-                    inventoryUI.UpdateData(item.Key, item.Value.item.ItemIMG, item.Value.num);
+                    foreach (var item in inventoryData.GetCurrentInventoryState())
+                    {
+                        inventoryUI.UpdateData(item.Key, item.Value.item.ItemIMG, item.Value.num);
+                    }
+                }
+                else
+                {
+                    inventoryUI.Hide();
                 }
             }
-
-            else {
-                inventoryUI.Hide();
-                
-            }
         }
-    }
-    void Start() {
-        keybindManager = FindObjectOfType<KeybindManager>();
 
-        if (keybindManager == null) {
-            Debug.LogError("KeybindManager not found in the scene! Ensure it's added to the scene.");
-    }
-}
+        void Start()
+        {
+            keybindManager = FindObjectOfType<KeybindManager>();
+
+            // Make sure these methods are called during initialization
+            PrepareInventoryData();
+            PrepareUI();
+
+            Debug.Log($"InventoryController initialized with data ID: {inventoryData.GetInstanceID()}");
+        }
 
 
-    public void PrepareUI() {
+        public void PrepareUI() {
 
         inventoryUI.InitializeInvenUI(inventoryData.Size);
         this.inventoryUI.OnDescriptionRequested += HandleDescriptionRequested;
@@ -88,7 +96,27 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    private void HandleDescriptionRequested(int itemIndex) {
+    // Add this public method to remove items by name
+    public void RemoveItemByName(string itemName, int amount)
+    {
+        if (inventoryData == null) return;
+    
+        // Loop through inventory slots to find the item
+        for (int i = 0; i < inventoryData.Size; i++)
+        {
+            var item = inventoryData.GetItemAt(i);
+            if (!item.isEmpty && item.item.name == itemName)
+            {
+                // Found the item, remove it
+                inventoryData.RemoveItem(i, amount);
+                Debug.Log($"Removed {amount}x {itemName} from UI inventory at slot {i}");
+                break;
+            }
+        }
+    }
+
+    private void HandleDescriptionRequested(int itemIndex)
+    {
         InventoryItem inventoryItem = inventoryData.GetItemAt(itemIndex);
 
         if(inventoryItem.isEmpty) {

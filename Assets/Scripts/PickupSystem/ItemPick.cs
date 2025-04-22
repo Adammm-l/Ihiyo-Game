@@ -17,11 +17,38 @@ public class ItemPick : MonoBehaviour
 
     [SerializeField] private float duration = 9.8f; // Animation Duration
 
-    private void Start() {
+    private void Start()
+    {
+        Debug.Log($"ItemPick: Started with item {InventoryItem.name}, quantity {Quantity}");
 
-        GetComponent<SpriteRenderer>().sprite = InventoryItem.ItemIMG; // Set pickup img to be the inventory image
-        StartCoroutine(AnimateItemPickUp()); // Destroy Item after animation ends
+        // Find PickUpSystem and check inventory reference
+        PickUpSystem pickupSystem = FindObjectOfType<PickUpSystem>();
+        if (pickupSystem != null)
+        {
+            Debug.Log($"ItemPick: Found PickUpSystem component");
 
+            // Using reflection to check if the inventory reference matches
+            var field = pickupSystem.GetType().GetField("inventoryData",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.Public);
+
+            if (field != null)
+            {
+                var pickupInventory = field.GetValue(pickupSystem) as InventorySO;
+                Debug.Log($"ItemPick: PickUpSystem has inventoryData with ID: {pickupInventory?.GetInstanceID()}");
+            }
+            else
+            {
+                Debug.Log("ItemPick: Could not access inventoryData field");
+            }
+        }
+        else
+        {
+            Debug.Log("ItemPick: No PickUpSystem found in the scene");
+        }
+
+        GetComponent<SpriteRenderer>().sprite = InventoryItem.ItemIMG;
+        StartCoroutine(AnimateItemPickUp());
     }
 
     public void DestroyItem() {
