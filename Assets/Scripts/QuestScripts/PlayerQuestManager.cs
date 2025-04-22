@@ -40,6 +40,11 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
             quest.isCompleted = true;
             quest.isEnabled = false;
             activeQuests.Remove(quest); // Remove completed quest
+
+            // Add this line to save completion status
+            PlayerPrefs.SetInt("Quest_" + quest.questTitle + "_Completed", 1);
+            PlayerPrefs.Save();
+
             Debug.Log($"[PlayerQuestManager] Quest completed and removed: {quest.questTitle}");
 
             QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
