@@ -116,4 +116,32 @@ public class TimeManager : MonoBehaviour
         if (displayHour == 0) displayHour = 12;
         return $"DAY {gameDay} at {displayHour:D2}:{gameMinute:D2} {period}";
     }
+
+    public void SetTime(int hour12, int minute, string period)
+    {
+        // Validate inputs
+        if (hour12 < 1 || hour12 > 12)
+        {
+            Debug.LogError("Invalid hour");
+            return;
+        }
+        if (minute < 0 || minute >= 60)
+        {
+            Debug.LogError("Invalid minute");
+            return;
+        }
+
+        // Convert to 24-hour format
+        if (period == "PM")
+        {
+            gameHour = (hour12 == 12) ? 12 : hour12 + 12;
+        }
+        else // AM
+        {
+            gameHour = (hour12 == 12) ? 0 : hour12;
+        }
+
+        gameMinute = minute;
+        UpdateTimeDisplay(); // Force immediate UI update
+    }
 }
