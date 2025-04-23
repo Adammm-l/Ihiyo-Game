@@ -25,7 +25,7 @@ TagManager:
   - SolidObjects
   - Player
   - GhostPassable
-  - 
+  - GhostMoveable
   - 
   - 
   - 
