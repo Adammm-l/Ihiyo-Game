@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using InventoryCTRL;
+using InventoryModel;
 //adam
 //this script basically manages all of NPC interactions and quest giving
 [System.Serializable]
@@ -228,12 +230,25 @@ public class NPCInteraction : MonoBehaviour
 
     private void GiveItemToPlayer(string itemName, int amount)
     {
-        Inventory playerInventory = FindObjectOfType<Inventory>();
+        // Quest system
+        Inventory questInventory = FindObjectOfType<Inventory>();
         for (int i = 0; i < amount; i++)
+            questInventory.AddItem(itemName);
+
+        // UI inventory - safely add through initialItems
+        InventoryController inventoryController = FindObjectOfType<InventoryController>();
+        ItemSO item = Resources.Load<ItemSO>("Items/" + itemName);
+
+        if (item != null && inventoryController != null)
         {
-            playerInventory.AddItem(itemName);
+            // Add through initial items list and refresh
+            inventoryController.initialItems.Add(new InventoryItem
+            {
+                item = item,
+                num = amount
+            });
+            inventoryController.PrepareInventoryData();
         }
-        //Debug.Log($"Gave player {amount}x {itemName}");
     }
 
     private void HandleDialogue(DialogueSegment currentSegment) //regular dialogue handler
@@ -333,7 +348,7 @@ public class NPCInteraction : MonoBehaviour
             {
                 // Remove items and complete the quest
                 Debug.Log($"[HandleQuestResponses] Player has enough items to complete the quest. Completing quest...");
-                playerInventory.RemoveItem(quest.requiredItem, quest.requiredAmount);
+                RemoveItemFromPlayer(quest.requiredItem, quest.requiredAmount);
 
                 PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
                 if (questManager != null)
@@ -487,5 +502,19 @@ public class NPCInteraction : MonoBehaviour
         yield return new WaitForSeconds(notificationDuration);
 
         questNotificationSprite.SetActive(false);
+    }
+    private void RemoveItemFromPlayer(string itemName, int amount)
+    {
+        // Remove from quest inventory
+        Inventory questInventory = FindObjectOfType<Inventory>();
+        if (questInventory != null)
+            questInventory.RemoveItem(itemName, amount);
+
+        // Remove from UI inventory
+        InventoryController inventoryController = FindObjectOfType<InventoryController>();
+        if (inventoryController != null)
+        {
+            inventoryController.RemoveItemByName(itemName, amount);
+        }
     }
 }
