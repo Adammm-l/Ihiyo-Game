@@ -7,36 +7,26 @@ public class PickUpSystem : MonoBehaviour
 {
 
     [SerializeField] private InventorySO inventoryData;
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log($"PickUpSystem: Triggered by {collision.gameObject.name}");
+ 
+    private void OnTriggerEnter2D(Collider2D collision) {
 
         ItemPick item = collision.GetComponent<ItemPick>();
 
-        if (item != null)
-        {
-            Debug.Log($"PickUpSystem: Found ItemPick component with item {item.InventoryItem.name}, qty: {item.Quantity}");
-            Debug.Log($"PickUpSystem: Using inventoryData with ID: {inventoryData.GetInstanceID()}");
+        if (item != null) {
 
             int remind = inventoryData.AddItem(item.InventoryItem, item.Quantity);
 
-            Debug.Log($"PickUpSystem: AddItem returned {remind} (0 means all items added successfully)");
+            if (remind == 0) {
 
-            if (remind == 0)
-            {
-                Debug.Log($"PickUpSystem: All items added, destroying pickup");
-                item.DestroyItem();
+                item.DestroyItem(); // End the Item
+
             }
-            else
-            {
-                Debug.Log($"PickUpSystem: Not all items added, remaining: {remind}");
+
+            else {
+
                 item.Quantity = remind;
+
             }
-        }
-        else
-        {
-            Debug.Log($"PickUpSystem: No ItemPick component found on collision object");
         }
     }
 }
