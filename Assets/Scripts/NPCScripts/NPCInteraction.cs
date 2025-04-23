@@ -230,24 +230,24 @@ public class NPCInteraction : MonoBehaviour
 
     private void GiveItemToPlayer(string itemName, int amount)
     {
-        // Quest system
+        // Always add to quest inventory
         Inventory questInventory = FindObjectOfType<Inventory>();
         for (int i = 0; i < amount; i++)
-            questInventory.AddItem(itemName);
-
-        // UI inventory - safely add through initialItems
-        InventoryController inventoryController = FindObjectOfType<InventoryController>();
-        ItemSO item = Resources.Load<ItemSO>("Items/" + itemName);
-
-        if (item != null && inventoryController != null)
         {
-            // Add through initial items list and refresh
-            inventoryController.initialItems.Add(new InventoryItem
-            {
-                item = item,
-                num = amount
-            });
-            inventoryController.PrepareInventoryData();
+            questInventory.AddItem(itemName);
+        }
+
+        // Check if this item should also appear in UI inventory
+        ItemSO itemSO = Resources.Load<ItemSO>("Items/" + itemName);
+        if (itemSO != null)
+        {
+            // This is a physical item with a UI representation
+            Debug.Log($"Adding {itemName} to UI inventory");
+            InventoryBridge.AddItem(itemSO, amount);
+        }
+        else
+        {
+            Debug.Log($"Item {itemName} is non-physical, only added to quest inventory");
         }
     }
 
