@@ -31,17 +31,15 @@ public class ItemPickup : MonoBehaviour
     void Update()
     {
         interactKey = keybindManager.GetKeybind("Interact");
-        if (isPlayerInRange && Input.GetKeyDown(interactKey) && !hasBeenPickedUp)
+        if (isPlayerInRange && Input.GetKeyDown(interactKey))
         {
-            hasBeenPickedUp = true; // Prevent multiple pickups
-
             // Add to quest inventory
-            Inventory playerInventory = FindObjectOfType<Inventory>();
-            if (playerInventory != null && item != null)
+            Inventory questInventory = FindObjectOfType<Inventory>();
+            if (questInventory != null && item != null)
             {
-                playerInventory.AddItem(item.ItemName);
+                questInventory.AddItem(item.ItemName);
 
-                // Update quests
+                // Update quest progress
                 PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
                 if (questManager != null)
                     questManager.UpdateQuestProgress(item.ItemName);
@@ -51,8 +49,12 @@ public class ItemPickup : MonoBehaviour
                     questLogManager.UpdateQuestLog();
             }
 
-            // Let ItemPick component handle UI inventory
-            // We just need to destroy the object
+            // Add to UI inventory through bridge
+            if (inventoryItemSO != null)
+            {
+                InventoryBridge.AddItem(inventoryItemSO, 1);
+            }
+
             Debug.Log($"Picked up: {item.ItemName}");
             Destroy(gameObject);
         }
