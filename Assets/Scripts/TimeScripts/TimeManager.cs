@@ -11,7 +11,6 @@ public class TimeManager : MonoBehaviour
     [SerializeField] private float secondsPerMinute = 1f;
     private int gameHour = 8;
     private int gameMinute = 0;
-    private int gameDay = 1; // Added day counter
     private float timer = 0f;
     private void Awake()
     {
@@ -53,7 +52,6 @@ public class TimeManager : MonoBehaviour
     {
         gameHour = 8;
         gameMinute = 0;
-        gameDay = 1; // Initialize day to 1
     }
     // Update is called once per frame
     private void Update()
@@ -76,7 +74,6 @@ public class TimeManager : MonoBehaviour
             if (gameHour >= 24)
             {
                 gameHour = 0;
-                gameDay++; // Increment day when hour resets
             }
         }
     }
@@ -89,7 +86,7 @@ public class TimeManager : MonoBehaviour
         {
             displayHour = 12;
         }
-        string formattedTime = $"DAY {gameDay} at {displayHour:D2}:{gameMinute:D2} {period}";
+        string formattedTime = $"{displayHour:D2}:{gameMinute:D2} {period}";
         timeDisplay.text = formattedTime;
     }
     public void SetTimeDisplay(TextMeshProUGUI display)
@@ -105,16 +102,12 @@ public class TimeManager : MonoBehaviour
     {
         return gameMinute;
     }
-    public int GetDay()
-    {
-        return gameDay;
-    }
     public string GetTimeString()
     {
         string period = gameHour >= 12 ? "PM" : "AM";
         int displayHour = gameHour % 12;
         if (displayHour == 0) displayHour = 12;
-        return $"DAY {gameDay} at {displayHour:D2}:{gameMinute:D2} {period}";
+        return $"{displayHour:D2}:{gameMinute:D2} {period}";
     }
 
     public void SetTime(int hour12, int minute, string period)
