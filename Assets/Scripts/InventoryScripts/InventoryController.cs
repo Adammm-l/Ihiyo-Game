@@ -34,37 +34,24 @@ public class InventoryController : MonoBehaviour
                 {
                     inventoryUI.Show();
 
+                    // Add this line to explicitly reset selection
+                    inventoryUI.ResetSelect();
+
                     foreach (var item in inventoryData.GetCurrentInventoryState())
                     {
                         inventoryUI.UpdateData(item.Key, item.Value.item.ItemIMG, item.Value.num);
                     }
-
-                    // Add this line to ensure selection is reset after loading items
-                    inventoryUI.ResetSelect();
                 }
                 else
                 {
                     inventoryUI.Hide();
-                } 
+                }
             }
         }
 
         void Start()
         {
             keybindManager = FindObjectOfType<KeybindManager>();
-
-            if (keybindManager == null)
-            {
-                Debug.LogError("KeybindManager not found in the scene! Ensure it's added to the scene.");
-            }
-
-            // Debug initial inventory state
-            Debug.Log("Initial inventory state:");
-            for (int i = 0; i < inventoryData.Size; i++)
-            {
-                var item = inventoryData.GetItemAt(i);
-                Debug.Log($"Slot {i}: {(item.isEmpty ? "Empty" : item.item.name)}");
-            }
 
             // Make sure these methods are called during initialization
             PrepareInventoryData();
@@ -186,6 +173,6 @@ public class InventoryController : MonoBehaviour
         }
 
     }
-    }
+}
 
 }
