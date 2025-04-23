@@ -169,14 +169,9 @@ public class KeybindManager : MonoBehaviour // Terrence Akinola
     }
 
     void Start() {
-        if(!keybindExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
-
-            keybindExists = true;
+      
             DontDestroyOnLoad(transform.gameObject);
         }
+//meow
 
-        else { // Eliminate Duplicate Objects
-            Destroy(gameObject);
-        }
-}
 }
