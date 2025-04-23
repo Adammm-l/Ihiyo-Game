@@ -15,6 +15,10 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     //private static bool saveExists; // All instances of this Player references the exact same variable
 
     // Start is called before the first frame update
+
+    void Awake() {
+        
+    }
     void Start()
     {
         saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
@@ -68,13 +72,18 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             saveButton.onClick.AddListener(SaveGame);
             Debug.Log("Button Reconnected!");
         }
-        else {
+        else { 
             Debug.LogError("Button not found");
         }
         
         if (File.Exists(savePath)) {
 
             SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(savePath)); //Pull Existing File Information
+
+            GameObject[] wavePoints = GameObject.FindGameObjectsWithTag("WavePoint"); // Tag all wavepoints in the scene
+            foreach (GameObject wavePoint in wavePoints) { // Disable all active wave points to prevent the player from randomly teleporting upon spawn
+                wavePoint.SetActive(false);
+            }
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition; //Sets Value of Player Position
 
@@ -88,7 +97,10 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         }
 
         else {
-
+            GameObject[] wavePoints = GameObject.FindGameObjectsWithTag("WavePoint"); // Tag all wavepoints in the scene
+            foreach (GameObject wavePoint in wavePoints) { // Disable all active wave points to prevent the player from randomly teleporting upon spawn
+                wavePoint.SetActive(false);
+            }
              SaveGame(); //If there isn't a save, start at initial save point
              MapController_Dynamic.Instance?.GenerateMap();
              return false;

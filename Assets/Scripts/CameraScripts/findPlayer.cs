@@ -28,6 +28,7 @@ public class findPlayer : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
@@ -36,7 +37,12 @@ public class findPlayer : MonoBehaviour
             defaultFollowTarget = player.transform;
             playerCamera.Follow = defaultFollowTarget;
             playerCamera.LookAt = defaultFollowTarget;
+            Camera.main.transform.position = defaultFollowTarget.position + new Vector3(0f,2f,-10f); 
             Debug.Log("Camera attached to Player");
+
+            //Snap the Main Camera to the player's position with default camera offset
+
+            
         }
         else
         {
