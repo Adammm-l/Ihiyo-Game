@@ -45,28 +45,33 @@ public class UIInventory : MonoBehaviour
         }
     }
 
-    public void InitializeInvenUI(int intSize) {
+    public void InitializeInvenUI(int intSize)
+    {
+        // Clear any existing slots
+        foreach (Transform child in contentPane)
+        {
+            if (child.GetComponent<UIInventoryItem>() != null)
+                Destroy(child.gameObject);
+        }
+        uiItemList.Clear();
 
-        for (int i = 0; i < intSize; i++) {
-// Creates a number of items in a list
-
-            UIInventoryItem uIItem = Instantiate (itemPrefab, Vector3.zero, Quaternion.identity); // Basically creates the item object
+        for (int i = 0; i < intSize; i++)
+        {
+            UIInventoryItem uIItem = Instantiate(itemPrefab, Vector3.zero, Quaternion.identity); // Creates the item object
             uIItem.transform.SetParent(contentPane);
             uiItemList.Add(uIItem); // Add item to list
 
-// Assign Methods to Clicks
-
+            // Assign Methods to Clicks
             uIItem.OnItemClicked += HandleItemSelection;
             uIItem.OnItemBeginDrag += HandleBeginDrag;
             uIItem.OnItemDroppedOn += HandleSwap;
             uIItem.OnItemEndDrag += HandleEndDrag;
             uIItem.OnRightMouseBtnClick += HandleShowItemActions;
-
         }
     }
 
-// Show and Hide the Inventory Page
-    public void Show() {
+        // Show and Hide the Inventory Page
+        public void Show() {
 
         gameObject.SetActive(true);
         ResetSelect();

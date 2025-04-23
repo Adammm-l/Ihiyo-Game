@@ -23,4 +23,18 @@ MonoBehaviour:
     item: {fileID: 0}
   - num: 0
     item: {fileID: 0}
-  <Size>k__BackingField: 10
+  - num: 0
+    item: {fileID: 0}
+  - num: 0
+    item: {fileID: 0}
+  - num: 0
+    item: {fileID: 0}
+  - num: 0
+    item: {fileID: 0}
+  - num: 0
+    item: {fileID: 0}
+  - num: 0
+    item: {fileID: 0}
+  - num: 0
+    item: {fileID: 0}
+  <Size>k__BackingField: 12
