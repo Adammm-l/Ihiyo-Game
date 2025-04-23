@@ -44,13 +44,16 @@ public class InventoryController : MonoBehaviour
             }
         }
     }
-    void Start() {
-        keybindManager = FindObjectOfType<KeybindManager>();
+        void Start()
+        {
+            keybindManager = FindObjectOfType<KeybindManager>();
 
-        if (keybindManager == null) {
-            Debug.LogError("KeybindManager not found in the scene! Ensure it's added to the scene.");
-    }
-}
+            // Make sure these methods are called during initialization
+            PrepareInventoryData();
+            PrepareUI();
+
+            Debug.Log($"InventoryController initialized with data ID: {inventoryData.GetInstanceID()}");
+        }
 
 
     public void PrepareUI() {
@@ -78,7 +81,25 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    private void UpdateInventoryUI(Dictionary<int, InventoryItem> inventoryState) {
+        public void RemoveItemByName(string itemName, int amount)
+        {
+            if (inventoryData == null) return;
+
+            // Loop through inventory slots to find the item
+            for (int i = 0; i < inventoryData.Size; i++)
+            {
+                var item = inventoryData.GetItemAt(i);
+                if (!item.isEmpty && item.item.name == itemName)
+                {
+                    // Found the item, remove it
+                    inventoryData.RemoveItem(i, amount);
+                    Debug.Log($"Removed {amount}x {itemName} from UI inventory at slot {i}");
+                    break;
+                }
+            }
+        }
+
+        private void UpdateInventoryUI(Dictionary<int, InventoryItem> inventoryState) {
 
         inventoryUI.ResetAllItems();
 
