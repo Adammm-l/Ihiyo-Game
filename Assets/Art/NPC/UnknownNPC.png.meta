@@ -290,12 +290,12 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 10
-        y: 4
-        width: 12
+        y: 5
+        width: 13
         height: 27
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 0, y: 0, z: 1, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -331,12 +331,12 @@ TextureImporter:
       name: UnknownNPC_11
       rect:
         serializedVersion: 2
-        x: 56
-        y: 4
+        x: 68
+        y: 34
         width: 12
         height: 28
       alignment: 9
-      pivot: {x: -0.5760441, y: 0.51190054}
+      pivot: {x: 0.4846271, y: 0.492136}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -357,7 +357,7 @@ TextureImporter:
         width: 1
         height: 1
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -365,6 +365,27 @@ TextureImporter:
       bones: []
       spriteID: f0d9a9683051e4b229acddb01bd2f5ab
       internalID: 443872795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UnknownNPC_13
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 4
+        width: 11
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23d79873b450446169149c87534f6b82
+      internalID: -19030358
       vertices: []
       indices: 
       edges: []
@@ -385,6 +406,7 @@ TextureImporter:
       UnknownNPC_10: 1512719578
       UnknownNPC_11: 79480682
       UnknownNPC_12: 443872795
+      UnknownNPC_13: -19030358
       UnknownNPC_2: 1944577665
       UnknownNPC_3: -1909407851
       UnknownNPC_4: 629977425
