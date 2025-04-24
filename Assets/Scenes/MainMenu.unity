@@ -11432,7 +11432,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 35
-  m_CharacterLimit: 32
+  m_CharacterLimit: 16
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
@@ -25753,7 +25753,6 @@ MonoBehaviour:
   settingsMenu: {fileID: 407783228}
   galleryMenu: {fileID: 2129287586}
   dialoguePopup: {fileID: 2109524238}
-  startingScene: ihi_room
 --- !u!114 &1755812789
 MonoBehaviour:
   m_ObjectHideFlags: 0

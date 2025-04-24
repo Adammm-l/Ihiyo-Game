@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 // Terrence and Edwin (Eri)
 public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) Sotres
@@ -11,7 +12,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     public const int MAX_SLOTS = 3;
     const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
-    Vector3 defaultPlayerPosition = new Vector3(-5.5f, 1.25f, 0f);
+    SaveData defaultSaveData;
     //private static bool saveExists; // All instances of this Player references the exact same variable
 
     // Start is called before the first frame update
@@ -23,7 +24,15 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     {
         saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
         Directory.CreateDirectory(saveLocation);
-        DontDestroyOnLoad(transform.gameObject);
+
+        defaultSaveData = new SaveData
+        {
+            playerPosition = new Vector3(-5.5f, 1.25f, 0f),
+            sceneName = "Ihi_House",
+            mapBoundary = "Ihi_Room",
+            currentDay = 1,
+            isNight = false,
+        };
     }
 
     public void SaveGame() 
@@ -41,6 +50,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             saveData = new SaveData(); // initialize new save data if no file exists (literally just to please the compiler)
         }
         saveData.playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+        saveData.sceneName = SceneManager.GetActiveScene().name;
         saveData.mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name;
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
@@ -53,11 +63,12 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         
         SaveData saveData = new SaveData 
         {
-            playerPosition = defaultPlayerPosition,
-            mapBoundary = "Ihi_Room",
+            playerPosition = defaultSaveData.playerPosition,
+            sceneName = defaultSaveData.sceneName,
+            mapBoundary = defaultSaveData.mapBoundary,
             saveName = name,
-            currentDay = 1,
-            isNight = false
+            currentDay = defaultSaveData.currentDay,
+            isNight = defaultSaveData.isNight,
         };
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
@@ -143,5 +154,17 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     {
         PlayerPrefs.SetInt(ActiveSlotKey, activeSlot);
         PlayerPrefs.Save();
+    }
+
+    public string GetSavedSceneName(int slot)
+    {
+        string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
+        if (!File.Exists(savePath))
+        {
+            return defaultSaveData.sceneName; // default
+        }
+
+        SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(savePath));
+        return saveData.sceneName;
     }
 }

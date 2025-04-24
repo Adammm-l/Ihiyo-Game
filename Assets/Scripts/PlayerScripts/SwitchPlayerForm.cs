@@ -27,6 +27,7 @@ public class SwitchPlayerForm : MonoBehaviour
     Rigidbody2D rb;
     BoxCollider2D playerCollider;
     PlayerControl playerMovement;
+    GameObject ghostIndicator;
 
     [Header("Keybinds")]
     KeybindManager keybindManager;
@@ -63,9 +64,19 @@ public class SwitchPlayerForm : MonoBehaviour
 
         keybindManager = keybindHolder.GetComponent<KeybindManager>();
         playerMovement = GetComponent<PlayerControl>();
-        
+        ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
         FindAllPassableObjects();
         FindAllPossessableObjects();
+
+        if (isGhost)
+        {
+            EnterGhostForm();
+        }
+        else
+        {
+            EnterPhysicalForm();
+        }
+        UpdatePossessableObjects();
     }
 
     void FindAllPassableObjects()
@@ -203,6 +214,12 @@ public class SwitchPlayerForm : MonoBehaviour
         
         HighlightAllPassableObjects();
         UpdatePossessableObjects();
+        
+        Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
+        Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
+
+        ghostStateIcon.gameObject.SetActive(true);
+        humanStateIcon.gameObject.SetActive(false);
     }
 
     void EnterPhysicalForm()
@@ -216,6 +233,12 @@ public class SwitchPlayerForm : MonoBehaviour
         ResetAllPassableObjectColors();
         ResetAllPossessableObjectColors();
         ReleaseObject();
+        
+        Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
+        Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
+
+        ghostStateIcon.gameObject.SetActive(false);
+        humanStateIcon.gameObject.SetActive(true);
     }
 
     string GetLayerNameFromLayerMask(LayerMask layerMask)

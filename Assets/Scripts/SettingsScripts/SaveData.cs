@@ -8,6 +8,7 @@ using UnityEngine;
 public class SaveData
 {
     public Vector3 playerPosition;
+    public string sceneName;
     public string mapBoundary; //Boundary Name for Map
     public string saveName;
     public int currentDay;

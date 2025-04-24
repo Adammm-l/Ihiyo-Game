@@ -10,7 +10,6 @@ using System;
 using UnityEditor;
 
 // can't navigate to menu on save/load screens if not on center (ui fix) - can't get this to happen anymore so i think it's fixed?
-
 // fix video settings
 
 public class MainMenuController : MonoBehaviour // Terrence Akinola
@@ -39,9 +38,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     bool cursorWasVisible;
     Vector3 lastMousePosition;
     Vector2 offScreenPosition = new Vector2(-1000, -1000);
-
-    [Header("Levels")]
-    public string startingScene;
 
     void Start()
     {
@@ -938,6 +934,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     void LoadSave(int saveSlot)
     {
         // open scene and load data from save slot
+        string startingScene = saveController.GetSavedSceneName(saveSlot);
+
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadScene(startingScene);
 
