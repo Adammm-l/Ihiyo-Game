@@ -108,8 +108,16 @@ public class NPCInteraction : MonoBehaviour
 
     private void Interact()
     {
-        //Debug.Log($"Interact called. dialogueSegmentIndex: {dialogueSegmentIndex}, interactionCount: {interactionCount}");
         PlayerControl player = FindObjectOfType<PlayerControl>();
+
+        // Check if player is in ghost form
+        SwitchPlayerForm playerForm = player.GetComponent<SwitchPlayerForm>();
+        if (playerForm != null && playerForm.isGhost)
+        {
+            // Let GhostNPCInteraction handle it
+            return;
+        }
+
         NPCMovement npcMovement = GetComponentInParent<NPCMovement>();
         MerchantTypeNPC merchant = GetComponentInParent<MerchantTypeNPC>();
         player.canMove = false;
