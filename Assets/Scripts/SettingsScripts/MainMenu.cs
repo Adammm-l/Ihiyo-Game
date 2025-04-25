@@ -27,7 +27,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     TextMeshProUGUI menuTextLabel;
 
     KeybindManager keybindManager;
-    SaveController saveController;
+    SaveController saveManager;
     Coroutine currentKeybindCoroutine;
     Button[] modifiableButtons;
     
@@ -46,8 +46,8 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         lastMousePosition = Input.mousePosition;
         
         menuTextLabel = dialoguePopup.transform.Find("MenuText").GetComponent<TextMeshProUGUI>();
-        keybindManager = GetComponent<KeybindManager>();
-        saveController = GetComponent<SaveController>();
+        keybindManager = KeybindManager.Instance;
+        saveManager = SaveController.Instance;
         volumeSettings = GetComponent<VolumeSettings>();
         currentKeybindCoroutine = null;
 
@@ -662,7 +662,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         bool hasSaves = false;
         for (int i = 1; i <= 3; i++)
         {
-            if (saveController.SaveExists(i))
+            if (saveManager.SaveExists(i))
             {
                 hasSaves = true;
                 break;
@@ -708,7 +708,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         int saveCount = 0;
         for (int i = 1; i <= SaveController.MAX_SLOTS; i++) // count number of valid saves
         {
-            if (saveController.SaveExists(i))
+            if (saveManager.SaveExists(i))
             {
                 saveCount++;
             }
@@ -742,7 +742,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             slotIndex++;
             int currentSlot = slotIndex;
 
-            SaveData saveData = saveController.GetSaveData(currentSlot);
+            SaveData saveData = saveManager.GetSaveData(currentSlot);
             bool slotHasSave = saveData != null;
 
             if (slotHasSave)
@@ -839,7 +839,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
             if (action == "save")
             {
-                if (saveController.SaveExists(currentSlot))
+                if (saveManager.SaveExists(currentSlot))
                 {
                     slotButton.onClick.AddListener(() => OpenOverwritePopup(currentSlot));
                 }
@@ -850,7 +850,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             }
             if (action == "load")
             {
-                if (saveController.SaveExists(currentSlot))
+                if (saveManager.SaveExists(currentSlot))
                 {
                     slotButton.onClick.AddListener(() => LoadSave(currentSlot));
                 }
@@ -918,30 +918,30 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
         RestoreDisabledButtons();
         namePopup.SetActive(false);
-        if (saveController.SaveExists(saveSlot))
+        if (saveManager.SaveExists(saveSlot))
         {
-            saveController.DeleteSave(saveSlot);
+            saveManager.DeleteSave(saveSlot);
             Debug.Log($"Save in slot {saveSlot} was overwritten with new save: {enteredName}");
         }
         else
         {
             Debug.Log($"New game saved to slot {saveSlot} with name '{enteredName}'");
         }
-        saveController.CreateSave(saveSlot, enteredName);
+        saveManager.CreateSave(saveSlot, enteredName);
         LoadSave(saveSlot);
     }
 
     void LoadSave(int saveSlot)
     {
         // open scene and load data from save slot
-        string startingScene = saveController.GetSavedSceneName(saveSlot);
+        string startingScene = saveManager.GetSavedSceneName(saveSlot);
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadScene(startingScene);
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            saveController.LoadGame(saveSlot);
+            saveManager.LoadGame(saveSlot);
             Debug.Log($"Loaded slot {saveSlot}.");
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }

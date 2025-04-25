@@ -13,12 +13,24 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
     SaveData defaultSaveData;
+
+    public static SaveController Instance;
     //private static bool saveExists; // All instances of this Player references the exact same variable
 
     // Start is called before the first frame update
 
-    void Awake() {
-        
+    void Awake() 
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            DestroyImmediate(gameObject);
+            return;
+        }
     }
     void Start()
     {

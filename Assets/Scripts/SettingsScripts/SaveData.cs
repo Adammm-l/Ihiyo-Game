@@ -16,4 +16,10 @@ public class SaveData
     
     // probably need to add time, dialogue, completed quests, items, 
     // a whole bunch of other stuff now that i think about it
+
+    // moveable object positions
+    // npc positions
+    // can activate ghost form
+    // has access to time machine
+    // replace day with time
 }

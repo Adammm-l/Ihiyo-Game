@@ -1168,6 +1168,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1823499715910502926, guid: 4fff8ddddef63524fb16813c0c62d711, type: 3}
       insertIndex: -1
       addedObject: {fileID: 149784033}
+    - targetCorrespondingSourceObject: {fileID: 1823499715910502926, guid: 4fff8ddddef63524fb16813c0c62d711, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 149784037}
   m_SourcePrefab: {fileID: 100100000, guid: 4fff8ddddef63524fb16813c0c62d711, type: 3}
 --- !u!1 &149784032 stripped
 GameObject:
@@ -1195,6 +1198,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &149784037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149784032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39f47bca1119e79428f561113a9c1147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &152705453
@@ -1372,7 +1387,6 @@ MonoBehaviour:
     itemToGive: 
     itemAmount: 1
   interactionText: {fileID: 1108672924}
-  keybindHolder: {fileID: 200205733}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3
   BoughtItemText: {fileID: 827341234}
@@ -7152,17 +7166,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
---- !u!114 &625298736 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2209956000850791820, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
-  m_PrefabInstance: {fileID: 625298734}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4396b4dd99e9a6b4b88ecf8b516dd9ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &625372468
 GameObject:
   m_ObjectHideFlags: 0
@@ -9002,7 +9005,6 @@ MonoBehaviour:
     itemToGive: 
     itemAmount: 1
   interactionText: {fileID: 190299204}
-  keybindHolder: {fileID: 200205733}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3
   BoughtItemText: {fileID: 827341234}
@@ -10897,7 +10899,11 @@ PrefabInstance:
     - target: {fileID: 6656336149255868461, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 625298736}
+      objectReference: {fileID: 5796910719716993004, guid: c0ced5731438e714db5e85ca5e90704f, type: 3}
+    - target: {fileID: 6656336149255868461, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SaveGame
+      objectReference: {fileID: 0}
     - target: {fileID: 6835968890250120417, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

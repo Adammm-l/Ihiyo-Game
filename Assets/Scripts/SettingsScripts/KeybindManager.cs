@@ -11,10 +11,22 @@ public class KeybindManager : MonoBehaviour // Terrence Akinola
     Dictionary<string, KeyCode> defaultKeybinds = new Dictionary<string, KeyCode>();
     Dictionary<string, KeyCode> oldKeybinds = new Dictionary<string, KeyCode>();
 
+    public static KeybindManager Instance;
     // putting it on awake fixes issues with keybindmanager being null on certain start calls
     // private static bool keybindExists; // All instances of this Player references the exact same variable
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (Instance != this)
+        {
+            DestroyImmediate(gameObject);
+            return;
+        }
+
         // initializes default keybinds
         defaultKeybinds = new Dictionary<string, KeyCode>
         {

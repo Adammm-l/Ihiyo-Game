@@ -22,7 +22,6 @@ public class SwitchPlayerForm : MonoBehaviour
     Renderer playerRenderer;
 
     [Header("References")]
-    public GameObject keybindHolder;
     public CinemachineVirtualCamera cmVirtualCamera;
     Rigidbody2D rb;
     BoxCollider2D playerCollider;
@@ -62,7 +61,7 @@ public class SwitchPlayerForm : MonoBehaviour
             return;
         }
 
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
         playerMovement = GetComponent<PlayerControl>();
         ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
         FindAllPassableObjects();

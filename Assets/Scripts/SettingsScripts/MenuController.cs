@@ -5,7 +5,6 @@ using UnityEngine;
 public class MenuController : MonoBehaviour
 {
     [Header("References")]
-    public GameObject keybindHolder;
     public GameObject menuCanvas;
     KeybindManager keybindManager;
     KeyCode gameMenuKey;
@@ -17,7 +16,7 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
         menuCanvas.SetActive(false); //So Menu isn't always on
         if(!menuExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
 
