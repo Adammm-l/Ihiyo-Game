@@ -13,8 +13,11 @@ EditorBuildSettings:
     guid: 36aa15e3cebe8084f83a6a1285e98990
   - enabled: 1
     path: Assets/Scenes/Ihi_House.unity
-    guid: 0cc74973480dc3d4db16566aa6e1ad12
+    guid: 9f0bc230896e36c499bfc551e7f2d374
   - enabled: 1
     path: Assets/Scenes/Dark_Hall.unity
     guid: 5fce0f3f5ed91904589971075725db7f
+  - enabled: 0
+    path: Assets/Scenes/ihi_room.unity
+    guid: 0cc74973480dc3d4db16566aa6e1ad12
   m_configObjects: {}

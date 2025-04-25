@@ -8236,6 +8236,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameController
       objectReference: {fileID: 0}
+    - target: {fileID: 5026507223717984794, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
+      propertyPath: MapBounds
+      value: 
+      objectReference: {fileID: 6166148035529231480}
     - target: {fileID: 6581697393602967765, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1168.9967
@@ -14504,6 +14508,11 @@ PrefabInstance:
       addedObject: {fileID: 971669751}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 256e6b9941bf52846bbe8f4009b672cc, type: 3}
+--- !u!1 &6166148035529231480 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3897629531305048700, guid: 256e6b9941bf52846bbe8f4009b672cc, type: 3}
+  m_PrefabInstance: {fileID: 6166148035529231479}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6632405425686612204
 PrefabInstance:
   m_ObjectHideFlags: 0
