@@ -12,12 +12,11 @@ public class GhostNPCInteraction : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] private GameObject thoughtBubbleUI;
-    [SerializeField] private RectTransform spawnArea;
+    [SerializeField] private RectTransform thoughtsContainer;
     [SerializeField] private GameObject thoughtTextPrefab;
     [SerializeField] private TextMeshProUGUI titleText;
 
     [Header("References")]
-    [SerializeField] private GameObject interactionTextGhost;
     [SerializeField] private GameObject keybindHolder;
 
     [Header("Thought Animation Settings")]
@@ -41,15 +40,6 @@ public class GhostNPCInteraction : MonoBehaviour
     {
         keybindManager = keybindHolder.GetComponent<KeybindManager>();
         npcMovement = GetComponentInParent<NPCMovement>();
-
-        // Set up ghost interaction text
-        if (interactionTextGhost != null)
-        {
-            TextMeshProUGUI interactionTextBox = interactionTextGhost.GetComponent<TextMeshProUGUI>();
-            interactKey = keybindManager.GetKeybind("Interact");
-            interactionTextBox.text = $"\"{interactKey}\" to read thoughts";
-            interactionTextGhost.SetActive(false);
-        }
 
         // Make sure thoughts UI is hidden at start
         if (thoughtBubbleUI != null)
@@ -75,14 +65,9 @@ public class GhostNPCInteraction : MonoBehaviour
         // Update interact key in case keybinds changed
         interactKey = keybindManager.GetKeybind("Interact");
 
-        // Only show ghost interaction text when player is in ghost form
+        // Handle ghost interaction when player is in ghost form
         if (playerForm != null && playerForm.isGhost)
         {
-            if (interactionTextGhost != null)
-            {
-                interactionTextGhost.SetActive(true);
-            }
-
             // Handle ghost interaction
             if (Input.GetKeyDown(interactKey) && !isShowingThoughts)
             {
@@ -91,13 +76,6 @@ public class GhostNPCInteraction : MonoBehaviour
             else if (Input.GetKeyDown(interactKey) && isShowingThoughts)
             {
                 HideThoughts();
-            }
-        }
-        else
-        {
-            if (interactionTextGhost != null)
-            {
-                interactionTextGhost.SetActive(false);
             }
         }
     }
@@ -123,11 +101,6 @@ public class GhostNPCInteraction : MonoBehaviour
         {
             isPlayerInRange = false;
             HideThoughts();
-
-            if (interactionTextGhost != null)
-            {
-                interactionTextGhost.SetActive(false);
-            }
         }
     }
 
@@ -146,6 +119,7 @@ public class GhostNPCInteraction : MonoBehaviour
         if (titleText != null)
         {
             titleText.text = $"{npcName}'s Thoughts";
+            titleText.characterSpacing = 1f;
             titleText.gameObject.SetActive(true);
         }
 
@@ -211,7 +185,7 @@ public class GhostNPCInteraction : MonoBehaviour
         string thought = thoughtFragments[Random.Range(0, thoughtFragments.Count)];
 
         // Create text object at random position within container
-        GameObject thoughtObj = Instantiate(thoughtTextPrefab, spawnArea);
+        GameObject thoughtObj = Instantiate(thoughtTextPrefab, thoughtsContainer);
         RectTransform rt = thoughtObj.GetComponent<RectTransform>();
 
         // Increased padding to keep text away from borders
@@ -219,8 +193,8 @@ public class GhostNPCInteraction : MonoBehaviour
         float verticalPadding = 40f;
 
         // Random position within container bounds
-        float randX = Random.Range(-spawnArea.rect.width / 2 + padding, spawnArea.rect.width / 2 - padding);
-        float randY = Random.Range(-spawnArea.rect.height / 2 + verticalPadding, spawnArea.rect.height / 2 - verticalPadding);
+        float randX = Random.Range(-thoughtsContainer.rect.width / 2 + padding, thoughtsContainer.rect.width / 2 - padding);
+        float randY = Random.Range(-thoughtsContainer.rect.height / 2 + verticalPadding, thoughtsContainer.rect.height / 2 - verticalPadding);
         rt.anchoredPosition = new Vector2(randX, randY);
 
         // Set the text
@@ -232,7 +206,7 @@ public class GhostNPCInteraction : MonoBehaviour
         textComponent.enableWordWrapping = true;
 
         // Set maximum width for the text based on panel size
-        float maxWidth = spawnArea.rect.width - (padding * 2);
+        float maxWidth = thoughtsContainer.rect.width - (padding * 2);
         rt.sizeDelta = new Vector2(maxWidth * 0.6f, textComponent.preferredHeight);
 
         // Add some rotation for variety

@@ -5,13 +5,13 @@ using TMPro;
 //Adam
 public class TimeManager : MonoBehaviour
 {
-    // Singleton instance
     public static TimeManager Instance { get; private set; }
     [SerializeField] private TextMeshProUGUI timeDisplay;
     [SerializeField] private float secondsPerMinute = 1f;
     private int gameHour = 8;
     private int gameMinute = 0;
     private float timer = 0f;
+
     private void Awake()
     {
         if (Instance == null)
@@ -24,14 +24,17 @@ public class TimeManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
     private void OnEnable()
     {
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
     private void OnDisable()
     {
         UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
         if (timeDisplay == null)
@@ -47,12 +50,14 @@ public class TimeManager : MonoBehaviour
             }
         }
     }
+
     // Start is called before the first frame update
     private void Start()
     {
         gameHour = 8;
         gameMinute = 0;
     }
+
     // Update is called once per frame
     private void Update()
     {
@@ -64,6 +69,7 @@ public class TimeManager : MonoBehaviour
         }
         UpdateTimeDisplay();
     }
+
     private void IncrementTime()
     {
         gameMinute++;
@@ -77,31 +83,35 @@ public class TimeManager : MonoBehaviour
             }
         }
     }
+
     private void UpdateTimeDisplay()
     {
         if (timeDisplay == null) return;
         string period = gameHour >= 12 ? "PM" : "AM";
         int displayHour = gameHour % 12;
-        if (displayHour == 0) //convert to AM/PM vers
+        if (displayHour == 0) 
         {
             displayHour = 12;
         }
         string formattedTime = $"{displayHour:D2}:{gameMinute:D2} {period}";
         timeDisplay.text = formattedTime;
     }
+
     public void SetTimeDisplay(TextMeshProUGUI display)
     {
         timeDisplay = display;
     }
-    //Public getter methods
+    
     public int GetHour()
     {
         return gameHour;
     }
+
     public int GetMinute()
     {
         return gameMinute;
     }
+
     public string GetTimeString()
     {
         string period = gameHour >= 12 ? "PM" : "AM";
@@ -112,7 +122,7 @@ public class TimeManager : MonoBehaviour
 
     public void SetTime(int hour12, int minute, string period)
     {
-        // Validate inputs
+        
         if (hour12 < 1 || hour12 > 12)
         {
             Debug.LogError("Invalid hour");
@@ -124,7 +134,7 @@ public class TimeManager : MonoBehaviour
             return;
         }
 
-        // Convert to 24-hour format
+        
         if (period == "PM")
         {
             gameHour = (hour12 == 12) ? 12 : hour12 + 12;
@@ -135,6 +145,6 @@ public class TimeManager : MonoBehaviour
         }
 
         gameMinute = minute;
-        UpdateTimeDisplay(); // Force immediate UI update
+        UpdateTimeDisplay();
     }
 }

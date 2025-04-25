@@ -18,7 +18,6 @@ public class SceneLightingManager : MonoBehaviour
     [SerializeField] private string playerTag = "Player";
     [SerializeField] private bool affectPlayer = true;
 
-    // Track scene objects and persistent objects separately
     private List<SpriteRenderer> sceneRenderers = new List<SpriteRenderer>();
     private List<Tilemap> sceneTilemaps = new List<Tilemap>();
     private List<SpriteRenderer> persistentRenderers = new List<SpriteRenderer>();
@@ -26,7 +25,6 @@ public class SceneLightingManager : MonoBehaviour
     private Dictionary<SpriteRenderer, Color> originalSpriteColors = new Dictionary<SpriteRenderer, Color>();
     private Dictionary<Tilemap, Color> originalTilemapColors = new Dictionary<Tilemap, Color>();
 
-    // Static reference to track if player lighting has been initialized
     private static bool playerInitialized = false;
 
     void OnEnable()
@@ -41,10 +39,7 @@ public class SceneLightingManager : MonoBehaviour
 
     void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
-        // Reset scene-specific lighting
         ResetSceneLighting();
-
-        // Setup new lighting after a frame
         StartCoroutine(CollectObjectsNextFrame());
     }
 
@@ -61,7 +56,6 @@ public class SceneLightingManager : MonoBehaviour
         UpdateLighting();
     }
 
-    // Reset scene-specific lighting when changing scenes
     private void ResetSceneLighting()
     {
         foreach (SpriteRenderer renderer in sceneRenderers)
@@ -86,18 +80,14 @@ public class SceneLightingManager : MonoBehaviour
 
     public void CollectRenderersAndTilemaps()
     {
-        // Only clear scene objects, maintain persistent ones
         sceneRenderers.Clear();
         sceneTilemaps.Clear();
-
-        // Handle player separately if it's the first time
         if (!playerInitialized && affectPlayer)
         {
             CollectPlayerObjects();
             playerInitialized = true;
         }
 
-        // Collect scene objects with tags
         foreach (string tag in tagsToAffect)
         {
             try
@@ -106,7 +96,6 @@ public class SceneLightingManager : MonoBehaviour
 
                 foreach (GameObject obj in taggedObjects)
                 {
-                    // Skip objects that are DontDestroyOnLoad (like player)
                     if (IsInDontDestroyOnLoad(obj))
                         continue;
 
@@ -137,7 +126,6 @@ public class SceneLightingManager : MonoBehaviour
 
     private void CollectPlayerObjects()
     {
-        // Reset persistent renderers
         persistentRenderers.Clear();
 
         try
@@ -159,10 +147,8 @@ public class SceneLightingManager : MonoBehaviour
         catch (UnityException) { }
     }
 
-    // Check if object is in DontDestroyOnLoad scene
     private bool IsInDontDestroyOnLoad(GameObject obj)
     {
-        // Objects in "DontDestroyOnLoad" scene have scene index -1
         return obj.scene.buildIndex == -1;
     }
 
@@ -178,7 +164,6 @@ public class SceneLightingManager : MonoBehaviour
         float currentHour = TimeManager.Instance.GetHour() + (TimeManager.Instance.GetMinute() / 60f);
         Color targetColor = CalculateTimeColor(currentHour);
 
-        // Update scene sprite renderers
         foreach (SpriteRenderer renderer in sceneRenderers)
         {
             if (renderer == null) continue;
@@ -192,7 +177,6 @@ public class SceneLightingManager : MonoBehaviour
             );
         }
 
-        // Update scene tilemaps
         foreach (Tilemap tilemap in sceneTilemaps)
         {
             if (tilemap == null) continue;
@@ -206,7 +190,6 @@ public class SceneLightingManager : MonoBehaviour
             );
         }
 
-        // Update player renderers
         if (affectPlayer)
         {
             foreach (SpriteRenderer renderer in persistentRenderers)
@@ -248,7 +231,6 @@ public class SceneLightingManager : MonoBehaviour
         }
     }
 
-    // Public method to manually reset player lighting
     public void ResetPlayerLighting()
     {
         playerInitialized = false;
