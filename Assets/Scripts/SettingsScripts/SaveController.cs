@@ -110,11 +110,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition; //Sets Value of Player Position
 
-            PolygonCollider2D savedMapBoundary = GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
-
-            FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D = savedMapBoundary;
-
-            MapController_Dynamic.Instance?.GenerateMap(savedMapBoundary);
+            StartCoroutine(AssignConfinerAfterSceneLoad(saveData));
 
             return true;
         }
@@ -129,6 +125,50 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
              return false;
 
          }
+    }
+
+    private IEnumerator AssignConfinerAfterSceneLoad(SaveData saveData)
+    {
+        yield return null;
+        yield return null;
+
+        GameObject boundaryObj = null;
+        int attempts = 0;
+        while (boundaryObj == null && attempts < 5)
+        {
+            boundaryObj = GameObject.Find(saveData.mapBoundary);
+            attempts++;
+            if (boundaryObj == null) 
+            {
+                yield return null;
+            }
+        }
+
+        if (boundaryObj == null)
+        {
+            Debug.LogError($"Boundary '{saveData.mapBoundary}' not found after {attempts} attempts");
+            yield break;
+        }
+        PolygonCollider2D polyCollider = boundaryObj.GetComponent<PolygonCollider2D>();
+        if (polyCollider == null)
+        {
+            Debug.LogError($"No PolygonCollider2D on '{saveData.mapBoundary}'");
+            yield break;
+        }
+        CinemachineConfiner confiner = FindFirstObjectByType<CinemachineConfiner>();
+        if (confiner != null)
+        {
+            confiner.m_BoundingShape2D = polyCollider;
+            confiner.InvalidatePathCache();
+        }
+
+        if (MapController_Dynamic.Instance != null)
+        {
+            while (MapController_Dynamic.Instance == null || !MapController_Dynamic.Instance.gameObject.activeInHierarchy)
+            {
+                yield return null;
+            }
+        }
     }
 
     public void DeleteSave(int slot)

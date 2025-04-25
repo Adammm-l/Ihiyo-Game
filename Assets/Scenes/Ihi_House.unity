@@ -8240,6 +8240,14 @@ PrefabInstance:
       propertyPath: MapBounds
       value: 
       objectReference: {fileID: 6166148035529231480}
+    - target: {fileID: 5026507223717984794, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
+      propertyPath: mapParent
+      value: 
+      objectReference: {fileID: 6632405425686612207}
+    - target: {fileID: 5026507223717984794, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
+      propertyPath: playerIcon
+      value: 
+      objectReference: {fileID: 6632405425686612206}
     - target: {fileID: 6581697393602967765, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1168.9967
@@ -14818,6 +14826,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6656336149255868461, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6656336149255868461, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
@@ -15028,6 +15040,16 @@ PrefabInstance:
 --- !u!224 &6632405425686612205 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6910490363274362720, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
+  m_PrefabInstance: {fileID: 6632405425686612204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6632405425686612206 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7195128491090586485, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
+  m_PrefabInstance: {fileID: 6632405425686612204}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6632405425686612207 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2359572470747415156, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
   m_PrefabInstance: {fileID: 6632405425686612204}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6931013450385907057
