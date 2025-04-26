@@ -12,14 +12,13 @@ public class ItemPickup : MonoBehaviour
     private Item item;
 
     [Header("References")]
-    public GameObject keybindHolder;
     KeybindManager keybindManager;
     KeyCode interactKey;
 
     void Start()
     {
         item = GetComponent<Item>();
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
 
         // Set sprite to match inventory item
         if (inventoryItemSO != null && GetComponent<SpriteRenderer>() != null)

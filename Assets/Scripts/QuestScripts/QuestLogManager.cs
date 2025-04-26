@@ -6,7 +6,6 @@ using TMPro;
 public class QuestLogManager : MonoBehaviour
 {
     [Header("References")]
-    public GameObject keybindHolder;
     [SerializeField] private GameObject questLogPanel;
     [SerializeField] private Transform questContent;
     [SerializeField] private GameObject questTextPrefab;
@@ -20,7 +19,7 @@ public class QuestLogManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
         uiManager = FindObjectOfType<UIManager>();
     }
 

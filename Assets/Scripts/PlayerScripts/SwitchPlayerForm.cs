@@ -22,11 +22,11 @@ public class SwitchPlayerForm : MonoBehaviour
     Renderer playerRenderer;
 
     [Header("References")]
-    public GameObject keybindHolder;
     public CinemachineVirtualCamera cmVirtualCamera;
     Rigidbody2D rb;
     BoxCollider2D playerCollider;
     PlayerControl playerMovement;
+    GameObject ghostIndicator;
 
     [Header("Keybinds")]
     KeybindManager keybindManager;
@@ -61,7 +61,7 @@ public class SwitchPlayerForm : MonoBehaviour
             return;
         }
 
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
         playerMovement = GetComponent<PlayerControl>();
         
         FindAllPassableObjects();
@@ -101,6 +101,8 @@ public class SwitchPlayerForm : MonoBehaviour
     void Update()
     {
         switchForm = keybindManager.GetKeybind("SwitchForm");
+        ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
+
         if (Input.GetKeyDown(switchForm))
         {
             TryToggleForm();
@@ -203,6 +205,12 @@ public class SwitchPlayerForm : MonoBehaviour
         
         HighlightAllPassableObjects();
         UpdatePossessableObjects();
+
+        Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
+        Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
+
+        ghostStateIcon.gameObject.SetActive(true);
+        humanStateIcon.gameObject.SetActive(false);
     }
 
     void EnterPhysicalForm()
@@ -216,6 +224,12 @@ public class SwitchPlayerForm : MonoBehaviour
         ResetAllPassableObjectColors();
         ResetAllPossessableObjectColors();
         ReleaseObject();
+
+        Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
+        Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
+
+        ghostStateIcon.gameObject.SetActive(false);
+        humanStateIcon.gameObject.SetActive(true);
     }
 
     string GetLayerNameFromLayerMask(LayerMask layerMask)

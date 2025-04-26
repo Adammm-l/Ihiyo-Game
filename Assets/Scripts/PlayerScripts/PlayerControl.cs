@@ -8,7 +8,6 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] public bool canMove = true; //added by Adam
 
     [Header("References")]
-    public GameObject keybindHolder;
     private Rigidbody2D rb;
     private Vector2 moveDir;
     private Animator animator;
@@ -37,7 +36,7 @@ public class PlayerControl : MonoBehaviour
     void Start() {
         rb = GetComponent<Rigidbody2D>(); //Accesses the RigidBody Component that are both attached to the same object
         animator = GetComponent<Animator>(); //Access character animation
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
         switchPlayerForm = GetComponent<SwitchPlayerForm>();
 
         if(!playerExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates

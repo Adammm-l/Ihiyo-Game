@@ -8,7 +8,6 @@ namespace InventoryCTRL {
 public class InventoryController : MonoBehaviour
 {
     [Header("References")]
-    public GameObject keybindHolder;
     KeybindManager keybindManager;
     KeyCode inventoryKey;
 
@@ -46,7 +45,7 @@ public class InventoryController : MonoBehaviour
     }
         void Start()
         {
-            keybindManager = FindObjectOfType<KeybindManager>();
+            keybindManager = KeybindManager.Instance;
 
             // Make sure these methods are called during initialization
             PrepareInventoryData();

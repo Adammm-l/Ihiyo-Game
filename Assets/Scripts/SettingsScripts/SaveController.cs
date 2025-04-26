@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 // Terrence and Edwin (Eri)
 public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) Sotres
@@ -11,24 +12,46 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     public const int MAX_SLOTS = 3;
     const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
-    Vector3 defaultPlayerPosition = new Vector3(-5.5f, 1.25f, 0f);
+    SaveData defaultSaveData;
+
+    public static SaveController Instance;
     //private static bool saveExists; // All instances of this Player references the exact same variable
 
     // Start is called before the first frame update
 
-    void Awake() {
-        
-    }
-    void Start()
+    void Awake() 
     {
-        saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
-        Directory.CreateDirectory(saveLocation);
-        DontDestroyOnLoad(transform.gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            
+            // Initialize here instead of Start
+            saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
+            Directory.CreateDirectory(saveLocation);
+
+            defaultSaveData = new SaveData
+            {
+                playerPosition = new Vector3(-5.5f, 1.25f, 0f),
+                sceneName = "Ihi_House",
+                mapBoundary = "Ihi_Room",
+                currentDay = 1,
+                isNight = false,
+            };
+        }
+        else if (Instance != this)
+        {
+            DestroyImmediate(gameObject);
+            return;
+        }
     }
 
     public void SaveGame() 
     {
         int activeSaveSlot = PlayerPrefs.GetInt(ActiveSlotKey);
+
+
+        saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
         string savePath = Path.Combine(saveLocation, $"save_{activeSaveSlot}.json");
         
         SaveData saveData;
@@ -41,6 +64,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             saveData = new SaveData(); // initialize new save data if no file exists (literally just to please the compiler)
         }
         saveData.playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+        saveData.sceneName = SceneManager.GetActiveScene().name;
         saveData.mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name;
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
@@ -53,11 +77,12 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         
         SaveData saveData = new SaveData 
         {
-            playerPosition = defaultPlayerPosition,
-            mapBoundary = "Ihi_Room",
+            playerPosition = defaultSaveData.playerPosition,
+            sceneName = defaultSaveData.sceneName,
+            mapBoundary = defaultSaveData.mapBoundary,
             saveName = name,
-            currentDay = 1,
-            isNight = false
+            currentDay = defaultSaveData.currentDay,
+            isNight = defaultSaveData.isNight,
         };
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
@@ -67,14 +92,14 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
         SetSaveSlot(slot); // remember active save slot for saving ingame
 
-        Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
-        if (saveButton != null) {
-            saveButton.onClick.AddListener(SaveGame);
-            Debug.Log("Button Reconnected!");
-        }
-        else { 
-            Debug.LogError("Button not found");
-        }
+        // Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
+        // if (saveButton != null) {
+        //     saveButton.onClick.AddListener(SaveGame);
+        //     Debug.Log("Button Reconnected!");
+        // }
+        // else { 
+        //     Debug.LogError("Button not found");
+        // }
         
         if (File.Exists(savePath)) {
 
@@ -87,11 +112,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition; //Sets Value of Player Position
 
-            PolygonCollider2D savedMapBoundary = GameObject.Find(saveData.mapBoundary).GetComponent<PolygonCollider2D>();
-
-            FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D = savedMapBoundary;
-
-            MapController_Dynamic.Instance?.GenerateMap(savedMapBoundary);
+            StartCoroutine(AssignConfinerAfterSceneLoad(saveData));
 
             return true;
         }
@@ -106,6 +127,53 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
              return false;
 
          }
+    }
+
+    private IEnumerator AssignConfinerAfterSceneLoad(SaveData saveData)
+    {
+        yield return null;
+        yield return null;
+
+        GameObject boundaryObj = null;
+        int attempts = 0;
+        while (boundaryObj == null && attempts < 5)
+        {
+            boundaryObj = GameObject.Find(saveData.mapBoundary);
+            attempts++;
+            if (boundaryObj == null) 
+            {
+                yield return null;
+            }
+        }
+
+        if (boundaryObj == null)
+        {
+            Debug.LogError($"Boundary '{saveData.mapBoundary}' not found after {attempts} attempts");
+            yield break;
+        }
+        PolygonCollider2D polyCollider = boundaryObj.GetComponent<PolygonCollider2D>();
+        if (polyCollider == null)
+        {
+            Debug.LogError($"No PolygonCollider2D on '{saveData.mapBoundary}'");
+            yield break;
+        }
+        CinemachineConfiner confiner = FindFirstObjectByType<CinemachineConfiner>();
+        if (confiner != null)
+        {
+            confiner.m_BoundingShape2D = polyCollider;
+            confiner.InvalidatePathCache();
+        }
+
+        if (MapController_Dynamic.Instance != null)
+        {
+            while (MapController_Dynamic.Instance == null || !MapController_Dynamic.Instance.gameObject.activeInHierarchy)
+            {
+                yield return null;
+            }
+        }
+
+        VolumeSettings volumeController = FindObjectOfType<VolumeSettings>();
+        volumeController.LoadVolume();
     }
 
     public void DeleteSave(int slot)
@@ -143,5 +211,17 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     {
         PlayerPrefs.SetInt(ActiveSlotKey, activeSlot);
         PlayerPrefs.Save();
+    }
+
+    public string GetSavedSceneName(int slot)
+    {
+        string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
+        if (!File.Exists(savePath))
+        {
+            return defaultSaveData.sceneName; // default
+        }
+
+        SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(savePath));
+        return saveData.sceneName;
     }
 }

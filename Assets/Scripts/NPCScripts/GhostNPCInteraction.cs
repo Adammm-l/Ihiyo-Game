@@ -16,8 +16,6 @@ public class GhostNPCInteraction : MonoBehaviour
     [SerializeField] private GameObject thoughtTextPrefab;
     [SerializeField] private TextMeshProUGUI titleText;
 
-    [Header("References")]
-    [SerializeField] private GameObject keybindHolder;
 
     [Header("Thought Animation Settings")]
     [SerializeField] private float minSpawnInterval = 0.5f;
@@ -38,7 +36,7 @@ public class GhostNPCInteraction : MonoBehaviour
 
     void Start()
     {
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
         npcMovement = GetComponentInParent<NPCMovement>();
 
         // Make sure thoughts UI is hidden at start

@@ -8,6 +8,7 @@ using UnityEngine;
 public class SaveData
 {
     public Vector3 playerPosition;
+    public string sceneName;
     public string mapBoundary; //Boundary Name for Map
     public string saveName;
     public int currentDay;
@@ -15,4 +16,11 @@ public class SaveData
     
     // probably need to add time, dialogue, completed quests, items, 
     // a whole bunch of other stuff now that i think about it
+
+    // moveable object positions
+    // npc positions
+    // can activate ghost form
+    // is ghost
+    // has access to time machine
+    // replace day with time
 }
