@@ -43,7 +43,6 @@ public class NPCInteraction : MonoBehaviour
 
     [Header("Managers")]
     public GameObject interactionText; //"E to interact" text
-    public GameObject keybindHolder;
     private DialogueManager dialogueManager;
     KeybindManager keybindManager;
     KeyCode interactKey;
@@ -56,7 +55,7 @@ public class NPCInteraction : MonoBehaviour
 
     void Start()
     {
-        keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        keybindManager = KeybindManager.Instance;
 
         TextMeshProUGUI interactionTextBox = interactionText.transform.GetComponent<TextMeshProUGUI>();
         interactKey = keybindManager.GetKeybind("Interact");
