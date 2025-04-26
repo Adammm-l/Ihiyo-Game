@@ -14,12 +14,14 @@ public class QuestLogManager : MonoBehaviour
     KeybindManager keybindManager;
 
     private bool isLogOpen = false;
+    private UIManager uiManager;
 
 
     // Start is called before the first frame update
     void Start()
     {
         keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        uiManager = FindObjectOfType<UIManager>();
     }
 
     // Update is called once per frame
@@ -33,9 +35,16 @@ public class QuestLogManager : MonoBehaviour
             ToggleQuestLog();
         }
     }
+
     public void ToggleQuestLog()
     {
         isLogOpen = !isLogOpen;
+
+        if (isLogOpen && uiManager != null)
+        {
+            uiManager.SetActivePanel(questLogPanel);
+        }
+
         questLogPanel.SetActive(isLogOpen);
 
         if (isLogOpen)

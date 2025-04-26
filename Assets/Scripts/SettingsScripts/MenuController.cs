@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// Eri (Edwin)
+// Eri (Edwin) + Adam
 public class MenuController : MonoBehaviour
 {
     [Header("References")]
@@ -10,6 +10,7 @@ public class MenuController : MonoBehaviour
     KeybindManager keybindManager;
     KeyCode gameMenuKey;
     private static bool menuExists; // All instances of this Player references the exact same variable
+    private UIManager uiManager;
 
     // Start is called before the first frame update
 
@@ -18,6 +19,7 @@ public class MenuController : MonoBehaviour
     void Start()
     {
         keybindManager = keybindHolder.GetComponent<KeybindManager>();
+        uiManager = FindObjectOfType<UIManager>();
         menuCanvas.SetActive(false); //So Menu isn't always on
         if(!menuExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
 
@@ -34,11 +36,17 @@ public class MenuController : MonoBehaviour
     void Update()
     {
         gameMenuKey = keybindManager.GetKeybind("GameMenu");
-        if(Input.GetKeyDown(gameMenuKey)) {
-            
-            menuCanvas.SetActive(!menuCanvas.activeSelf); //What the Canvas currently isn't
-        }
+        if (Input.GetKeyDown(gameMenuKey))
+        {
+            bool willBeActive = !menuCanvas.activeSelf;
 
+            if (willBeActive && uiManager != null)
+            {
+                uiManager.SetActivePanel(menuCanvas);
+            }
+
+            menuCanvas.SetActive(willBeActive);
+        }
     }
 
 }

@@ -47,31 +47,24 @@ public class ThoughtsBubbleController : MonoBehaviour
 
     private void SpawnThought()
     {
-        // Pick a random thought
         string thought = thoughtFragments[Random.Range(0, thoughtFragments.Count)];
-
-        // Create text object at random position within container
         GameObject thoughtObj = Instantiate(thoughtTextPrefab, thoughtsContainer);
         RectTransform rt = thoughtObj.GetComponent<RectTransform>();
 
-        // Random position within container bounds
         float randX = Random.Range(-thoughtsContainer.rect.width / 2 + 50, thoughtsContainer.rect.width / 2 - 50);
         float randY = Random.Range(-thoughtsContainer.rect.height / 2 + 20, thoughtsContainer.rect.height / 2 - 20);
         rt.anchoredPosition = new Vector2(randX, randY);
 
-        // Set the text
         TextMeshProUGUI textComponent = thoughtObj.GetComponent<TextMeshProUGUI>();
         textComponent.text = thought;
         textComponent.alpha = 0f;
 
-        // Manage the thought object
         activeThoughts.Add(thoughtObj);
         StartCoroutine(AnimateThought(thoughtObj, textComponent));
     }
 
     private IEnumerator AnimateThought(GameObject thoughtObj, TextMeshProUGUI textComponent)
     {
-        // Fade in
         float timer = 0f;
         while (timer < fadeInTime)
         {
@@ -79,11 +72,8 @@ public class ThoughtsBubbleController : MonoBehaviour
             textComponent.alpha = timer / fadeInTime;
             yield return null;
         }
-
-        // Stay visible
         yield return new WaitForSeconds(stayTime);
 
-        // Fade out
         timer = 0f;
         while (timer < fadeOutTime)
         {
@@ -92,7 +82,6 @@ public class ThoughtsBubbleController : MonoBehaviour
             yield return null;
         }
 
-        // Remove and destroy
         activeThoughts.Remove(thoughtObj);
         Destroy(thoughtObj);
     }

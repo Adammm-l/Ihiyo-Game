@@ -65,6 +65,13 @@ public class GhostNPCInteraction : MonoBehaviour
         // Update interact key in case keybinds changed
         interactKey = keybindManager.GetKeybind("Interact");
 
+        // Check if player switched forms while reading thoughts
+        if (isShowingThoughts && playerForm != null && !playerForm.isGhost)
+        {
+            HideThoughts();
+            return;
+        }
+
         // Handle ghost interaction when player is in ghost form
         if (playerForm != null && playerForm.isGhost)
         {

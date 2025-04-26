@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+//Adam
 public class AreaBlocker : MonoBehaviour
 {
     [SerializeField] private string requiredQuestTitle;
     [SerializeField] private bool mustBeCompleted = true;
-    [SerializeField] private float messageDuration = 3f;
+    [SerializeField] private bool activateAfterQuestGiven = false;
+    [SerializeField] private float messageDuration = 1.8f;
     [SerializeField] private GameObject messagePanel;
     [SerializeField] private TextMeshProUGUI messageText;
 
+    [SerializeField] private Collider2D triggerCollider;
+    [SerializeField] private Collider2D blockingCollider;
+
     private PlayerQuestManager questManager;
     private Coroutine hideMessageCoroutine;
+    private bool hasBeenActivated = false;
 
     private void Start()
     {
@@ -21,20 +26,41 @@ public class AreaBlocker : MonoBehaviour
         if (messagePanel != null)
             messagePanel.SetActive(false);
 
-        // Check if quest is already completed - if so, destroy this blocker
-        if (IsQuestCompleted())
+        if (triggerCollider == null || blockingCollider == null)
+        {
+            Collider2D[] colliders = GetComponents<Collider2D>();
+            foreach (Collider2D col in colliders)
+            {
+                if (col.isTrigger)
+                    triggerCollider = col;
+                else
+                    blockingCollider = col;
+            }
+        }
+
+        if (activateAfterQuestGiven)
+        {
+            if (triggerCollider) triggerCollider.enabled = false;
+            if (blockingCollider) blockingCollider.enabled = false;
+        }
+        else if (IsQuestCompleted())
         {
             Destroy(gameObject);
-            return;
         }
     }
 
     private void Update()
     {
-        // Continuously check if quest gets completed during gameplay
-        if (IsQuestCompleted())
+        if (!activateAfterQuestGiven && IsQuestCompleted())
         {
             Destroy(gameObject);
+        }
+
+        if (activateAfterQuestGiven && !hasBeenActivated && IsQuestActive())
+        {
+            if (triggerCollider) triggerCollider.enabled = true;
+            if (blockingCollider) blockingCollider.enabled = true;
+            hasBeenActivated = true;
         }
     }
 
@@ -44,6 +70,18 @@ public class AreaBlocker : MonoBehaviour
         {
             ShowMessage();
         }
+    }
+
+    private bool IsQuestActive()
+    {
+        if (questManager == null)
+            questManager = FindObjectOfType<PlayerQuestManager>();
+
+        if (questManager == null)
+            return false;
+
+        List<GameQuests> activeQuests = questManager.GetActiveQuests();
+        return activeQuests.Exists(q => q.questTitle == requiredQuestTitle);
     }
 
     private bool IsQuestCompleted()
@@ -56,14 +94,11 @@ public class AreaBlocker : MonoBehaviour
 
         if (mustBeCompleted)
         {
-            // Check if quest is completed via PlayerPrefs
             return PlayerPrefs.GetInt("Quest_" + requiredQuestTitle + "_Completed", 0) == 1;
         }
         else
         {
-            // If we're checking for quest being active
-            List<GameQuests> activeQuests = questManager.GetActiveQuests();
-            return activeQuests.Exists(q => q.questTitle == requiredQuestTitle);
+            return IsQuestActive();
         }
     }
 
