@@ -37,10 +37,10 @@ public class MenuController : MonoBehaviour
         {
             bool willBeActive = !menuCanvas.activeSelf;
 
-            if (willBeActive && uiManager != null)
-            {
-                uiManager.SetActivePanel(menuCanvas);
-            }
+            // if (willBeActive && uiManager != null)
+            // {
+            //     uiManager.SetActivePanel(menuCanvas);
+            // }
 
             menuCanvas.SetActive(willBeActive);
         }

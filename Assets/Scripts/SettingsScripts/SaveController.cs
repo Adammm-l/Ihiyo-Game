@@ -50,6 +50,11 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     public void SaveGame() 
     {
         int activeSaveSlot = PlayerPrefs.GetInt(ActiveSlotKey);
+
+        if (string.IsNullOrEmpty(saveLocation)) // not sure why i need this check now since this SHOULDN'T be possible
+        {
+            saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
+        }
         string savePath = Path.Combine(saveLocation, $"save_{activeSaveSlot}.json");
         
         SaveData saveData;
