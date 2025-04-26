@@ -72,7 +72,6 @@ public class NPCInteraction : MonoBehaviour
     {
         if (DialogueManager.IsMultipleChoiceActive) return;
 
-        interactKey = keybindManager.GetKeybind("Interact");
         if (isPlayerInRange && Input.GetKeyDown(interactKey))
         {
             Interact();
@@ -96,7 +95,6 @@ public class NPCInteraction : MonoBehaviour
             interactionText.SetActive(false);
             dialogueManager.HideDialogue();
 
-            // Resume NPC movement when player walks away
             NPCMovement npcMovement = GetComponentInParent<NPCMovement>();
             if (npcMovement != null)
             {
@@ -143,8 +141,6 @@ public class NPCInteraction : MonoBehaviour
             Inventory playerInventory = FindObjectOfType<Inventory>();
             if (playerInventory != null)
             {
-                bool handledQuest = false;
-
                 // First priority: Check if this NPC is a completion NPC for any active quest
                 foreach (GameQuests quest in questManager.GetActiveQuests())
                 {
@@ -153,7 +149,7 @@ public class NPCInteraction : MonoBehaviour
                         HandleQuestResponses(playerInventory, quest, npcMovement);
                         player.canMove = true;
                         IsInteracting = false;
-                        return; // Exit immediately after handling quest
+                        return;
                     }
                 }
 
@@ -166,12 +162,10 @@ public class NPCInteraction : MonoBehaviour
                         {
                             GameQuests questGiven = segment.triggeredQuest;
 
-                            // Find if this quest is active
                             foreach (GameQuests activeQuest in questManager.GetActiveQuests())
                             {
                                 if (activeQuest.questTitle == questGiven.questTitle)
                                 {
-                                    // This NPC gave the quest but another NPC completes it
                                     if (!string.IsNullOrEmpty(activeQuest.completionNPC) && activeQuest.completionNPC != npcName)
                                     {
                                         string incompleteResponse = !string.IsNullOrEmpty(activeQuest.giverIncompleteResponse)
@@ -179,11 +173,10 @@ public class NPCInteraction : MonoBehaviour
                                             : "Have you completed that task yet?";
 
                                         dialogueManager.ShowDialogue(npcName, incompleteResponse);
-                                        // NPC stays in place for quest responses
                                         npcMovement.PauseMovementInfinitely();
                                         player.canMove = true;
                                         IsInteracting = false;
-                                        return; // Exit immediately after handling quest
+                                        return;
                                     }
                                 }
                             }
@@ -237,24 +230,21 @@ public class NPCInteraction : MonoBehaviour
 
     private void GiveItemToPlayer(string itemName, int amount)
     {
-        // Always add to quest inventory
         Inventory questInventory = FindObjectOfType<Inventory>();
         for (int i = 0; i < amount; i++)
         {
             questInventory.AddItem(itemName);
         }
 
-        // Check if this item should also appear in UI inventory
         ItemSO itemSO = Resources.Load<ItemSO>("Items/" + itemName);
         if (itemSO != null)
         {
-            // This is a physical item with a UI representation
-            Debug.Log($"Adding {itemName} to UI inventory");
+            //Debug.Log($"Adding {itemName} to UI inventory");
             InventoryBridge.AddItem(itemSO, amount);
         }
         else
         {
-            Debug.Log($"Item {itemName} is non-physical, only added to quest inventory");
+            //Debug.Log($"Item {itemName} is non-physical, only added to quest inventory");
         }
     }
 
@@ -302,21 +292,16 @@ public class NPCInteraction : MonoBehaviour
                         {
                             GameQuests questGiven = segment.triggeredQuest;
 
-                            // Find if this quest is active
                             foreach (GameQuests activeQuest in questManager.GetActiveQuests())
                             {
                                 if (activeQuest.questTitle == questGiven.questTitle)
                                 {
-                                    // This NPC gave this quest, but don't handle completion if another NPC is designated
                                     if (string.IsNullOrEmpty(activeQuest.completionNPC) || activeQuest.completionNPC == npcName)
                                     {
-                                        // This NPC is also the completion NPC
                                         HandleQuestResponses(playerInventory, activeQuest, npcMovement);
                                     }
                                     else
                                     {
-                                        // This NPC gave the quest but another NPC completes it
-                                        // Show the quest giver's incomplete response
                                         string incompleteResponse = !string.IsNullOrEmpty(activeQuest.giverIncompleteResponse)
                                             ? activeQuest.giverIncompleteResponse
                                             : "Have you completed that task yet?";
@@ -465,7 +450,7 @@ public class NPCInteraction : MonoBehaviour
 
             questManager.AcceptQuest(quest);
             ShowQuestNotification();
-            Debug.Log($"Triggered quest: {quest.questTitle} to be completed by {quest.completionNPC}");
+            //Debug.Log($"Triggered quest: {quest.questTitle} to be completed by {quest.completionNPC}");
             EnableQuestItems(quest.requiredItem);
         }
     }

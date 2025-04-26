@@ -9,24 +9,21 @@ public class MenuController : MonoBehaviour
     KeybindManager keybindManager;
     KeyCode gameMenuKey;
     private static bool menuExists; // All instances of this Player references the exact same variable
-    private UIManager uiManager;
 
     // Start is called before the first frame update
-
-
-
     void Start()
     {
         keybindManager = KeybindManager.Instance;
-        uiManager = FindObjectOfType<UIManager>();
         menuCanvas.SetActive(false); //So Menu isn't always on
-        if(!menuExists) { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
+        if (!menuExists)
+        { // If the player doesn't exist, then mark them as Don't Destroy on Load, handling duplicates
 
             menuExists = true;
             DontDestroyOnLoad(transform.gameObject);
         }
 
-        else { // Eliminate Duplicate Objects
+        else
+        { // Eliminate Duplicate Objects
             Destroy(gameObject);
         }
     }
@@ -37,22 +34,22 @@ public class MenuController : MonoBehaviour
         gameMenuKey = keybindManager.GetKeybind("GameMenu");
         if (Input.GetKeyDown(gameMenuKey))
         {
-            bool willBeActive = !menuCanvas.activeSelf;
-
-            // if (willBeActive && uiManager != null)
-            // {
-            //     uiManager.SetActivePanel(menuCanvas);
-            // }
-
-            menuCanvas.SetActive(willBeActive);
+            UIManager.Instance.TogglePanel(menuCanvas);
         }
     }
 
     public void ToggleMenuOff()
     {
-        menuCanvas.SetActive(false);
+        UIManager.Instance.TogglePanel(menuCanvas, true, false);
     }
- 
+
+    public void OnMenuButtonClick()
+    {
+        if (!NPCInteraction.IsInteracting)
+        {
+            menuCanvas.SetActive(!menuCanvas.activeSelf);
+        }
 
 
+    }
 }

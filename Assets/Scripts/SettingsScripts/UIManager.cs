@@ -1,17 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
+//Adam
 public class UIManager : MonoBehaviour
 {
-    private static UIManager instance;
-    public static UIManager Instance { get { return instance; } }
+    public static UIManager Instance;
 
-    [SerializeField] private GameObject[] uiPanels;
+    private GameObject currentOpenPanel;
 
-    private void Awake()
+    void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -20,15 +21,26 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void SetActivePanel(GameObject panel)
+    public bool TogglePanel(GameObject panel, bool forceState = false, bool desiredState = false)
     {
-        if (NPCInteraction.IsInteracting)
-            return;
-
-        foreach (GameObject p in uiPanels)
+        if (panel.activeSelf && !forceState)
         {
-            if (p != panel)
-                p.SetActive(false);
+            panel.SetActive(false);
+            currentOpenPanel = null;
+            return false;
         }
+        if (currentOpenPanel != null && currentOpenPanel != panel)
+        {
+            currentOpenPanel.SetActive(false);
+        }
+        bool newState = forceState ? desiredState : true;
+        panel.SetActive(newState);
+        currentOpenPanel = newState ? panel : null;
+        return newState;
+    }
+
+    public bool CanTogglePanel()
+    {
+        return !NPCInteraction.IsInteracting;
     }
 }

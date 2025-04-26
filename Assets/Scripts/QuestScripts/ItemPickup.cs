@@ -7,7 +7,7 @@ using InventoryCTRL;
 public class ItemPickup : MonoBehaviour
 {
     [Header("Item Info")]
-    [SerializeField] private ItemSO inventoryItemSO; // Reference to the ItemSO
+    [SerializeField] private ItemSO inventoryItemSO; //Reference to the ItemSO
     private bool isPlayerInRange = false;
     private Item item;
 
@@ -20,25 +20,20 @@ public class ItemPickup : MonoBehaviour
         item = GetComponent<Item>();
         keybindManager = KeybindManager.Instance;
 
-        // Set sprite to match inventory item
         if (inventoryItemSO != null && GetComponent<SpriteRenderer>() != null)
             GetComponent<SpriteRenderer>().sprite = inventoryItemSO.ItemIMG;
     }
-
-    private bool hasBeenPickedUp = false;
 
     void Update()
     {
         interactKey = keybindManager.GetKeybind("Interact");
         if (isPlayerInRange && Input.GetKeyDown(interactKey))
         {
-            // Add to quest inventory
             Inventory questInventory = FindObjectOfType<Inventory>();
             if (questInventory != null && item != null)
             {
                 questInventory.AddItem(item.ItemName);
 
-                // Update quest progress
                 PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
                 if (questManager != null)
                     questManager.UpdateQuestProgress(item.ItemName);
@@ -47,8 +42,6 @@ public class ItemPickup : MonoBehaviour
                 if (questLogManager != null)
                     questLogManager.UpdateQuestLog();
             }
-
-            // Add to UI inventory through bridge
             if (inventoryItemSO != null)
             {
                 InventoryBridge.AddItem(inventoryItemSO, 1);

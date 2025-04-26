@@ -11,13 +11,10 @@ public class TimeSetUI : MonoBehaviour
     [SerializeField] private TMP_Dropdown minuteDropdown;
     [SerializeField] private TMP_Dropdown periodDropdown;
 
-    private UIManager uiManager;
-
     private void Start()
     {
         InitializeDropdowns();
         timeSetPanel.SetActive(false);
-        uiManager = FindObjectOfType<UIManager>();
     }
 
     void InitializeDropdowns()
@@ -40,14 +37,7 @@ public class TimeSetUI : MonoBehaviour
 
     public void ToggleTimePanel()
     {
-        bool willBeActive = !timeSetPanel.activeSelf;
-
-        if (willBeActive && uiManager != null)
-        {
-            uiManager.SetActivePanel(timeSetPanel);
-        }
-
-        timeSetPanel.SetActive(willBeActive);
+        UIManager.Instance.TogglePanel(timeSetPanel);
     }
 
     public void OnConfirmTime()
@@ -58,5 +48,13 @@ public class TimeSetUI : MonoBehaviour
 
         TimeManager.Instance.SetTime(hour, minute, period);
         ToggleTimePanel();
+    }
+
+    public void OnTimeSettingsButtonClick()
+    {
+        if (!NPCInteraction.IsInteracting)
+        {
+            ToggleTimePanel();
+        }
     }
 }
