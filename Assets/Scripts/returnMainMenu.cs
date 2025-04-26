@@ -12,7 +12,7 @@ public class MainMenuButton : MonoBehaviour
         if (Application.CanStreamedLevelBeLoaded(mainMenuSceneName))
         {
             SceneManager.LoadScene(mainMenuSceneName);
-            
+
             MenuController menuController = FindObjectOfType<MenuController>();
             menuController.ToggleMenuOff();
         }

@@ -63,19 +63,9 @@ public class SwitchPlayerForm : MonoBehaviour
 
         keybindManager = KeybindManager.Instance;
         playerMovement = GetComponent<PlayerControl>();
-        ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
+        
         FindAllPassableObjects();
         FindAllPossessableObjects();
-
-        if (isGhost)
-        {
-            EnterGhostForm();
-        }
-        else
-        {
-            EnterPhysicalForm();
-        }
-        UpdatePossessableObjects();
     }
 
     void FindAllPassableObjects()
@@ -112,7 +102,7 @@ public class SwitchPlayerForm : MonoBehaviour
     {
         switchForm = keybindManager.GetKeybind("SwitchForm");
         ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
-        
+
         if (Input.GetKeyDown(switchForm))
         {
             TryToggleForm();
@@ -215,7 +205,7 @@ public class SwitchPlayerForm : MonoBehaviour
         
         HighlightAllPassableObjects();
         UpdatePossessableObjects();
-        
+
         Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
         Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
 
@@ -234,7 +224,7 @@ public class SwitchPlayerForm : MonoBehaviour
         ResetAllPassableObjectColors();
         ResetAllPossessableObjectColors();
         ReleaseObject();
-        
+
         Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
         Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
 

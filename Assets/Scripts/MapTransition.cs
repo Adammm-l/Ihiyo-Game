@@ -28,7 +28,7 @@ public class MapTransition : MonoBehaviour
 
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        confiner = FindObjectOfType<CinemachineConfiner>(); // cuz it fails otherwise
+        confiner = FindObjectOfType<CinemachineConfiner>();
         
         if (collision.gameObject.CompareTag("Player")) { //If the camera bounds touch the Player
             confiner.m_BoundingShape2D = mapBound; // Swap out new camera bounds

@@ -54,7 +54,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6581697393602967765}
   - component: {fileID: 2209956000850791820}
-  - component: {fileID: 8018001484233575193}
+  - component: {fileID: 1795098768452345728}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4396b4dd99e9a6b4b88ecf8b516dd9ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8018001484233575193
+--- !u!114 &1795098768452345728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
