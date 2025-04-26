@@ -11,9 +11,6 @@ public class MenuController : MonoBehaviour
     private static bool menuExists; // All instances of this Player references the exact same variable
 
     // Start is called before the first frame update
-
-
-
     void Start()
     {
         keybindManager = KeybindManager.Instance;
@@ -33,11 +30,15 @@ public class MenuController : MonoBehaviour
     void Update()
     {
         gameMenuKey = keybindManager.GetKeybind("GameMenu");
-        if(Input.GetKeyDown(gameMenuKey)) {
-            
-            menuCanvas.SetActive(!menuCanvas.activeSelf); //What the Canvas currently isn't
+        if (Input.GetKeyDown(gameMenuKey))
+        {
+            menuCanvas.SetActive(!menuCanvas.activeSelf);
         }
+    }
 
+    public void ToggleMenuOff()
+    {
+        menuCanvas.SetActive(false);
     }
 
 }

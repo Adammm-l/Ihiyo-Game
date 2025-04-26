@@ -20,6 +20,7 @@ public class SaveData
     // moveable object positions
     // npc positions
     // can activate ghost form
+    // is ghost
     // has access to time machine
     // replace day with time
 }

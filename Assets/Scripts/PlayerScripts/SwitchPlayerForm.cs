@@ -111,6 +111,8 @@ public class SwitchPlayerForm : MonoBehaviour
     void Update()
     {
         switchForm = keybindManager.GetKeybind("SwitchForm");
+        ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
+        
         if (Input.GetKeyDown(switchForm))
         {
             TryToggleForm();

@@ -90,14 +90,14 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
         SetSaveSlot(slot); // remember active save slot for saving ingame
 
-        Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
-        if (saveButton != null) {
-            saveButton.onClick.AddListener(SaveGame);
-            Debug.Log("Button Reconnected!");
-        }
-        else { 
-            Debug.LogError("Button not found");
-        }
+        // Button saveButton = GameObject.Find("SaveButton").GetComponent<Button>();
+        // if (saveButton != null) {
+        //     saveButton.onClick.AddListener(SaveGame);
+        //     Debug.Log("Button Reconnected!");
+        // }
+        // else { 
+        //     Debug.LogError("Button not found");
+        // }
         
         if (File.Exists(savePath)) {
 
@@ -169,6 +169,9 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
                 yield return null;
             }
         }
+
+        VolumeSettings volumeController = FindObjectOfType<VolumeSettings>();
+        volumeController.LoadVolume();
     }
 
     public void DeleteSave(int slot)
