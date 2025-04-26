@@ -6,6 +6,8 @@ using TMPro;
 public class TimeManager : MonoBehaviour
 {
     public static TimeManager Instance { get; private set; }
+
+    public bool canIncrementTime;
     [SerializeField] private TextMeshProUGUI timeDisplay;
     [SerializeField] private float secondsPerMinute = 1f;
     private int gameHour = 8;
@@ -18,6 +20,7 @@ public class TimeManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            canIncrementTime = true;
         }
         else
         {
@@ -61,6 +64,11 @@ public class TimeManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (!canIncrementTime)
+        {
+            return;
+        }
+        
         timer += Time.deltaTime;
         if (timer >= secondsPerMinute)
         {
@@ -86,15 +94,7 @@ public class TimeManager : MonoBehaviour
 
     private void UpdateTimeDisplay()
     {
-        if (timeDisplay == null) return;
-        string period = gameHour >= 12 ? "PM" : "AM";
-        int displayHour = gameHour % 12;
-        if (displayHour == 0) 
-        {
-            displayHour = 12;
-        }
-        string formattedTime = $"{displayHour:D2}:{gameMinute:D2} {period}";
-        timeDisplay.text = formattedTime;
+        timeDisplay.text = GetFormattedTime();
     }
 
     public void SetTimeDisplay(TextMeshProUGUI display)
@@ -102,6 +102,17 @@ public class TimeManager : MonoBehaviour
         timeDisplay = display;
     }
     
+    public string GetFormattedTime()
+    {
+        string period = gameHour >= 12 ? "PM" : "AM";
+        int displayHour = gameHour % 12;
+        if (displayHour == 0) 
+        {
+            displayHour = 12;
+        }
+        return $"{displayHour:D2}:{gameMinute:D2} {period}";
+    }
+
     public int GetHour()
     {
         return gameHour;

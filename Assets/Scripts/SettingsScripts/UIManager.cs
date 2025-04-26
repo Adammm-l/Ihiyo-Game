@@ -5,7 +5,8 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-
+    PlayerControl playerControl;
+    TimeManager timeManager;
     private GameObject currentOpenPanel;
 
     void Awake()
@@ -14,6 +15,9 @@ public class UIManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            playerControl = FindObjectOfType<PlayerControl>();
+            timeManager = FindObjectOfType<TimeManager>();
         }
         else
         {
@@ -27,6 +31,9 @@ public class UIManager : MonoBehaviour
         {
             panel.SetActive(false);
             currentOpenPanel = null;
+
+            playerControl.canMove = true;
+            timeManager.canIncrementTime = true;
             return false;
         }
         if (currentOpenPanel != null && currentOpenPanel != panel)
@@ -36,6 +43,16 @@ public class UIManager : MonoBehaviour
         bool newState = forceState ? desiredState : true;
         panel.SetActive(newState);
         currentOpenPanel = newState ? panel : null;
+
+        if (newState)
+        {
+            playerControl.canMove = false;
+        }
+        else
+        {
+            playerControl.canMove = true;
+        }
+        timeManager.canIncrementTime = playerControl.canMove;
         return newState;
     }
 

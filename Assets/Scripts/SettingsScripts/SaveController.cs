@@ -35,7 +35,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
                 playerPosition = new Vector3(-5.5f, 1.25f, 0f),
                 sceneName = "Ihi_House",
                 mapBoundary = "Ihi_Room",
-                currentDay = 1,
+                currentTime = "8:00 AM",
                 isNight = false,
             };
         }
@@ -48,7 +48,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
     public void SaveGame() 
     {
-        int activeSaveSlot = PlayerPrefs.GetInt(ActiveSlotKey);
+        int activeSaveSlot = GetActiveSlot();
 
 
         saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
@@ -63,6 +63,10 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         {
             saveData = new SaveData(); // initialize new save data if no file exists (literally just to please the compiler)
         }
+
+        TimeManager timeManager = FindObjectOfType<TimeManager>();
+        saveData.currentTime = timeManager.GetFormattedTime();
+
         saveData.playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
         saveData.sceneName = SceneManager.GetActiveScene().name;
         saveData.mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name;
@@ -81,7 +85,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             sceneName = defaultSaveData.sceneName,
             mapBoundary = defaultSaveData.mapBoundary,
             saveName = name,
-            currentDay = defaultSaveData.currentDay,
+            currentTime = defaultSaveData.currentTime,
             isNight = defaultSaveData.isNight,
         };
 
@@ -132,23 +136,11 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     private IEnumerator AssignConfinerAfterSceneLoad(SaveData saveData)
     {
         yield return null;
-        yield return null;
 
-        GameObject boundaryObj = null;
-        int attempts = 0;
-        while (boundaryObj == null && attempts < 5)
-        {
-            boundaryObj = GameObject.Find(saveData.mapBoundary);
-            attempts++;
-            if (boundaryObj == null) 
-            {
-                yield return null;
-            }
-        }
-
+        GameObject boundaryObj = GameObject.Find(saveData.mapBoundary);
         if (boundaryObj == null)
         {
-            Debug.LogError($"Boundary '{saveData.mapBoundary}' not found after {attempts} attempts");
+            Debug.LogError($"Boundary '{saveData.mapBoundary}' not found");
             yield break;
         }
         PolygonCollider2D polyCollider = boundaryObj.GetComponent<PolygonCollider2D>();
@@ -166,12 +158,29 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
         if (MapController_Dynamic.Instance != null)
         {
+            yield return new WaitUntil(() => MapController_Dynamic.Instance.gameObject.activeInHierarchy);
+        }
+        
+        TimeManager timeManager = FindObjectOfType<TimeManager>();
+        if (timeManager != null)
+        {
+            string[] timeParts = saveData.currentTime.Split(' ', ':'); 
+            if (timeParts.Length >= 3)
+            {
+                int hour = int.Parse(timeParts[0]);
+                int minute = int.Parse(timeParts[1]);
+                string period = timeParts[2];
+                timeManager.SetTime(hour, minute, period);
+            }
+        }
+
+        if (MapController_Dynamic.Instance != null)
+        {
             while (MapController_Dynamic.Instance == null || !MapController_Dynamic.Instance.gameObject.activeInHierarchy)
             {
                 yield return null;
             }
         }
-
         VolumeSettings volumeController = FindObjectOfType<VolumeSettings>();
         volumeController.LoadVolume();
     }
@@ -223,5 +232,10 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
         SaveData saveData = JsonUtility.FromJson<SaveData>(File.ReadAllText(savePath));
         return saveData.sceneName;
+    }
+
+    public int GetActiveSlot()
+    {
+        return PlayerPrefs.GetInt(ActiveSlotKey);
     }
 }

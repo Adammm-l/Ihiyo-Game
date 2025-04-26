@@ -11,12 +11,12 @@ public class SaveData
     public string sceneName;
     public string mapBoundary; //Boundary Name for Map
     public string saveName;
-    public int currentDay;
+    public string currentTime;
     public bool isNight; // connect currentday and isnight to time system
     
     // probably need to add time, dialogue, completed quests, items, 
     // a whole bunch of other stuff now that i think about it
-
+    
     // moveable object positions
     // npc positions
     // can activate ghost form
