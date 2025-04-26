@@ -25,6 +25,19 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            
+            // Initialize here instead of Start
+            saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
+            Directory.CreateDirectory(saveLocation);
+
+            defaultSaveData = new SaveData
+            {
+                playerPosition = new Vector3(-5.5f, 1.25f, 0f),
+                sceneName = "Ihi_House",
+                mapBoundary = "Ihi_Room",
+                currentDay = 1,
+                isNight = false,
+            };
         }
         else if (Instance != this)
         {
@@ -32,29 +45,13 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             return;
         }
     }
-    void Start()
-    {
-        saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
-        Directory.CreateDirectory(saveLocation);
-
-        defaultSaveData = new SaveData
-        {
-            playerPosition = new Vector3(-5.5f, 1.25f, 0f),
-            sceneName = "Ihi_House",
-            mapBoundary = "Ihi_Room",
-            currentDay = 1,
-            isNight = false,
-        };
-    }
 
     public void SaveGame() 
     {
         int activeSaveSlot = PlayerPrefs.GetInt(ActiveSlotKey);
 
-        if (string.IsNullOrEmpty(saveLocation)) // not sure why i need this check now since this SHOULDN'T be possible
-        {
-            saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
-        }
+
+        saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
         string savePath = Path.Combine(saveLocation, $"save_{activeSaveSlot}.json");
         
         SaveData saveData;
