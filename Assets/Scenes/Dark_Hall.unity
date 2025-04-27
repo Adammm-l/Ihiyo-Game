@@ -2923,7 +2923,6 @@ GameObject:
   - component: {fileID: 306099733}
   - component: {fileID: 306099732}
   - component: {fileID: 306099731}
-  - component: {fileID: 306099730}
   m_Layer: 6
   m_Name: EmilyNPC
   m_TagString: NPC
@@ -2948,19 +2947,6 @@ Transform:
   - {fileID: 1629746958}
   m_Father: {fileID: 988223685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &306099730
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 306099728}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325a2d322b599a348b6fbb8ab70d16ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yPositionOffset: 0
 --- !u!50 &306099731
 Rigidbody2D:
   serializedVersion: 4
@@ -3740,7 +3726,6 @@ GameObject:
   - component: {fileID: 409050840}
   - component: {fileID: 409050839}
   - component: {fileID: 409050838}
-  - component: {fileID: 409050837}
   m_Layer: 6
   m_Name: KelseyNPC
   m_TagString: NPC
@@ -3765,19 +3750,6 @@ Transform:
   - {fileID: 1817944262}
   m_Father: {fileID: 988223685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &409050837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 409050835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325a2d322b599a348b6fbb8ab70d16ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yPositionOffset: 0
 --- !u!50 &409050838
 Rigidbody2D:
   serializedVersion: 4
@@ -10261,7 +10233,6 @@ GameObject:
   - component: {fileID: 676611310}
   - component: {fileID: 676611309}
   - component: {fileID: 676611308}
-  - component: {fileID: 676611307}
   m_Layer: 6
   m_Name: JosephNPC
   m_TagString: NPC
@@ -10286,19 +10257,6 @@ Transform:
   - {fileID: 697129107}
   m_Father: {fileID: 988223685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &676611307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 676611305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325a2d322b599a348b6fbb8ab70d16ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yPositionOffset: 0
 --- !u!50 &676611308
 Rigidbody2D:
   serializedVersion: 4
@@ -19082,7 +19040,6 @@ GameObject:
   - component: {fileID: 1413081929}
   - component: {fileID: 1413081928}
   - component: {fileID: 1413081927}
-  - component: {fileID: 1413081926}
   m_Layer: 6
   m_Name: MerchantNPC
   m_TagString: NPC
@@ -19107,19 +19064,6 @@ Transform:
   - {fileID: 1640089603}
   m_Father: {fileID: 988223685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1413081926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1413081924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325a2d322b599a348b6fbb8ab70d16ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yPositionOffset: 0
 --- !u!50 &1413081927
 Rigidbody2D:
   serializedVersion: 4
@@ -19319,7 +19263,6 @@ GameObject:
   - component: {fileID: 1427865534}
   - component: {fileID: 1427865533}
   - component: {fileID: 1427865532}
-  - component: {fileID: 1427865531}
   m_Layer: 6
   m_Name: UnknownNPC
   m_TagString: NPC
@@ -19344,19 +19287,6 @@ Transform:
   - {fileID: 1665998050}
   m_Father: {fileID: 988223685}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1427865531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1427865529}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 325a2d322b599a348b6fbb8ab70d16ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  yPositionOffset: 0
 --- !u!50 &1427865532
 Rigidbody2D:
   serializedVersion: 4
@@ -62821,7 +62751,11 @@ MonoBehaviour:
   possessableLayer:
     serializedVersion: 2
     m_Bits: 1024
-  yOffset: 0.5
+  npcLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  possessableOffset: 0.5
+  npcOffset: 0.2
   baseNumber: 1
 --- !u!4 &2078177430
 Transform:

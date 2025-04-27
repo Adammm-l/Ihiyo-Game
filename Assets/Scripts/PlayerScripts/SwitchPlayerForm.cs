@@ -33,7 +33,7 @@ public class SwitchPlayerForm : MonoBehaviour
     [Header("Keybinds")]
     KeybindManager keybindManager;
     KeyCode switchForm;
-    KeyCode possessKey = KeyCode.P;
+    KeyCode possessKey;
 
     [Header("Possession Settings")]
     public float maxPossessionDistance = 5f;
@@ -104,6 +104,7 @@ public class SwitchPlayerForm : MonoBehaviour
     void Update()
     {
         switchForm = keybindManager.GetKeybind("SwitchForm");
+        possessKey = keybindManager.GetKeybind("PossessObject");
 
         if (Input.GetKeyDown(switchForm))
         {

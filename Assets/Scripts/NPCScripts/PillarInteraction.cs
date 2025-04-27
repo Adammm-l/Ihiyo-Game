@@ -24,7 +24,7 @@ public class PillarInteraction : MonoBehaviour
     private bool hasBeenActivated = false;
     private DialogueManager dialogueManager;
 
-    void Start() //***COMMENTS FOR TERRENCE WHEN HE FIXES COLLIDER POSSESSION***
+    void Start() //***COMMENTS FOR TERRENCE WHEN HE FIXES COLLIDER POSSESSION*** (i didn't even need them lmao)
     {
         objectSnap = GetComponent<ObjectSnap>();
         keybindManager = KeybindManager.Instance;
