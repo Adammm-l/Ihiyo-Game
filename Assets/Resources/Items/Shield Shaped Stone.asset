@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 252ddb51a78128345a6236fe47b7bfd1, type: 3}
-  m_Name: ShieldStone
+  m_Name: Shield Shaped Stone
   m_EditorClassIdentifier: 
   <IsStack>k__BackingField: 0
   <MaxStackSize>k__BackingField: 1
