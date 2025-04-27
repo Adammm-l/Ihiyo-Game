@@ -10278,7 +10278,7 @@ Transform:
   m_GameObject: {fileID: 676611305}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.42, y: -15.03, z: 0}
+  m_LocalPosition: {x: 2.87, y: -10.47, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10793,6 +10793,7 @@ GameObject:
   - component: {fileID: 697129110}
   - component: {fileID: 697129109}
   - component: {fileID: 697129108}
+  - component: {fileID: 697129111}
   m_Layer: 6
   m_Name: InteractionCollider
   m_TagString: Untagged
@@ -10840,7 +10841,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcName: Joseph
-  dialogueSegments: []
+  dialogueSegments:
+  - lines:
+    - What do you want?
+    - Keep walking, kid
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Stranger danger
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
   interactionText: {fileID: 44669950}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3
@@ -10890,6 +10915,38 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.2803328, y: 0.34263372}
   m_EdgeRadius: 0
+--- !u!114 &697129111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 697129106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e6cca3c1c59f48b290ef2eb1a82f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcName: Joseph
+  thoughtFragments:
+  - ...
+  - My wife left me
+  - I saw a strange light in the trees at 6:42 this morning
+  - Bunch of trees in a square on the way here
+  - My landlord is a pocketwatcher
+  - What a weird lady
+  - ...
+  - Country music sucks
+  - What if I'm in a simulation, like a game
+  thoughtBubbleUI: {fileID: 110875958}
+  thoughtsContainer: {fileID: 914621758}
+  thoughtTextPrefab: {fileID: 1117351290}
+  titleText: {fileID: 1871051957}
+  minSpawnInterval: 0.5
+  maxSpawnInterval: 2
+  fadeInTime: 0.5
+  stayTime: 1.5
+  fadeOutTime: 0.7
 --- !u!1 &705632844
 GameObject:
   m_ObjectHideFlags: 0
