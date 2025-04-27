@@ -19113,7 +19113,7 @@ Transform:
   m_GameObject: {fileID: 1413081924}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.56, y: -14.91, z: 0}
+  m_LocalPosition: {x: -3.99, y: -9.87, z: 0}
   m_LocalScale: {x: 4, y: 4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45275,13 +45275,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3618759849620989776, guid: c7df0132484dcc44ca55550c58b62b63, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c7df0132484dcc44ca55550c58b62b63, type: 3}
+--- !u!224 &1600484947 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3786801214061896349, guid: c7df0132484dcc44ca55550c58b62b63, type: 3}
+  m_PrefabInstance: {fileID: 1600484946}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1600484948 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 775377462169817354, guid: c7df0132484dcc44ca55550c58b62b63, type: 3}
+  m_PrefabInstance: {fileID: 1600484946}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1602417234
 GameObject:
   m_ObjectHideFlags: 0
@@ -57516,6 +57526,8 @@ GameObject:
   - component: {fileID: 1640089606}
   - component: {fileID: 1640089605}
   - component: {fileID: 1640089604}
+  - component: {fileID: 1640089607}
+  - component: {fileID: 1640089608}
   m_Layer: 6
   m_Name: InteractionCollider
   m_TagString: Untagged
@@ -57563,7 +57575,119 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcName: Trader Bill
-  dialogueSegments: []
+  dialogueSegments:
+  - lines:
+    - Oh man, why is this place always dark
+    - I wonder why they decided to build a city in a place that doesn't even get
+      sunlight
+    - If you have buildings there, you're practically implying that people actually
+      exist here, right?
+    - 'Oh hey there kid. I am getting no business in this city. I am out of here
+      when my wife is done in the crapper. She has been in there for days already.
+      It must be a big load '
+    breakPoints: 
+    responseOptions:
+      responses:
+      - What do you sell?
+      - I don't think it's normal to be in the bathroom for that long
+      nextSegmentIDs: 0200000001000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Mind your own businesss
+    - I'm not going to check the female restroom either
+    - ...
+    - But, what you CAN do is check out my business
+    - 'I sell designer clothing! Get yourself a new Gussi Belt, or that new Balenciager
+      handbag for your little girlfriend '
+    - Oh, I also found this weird glowing stone on the ground earlier
+    breakPoints: 
+    responseOptions:
+      responses:
+      - I'll let you know if I want to buy anything
+      - Not interested
+      nextSegmentIDs: 0300000003000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - I'm glad you asked!
+    - 'I sell designer clothing! Get yourself a new Gussi Belt, or that new Balenciager
+      handbag for your little girlfriend '
+    - Oh, I also found this weird glowing stone on the ground earlier
+    breakPoints: 
+    responseOptions:
+      responses:
+      - I'll let you know if I want to buy anything
+      - Not interested
+      nextSegmentIDs: 0300000003000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Well okay. I will be here waiting for my wife if you change your mind
+    - 
+    - 
+    breakPoints: 000001
+    responseOptions:
+      responses: []
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
   interactionText: {fileID: 373034360}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3
@@ -57613,6 +57737,68 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.2803328, y: 0.34263372}
   m_EdgeRadius: 0
+--- !u!114 &1640089607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640089602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 075400b8cf141d347a2b56edafb83a28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopItems:
+  - itemName: Balenciager Handbag
+    itemPrice: 1000
+    itemDescription: Ripped is the new fashion trend!
+  - itemName: Gussi Belt
+    itemPrice: 500
+    itemDescription: Looking spiffy
+  - itemName: Lightning Stone
+    itemPrice: 20
+    itemDescription: A cool rock I found
+  - itemName: DEEOR Polo
+    itemPrice: 300
+    itemDescription: A blank polo, but it's from DEEOR
+  - itemName: Lois Vuitton Hoodie
+    itemPrice: 800
+    itemDescription: Looking spiffy!
+  shopUI: {fileID: 1600484948}
+  itemPrefab: {fileID: 139293892721702013, guid: 74601d8bedfe1480c90d501920b8dfff, type: 3}
+  itemContainer: {fileID: 1600484947}
+--- !u!114 &1640089608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640089602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e6cca3c1c59f48b290ef2eb1a82f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcName: Trader Bill
+  thoughtFragments:
+  - ...
+  - ...
+  - I wonder if my wife is still alive
+  - But for you, my friend..
+  - Why is this rock so heavy
+  - Why did i come here
+  - When life gives you lemons, uhh i forgot
+  - Those twins down at the garage were fineeeee
+  thoughtBubbleUI: {fileID: 110875958}
+  thoughtsContainer: {fileID: 914621758}
+  thoughtTextPrefab: {fileID: 1117351290}
+  titleText: {fileID: 1871051957}
+  minSpawnInterval: 0.5
+  maxSpawnInterval: 2
+  fadeInTime: 0.5
+  stayTime: 1.5
+  fadeOutTime: 0.7
 --- !u!1 &1665998049
 GameObject:
   m_ObjectHideFlags: 0
@@ -60211,12 +60397,12 @@ GameObject:
   - component: {fileID: 1911184985}
   - component: {fileID: 1911184984}
   m_Layer: 6
-  m_Name: LightningStone
+  m_Name: Lightning Stone
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1911184981
 Transform:
   m_ObjectHideFlags: 0
@@ -61271,19 +61457,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 17.11715
       objectReference: {fileID: 0}
     - target: {fileID: 2924517753097591361, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -14.3234
       objectReference: {fileID: 0}
     - target: {fileID: 3121158047409662029, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -61527,19 +61713,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 17.11715
       objectReference: {fileID: 0}
     - target: {fileID: 7402330962460730493, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -14.3234
       objectReference: {fileID: 0}
     - target: {fileID: 8164155207536167614, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
       propertyPath: m_AnchorMax.y

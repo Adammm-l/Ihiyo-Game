@@ -13211,8 +13211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2d761717cde1c4f8c3d0a395fe490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 1461468007}
+  waypoints: []
   movementSpeed: 2
   loop: 1
   waitTime: 2

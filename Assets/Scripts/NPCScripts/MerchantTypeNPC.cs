@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System.Linq;
+using InventoryModel;
 //adam
 [System.Serializable]
 public class ShopItem //Items in the shop and their names
@@ -51,6 +52,9 @@ public class MerchantTypeNPC : MonoBehaviour
         if (shopUI == null) return;
         shopUI.SetActive(true);
         PopulateShopUI();
+
+        // Manually trigger currency update when shop opens
+        CurrencyManager.Instance.UpdateCurrencyDisplay();
     }
 
     public void CloseShop()
@@ -76,9 +80,24 @@ public class MerchantTypeNPC : MonoBehaviour
         if (CurrencyManager.Instance.SpendCurrency(item.itemPrice))
         {
             Debug.Log($"Successfully bought {item.itemName} for {item.itemPrice}");
-        }
 
-        NPCInteraction npcInteraction = GetComponent<NPCInteraction>(); //notification box
-        npcInteraction.ShowPurchaseNotification(item.itemName, 1);
+            // Add item to quest inventory
+            Inventory questInventory = FindObjectOfType<Inventory>();
+            if (questInventory != null)
+            {
+                questInventory.AddItem(item.itemName);
+            }
+
+            // Add item to UI inventory
+            ItemSO itemSO = Resources.Load<ItemSO>("Items/" + item.itemName);
+            if (itemSO != null)
+            {
+                InventoryBridge.AddItem(itemSO, 1);
+            }
+
+            // Show notification
+            NPCInteraction npcInteraction = GetComponent<NPCInteraction>();
+            npcInteraction.ShowPurchaseNotification(item.itemName, 1);
+        }
     }
 }

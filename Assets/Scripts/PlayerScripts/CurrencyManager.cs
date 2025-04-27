@@ -1,23 +1,22 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using System;
+using InventoryCTRL;
+using InventoryModel;
 
+// This modified CurrencyManager uses the inventory system to track coins
 public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance { get; private set; }
 
-    [SerializeField] private int startingCurrency = 0;
-    private int currentCurrency;
-    private const string CURRENCY_SAVE_KEY = "PlayerCurrency";
+    [SerializeField] private string currencyItemName = "Coin"; // The item to use as currency
 
-    public event Action<int> OnCurrencyChanged;
-
-    private void Start()
-    {
-        ResetCurrency();  //for debugging; get rid of it later
-    }
+    // Event that other classes can subscribe to
+    public event System.Action<int> OnCurrencyChanged;
 
     private void Awake()
     {
+        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
@@ -26,70 +25,77 @@ public class CurrencyManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }
-
-        LoadCurrency();
-    }
-
-    private void LoadCurrency()
-    {
-        currentCurrency = PlayerPrefs.GetInt(CURRENCY_SAVE_KEY, startingCurrency);
-        Debug.Log($"Loaded currency: {currentCurrency}");
-    }
-
-    public void AddCurrency(int amount)
-    {
-        if (amount < 0)
-        {
-            Debug.LogWarning("Attempted to add negative currency");
             return;
         }
-
-        currentCurrency += amount;
-        SaveCurrency();
-        OnCurrencyChanged?.Invoke(currentCurrency);
-        Debug.Log($"Added {amount} currency. New total: {currentCurrency}");
     }
 
+    // Get current coin count from inventory
+    public int GetCurrentCurrency()
+    {
+        Inventory questInventory = FindObjectOfType<Inventory>();
+        if (questInventory != null)
+        {
+            return questInventory.GetItemCount(currencyItemName);
+        }
+        return 0;
+    }
+
+    // Spend currency by removing coins from inventory
     public bool SpendCurrency(int amount)
     {
-        Debug.Log($"Attempting to spend {amount} currency. Current total: {currentCurrency}");
-        if (amount < 0)
+        if (GetCurrentCurrency() >= amount)
         {
-            Debug.LogWarning("Attempted to spend negative currency");
-            return false;
-        }
+            // Remove from quest inventory
+            Inventory questInventory = FindObjectOfType<Inventory>();
+            if (questInventory != null)
+                questInventory.RemoveItem(currencyItemName, amount);
 
-        if (currentCurrency >= amount)
-        {
-            currentCurrency -= amount;
-            SaveCurrency();
-            OnCurrencyChanged?.Invoke(currentCurrency);
-            Debug.Log($"Successfully spent {amount} currency. New total: {currentCurrency}");
+            // Remove from UI inventory
+            InventoryController inventoryController = FindObjectOfType<InventoryController>();
+            if (inventoryController != null)
+            {
+                inventoryController.RemoveItemByName(currencyItemName, amount);
+            }
+
+            // Notify subscribers
+            NotifyCurrencyChanged();
             return true;
         }
 
-        Debug.Log("Not enough currency to spend");
         return false;
     }
 
-    public int GetCurrentCurrency()
+    // Add currency by adding coins to inventory
+    public void AddCurrency(int amount)
     {
-        return currentCurrency;
+        Inventory questInventory = FindObjectOfType<Inventory>();
+        if (questInventory != null)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                questInventory.AddItem(currencyItemName);
+            }
+        }
+
+        ItemSO itemSO = Resources.Load<ItemSO>("Items/" + currencyItemName);
+        if (itemSO != null)
+        {
+            InventoryBridge.AddItem(itemSO, amount);
+        }
+
+        // Notify subscribers
+        NotifyCurrencyChanged();
     }
 
-    private void SaveCurrency()
+    // Public method to force a currency update notification
+    public void UpdateCurrencyDisplay()
     {
-        PlayerPrefs.SetInt(CURRENCY_SAVE_KEY, currentCurrency);
-        PlayerPrefs.Save();
+        NotifyCurrencyChanged();
     }
 
-    public void ResetCurrency()
+    // Private method to trigger the event
+    private void NotifyCurrencyChanged()
     {
-        currentCurrency = startingCurrency;
-        SaveCurrency();
-        OnCurrencyChanged?.Invoke(currentCurrency);
+        OnCurrencyChanged?.Invoke(GetCurrentCurrency());
     }
-
-
 }
