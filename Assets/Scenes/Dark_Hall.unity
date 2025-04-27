@@ -57367,6 +57367,7 @@ GameObject:
   - component: {fileID: 1629746961}
   - component: {fileID: 1629746960}
   - component: {fileID: 1629746959}
+  - component: {fileID: 1629746962}
   m_Layer: 6
   m_Name: InteractionCollider
   m_TagString: Untagged
@@ -57414,7 +57415,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcName: Emily
-  dialogueSegments: []
+  dialogueSegments:
+  - lines:
+    - '**Waves at you**'
+    - '**Smiles at you**'
+    breakPoints: 
+    responseOptions:
+      responses:
+      - '**Wave back**'
+      - '**Do nothing**'
+      - '**Make a funny face**'
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
   interactionText: {fileID: 1858490458}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3
@@ -57464,6 +57491,38 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.2803328, y: 0.34263372}
   m_EdgeRadius: 0
+--- !u!114 &1629746962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629746957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e6cca3c1c59f48b290ef2eb1a82f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcName: Emily
+  thoughtFragments:
+  - My sister has no idea what I'm thinking
+  - I love Kelsey
+  - Hi!!!
+  - Kelsey and I are inseparable
+  - I don't think Joseph is the one for Kelsey
+  - Joseph is a real jerk!
+  - ...
+  - ...
+  - I wonder what that weird area with the pillars and alter is
+  thoughtBubbleUI: {fileID: 110875958}
+  thoughtsContainer: {fileID: 914621758}
+  thoughtTextPrefab: {fileID: 1117351290}
+  titleText: {fileID: 1871051957}
+  minSpawnInterval: 0.5
+  maxSpawnInterval: 2
+  fadeInTime: 0.5
+  stayTime: 1.5
+  fadeOutTime: 0.7
 --- !u!1 &1632506181
 GameObject:
   m_ObjectHideFlags: 0
@@ -59295,6 +59354,7 @@ GameObject:
   - component: {fileID: 1817944265}
   - component: {fileID: 1817944264}
   - component: {fileID: 1817944263}
+  - component: {fileID: 1817944266}
   m_Layer: 6
   m_Name: InteractionCollider
   m_TagString: Untagged
@@ -59469,12 +59529,143 @@ MonoBehaviour:
       currentAmount: 0
       completionNPC: Joseph
       giverIncompleteResponse: Bring Joseph my note! I'll make it worth your time
-      completionCompleteResponse: Oh my god!! You actually did it!!!
+      completionCompleteResponse: What is this?? You know what, normally I would
+        have shoved this note up somewhere you don't want me to say but.. maybe I
+        am in the wrong  this time. Thank you
       completionIncompleteResponse: Kick rocks, kid
     triggerQuestAfterSegment: 1
     giveItemAfterSegment: 1
     itemToGive: Kelsey's Note
     itemAmount: 1
+  - lines:
+    - Oh my god!! You really did it!!
+    - Did he say anything to you?
+    breakPoints: 
+    responseOptions:
+      responses:
+      - I gave it to him and ran away!
+      - He yelled at me!
+      - He said he would change for you
+      nextSegmentIDs: 060000000700000008000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Yeah, he can be scary sometimes
+    - Thank you anyways, it took alot off my chest
+    breakPoints: 
+    responseOptions:
+      responses:
+      - You're welcome
+      - ...
+      nextSegmentIDs: 0900000009000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Oh no! That bastard! This is why I want to divorce him!
+    - No empathy, even for kids
+    - Well, thank you anyways
+    breakPoints: 
+    responseOptions:
+      responses:
+      - You're welcome
+      - ...
+      nextSegmentIDs: 0900000009000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Ooooh I knew I loved him
+    - Maybe I shoould go talk to him again, it wasn't fair of me to send you to do
+      my work
+    - Thank you for bringing us together again
+    breakPoints: 
+    responseOptions:
+      responses:
+      - You're welcome
+      - ...
+      nextSegmentIDs: 0900000009000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - As a token of appreciation, heres a few coins
+    - Don't spend it all in once place!
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ...
+      - ...
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 1
+    itemToGive: Coin
+    itemAmount: 20
   interactionText: {fileID: 809724308}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3
@@ -59524,6 +59715,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.2803328, y: 0.34263372}
   m_EdgeRadius: 0
+--- !u!114 &1817944266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817944261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e6cca3c1c59f48b290ef2eb1a82f2fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcName: Kelsey
+  thoughtFragments:
+  - I love my sister!!
+  - I wonder what Joseph is thinking about right now
+  - I saw this weird stone in the bushes with Joseph
+  - Emily and I are inseparable
+  - ...
+  - ...
+  - I miss Joseph
+  - I hate Joseph
+  thoughtBubbleUI: {fileID: 110875958}
+  thoughtsContainer: {fileID: 914621758}
+  thoughtTextPrefab: {fileID: 1117351290}
+  titleText: {fileID: 1871051957}
+  minSpawnInterval: 0.5
+  maxSpawnInterval: 2
+  fadeInTime: 0.5
+  stayTime: 1.5
+  fadeOutTime: 0.7
 --- !u!1 &1823875844
 GameObject:
   m_ObjectHideFlags: 0
