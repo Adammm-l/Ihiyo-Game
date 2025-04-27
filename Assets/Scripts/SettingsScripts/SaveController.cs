@@ -13,6 +13,10 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
     SaveData defaultSaveData;
+
+    // data to change
+    TimeManager timeManager;
+    SwitchPlayerForm switchForm;
     public AutoSaveManager autoSaveManager;
 
     public static SaveController Instance;
@@ -37,6 +41,9 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
                 sceneName = "Ihi_House",
                 mapBoundary = "Ihi_Room",
                 currentTime = "8:00 AM",
+                isGhost = false,
+                canTransform = false,
+                canChangeTime = false
             };
 
             autoSaveManager = GetComponent<AutoSaveManager>();
@@ -66,15 +73,17 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             saveData = new SaveData(); // initialize new save data if no file exists (literally just to please the compiler)
         }
 
-        TimeManager timeManager = FindObjectOfType<TimeManager>();
+        timeManager = FindObjectOfType<TimeManager>();
         saveData.currentTime = timeManager.GetFormattedTime();
 
         saveData.playerPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
         saveData.sceneName = SceneManager.GetActiveScene().name;
         saveData.mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name;
 
-        SwitchPlayerForm switchForm = FindObjectOfType<SwitchPlayerForm>();
-        // canBeGhost = false
+        switchForm = FindObjectOfType<SwitchPlayerForm>();
+        saveData.isGhost = switchForm.isGhost;
+        saveData.canTransform = switchForm.canTransform;
+        // canChangeTime = defaultSaveData.canChangeTime
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
         Debug.Log($"Saved game on slot {activeSaveSlot}.");
@@ -91,6 +100,9 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             mapBoundary = defaultSaveData.mapBoundary,
             saveName = name,
             currentTime = defaultSaveData.currentTime,
+            isGhost = defaultSaveData.isGhost,
+            canTransform = defaultSaveData.canTransform,
+            canChangeTime = defaultSaveData.canChangeTime
         };
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
@@ -118,10 +130,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
                 wavePoint.SetActive(false);
             }
 
-            GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition; //Sets Value of Player Position
-
-            StartCoroutine(AssignConfinerAfterSceneLoad(saveData));
-
+            StartCoroutine(AssignDataAfterSceneLoad(saveData));
             return true;
         }
 
@@ -137,7 +146,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
          }
     }
 
-    private IEnumerator AssignConfinerAfterSceneLoad(SaveData saveData)
+    private IEnumerator AssignDataAfterSceneLoad(SaveData saveData)
     {
         yield return null;
 
@@ -164,8 +173,15 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         {
             yield return new WaitUntil(() => MapController_Dynamic.Instance.gameObject.activeInHierarchy);
         }
+        if (MapController_Dynamic.Instance != null)
+        {
+            while (MapController_Dynamic.Instance == null || !MapController_Dynamic.Instance.gameObject.activeInHierarchy)
+            {
+                yield return null;
+            }
+        }
         
-        TimeManager timeManager = FindObjectOfType<TimeManager>();
+        timeManager = FindObjectOfType<TimeManager>();
         if (timeManager != null)
         {
             string[] timeParts = saveData.currentTime.Split(' ', ':'); 
@@ -178,17 +194,17 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             }
         }
 
-        if (MapController_Dynamic.Instance != null)
-        {
-            while (MapController_Dynamic.Instance == null || !MapController_Dynamic.Instance.gameObject.activeInHierarchy)
-            {
-                yield return null;
-            }
-        }
+        switchForm = FindObjectOfType<SwitchPlayerForm>();
+        switchForm.isGhost = saveData.isGhost;
+        switchForm.SwitchForm();
+
+        switchForm.canTransform = saveData.canTransform;
+
         VolumeSettings volumeController = FindObjectOfType<VolumeSettings>();
         volumeController.LoadVolume();
 
         autoSaveManager.Initialize();
+        GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
     }
 
     public void DeleteSave(int slot)
@@ -213,6 +229,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
     public SaveData GetSaveData(int slot)
     {
+        saveLocation = Path.Combine(Application.persistentDataPath, "Saves");
         string savePath = Path.Combine(saveLocation, $"save_{slot}.json");
         if (File.Exists(savePath))
         {

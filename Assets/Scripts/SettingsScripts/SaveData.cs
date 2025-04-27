@@ -12,15 +12,14 @@ public class SaveData
     public string mapBoundary; //Boundary Name for Map
     public string saveName;
     public string currentTime;
-    public bool isNight; // connect currentday and isnight to time system
-    
-    // probably need to add time, dialogue, completed quests, items, 
-    // a whole bunch of other stuff now that i think about it
+    public bool isGhost;
+    public bool canTransform;
+    public bool canChangeTime;
     
     // moveable object positions
     // npc positions
-    // can activate ghost form
-    // is ghost
     // has access to time machine
-    // replace day with time
+    // dialogue
+    // active quests
+    // items
 }
