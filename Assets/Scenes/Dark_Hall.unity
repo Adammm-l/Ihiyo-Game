@@ -59342,7 +59342,139 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcName: Kelsey
-  dialogueSegments: []
+  dialogueSegments:
+  - lines:
+    - Hi! I'm Kelsey!
+    - And this is my twin sister Emily!
+    - I talk for both of us because Emily is mute
+    - But we are on the same wavelength so I always know what she is thinkging!
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Hi Kelsey! Hi Emily!
+      - Wow that's so cool, it's like talking to two people at once!
+      nextSegmentIDs: 0100000002000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Emily says hi back!
+    - Listen, I have something to tell you
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ...
+      nextSegmentIDs: 03000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - I know right? You can count on me!
+    - Listen, I have something to tell you
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ...
+      nextSegmentIDs: 03000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - This has been on my mind all day
+    - Here is a little backstory for you
+    - I got in a fight with my ex-husband, Joseph, the other day because he couldn't
+      tell the difference between Emily and I!!! We have been together for 8 months
+      and he still gets us mixed up!!! Can you believe it??
+    - I say he is my ex-husband but I can't divorce him, I love him too much
+    - I can't stand seeing him right now but I want you to deliver a note to him
+      for me
+    - Maybe after that he will reconsider his choices!!!
+    - Can you do that for me???
+    breakPoints: 
+    responseOptions:
+      responses:
+      - Consider it done
+      - Okay!!
+      nextSegmentIDs: 0400000004000000
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 0
+    itemToGive: 
+    itemAmount: 0
+  - lines:
+    - Thank you!! You're the best!!
+    - Let me know when you are done
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ...
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: Teach Joseph a Lesson!
+      questDescription: I need to deliver a letter to Joseph for Kelsey
+      isCompleted: 0
+      requiredItem: Kelsey's Note
+      requiredAmount: 1
+      currentAmount: 0
+      completionNPC: Joseph
+      giverIncompleteResponse: Bring Joseph my note! I'll make it worth your time
+      completionCompleteResponse: Oh my god!! You actually did it!!!
+      completionIncompleteResponse: Kick rocks, kid
+    triggerQuestAfterSegment: 1
+    giveItemAfterSegment: 1
+    itemToGive: Kelsey's Note
+    itemAmount: 1
   interactionText: {fileID: 809724308}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3

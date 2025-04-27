@@ -20,6 +20,7 @@ public class KeybindManager : MonoBehaviour // Terrence Akinola
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            //Debug.Log("eafd");
         }
         else if (Instance != this)
         {
