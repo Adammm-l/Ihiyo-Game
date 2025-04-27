@@ -1,39 +1,85 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Renderer))]
-public class DepthSorting : MonoBehaviour
+public class SimpleDepthSorter : MonoBehaviour
 {
-    private Renderer objectRenderer;
-    private Transform playerTransform;
-    private int defaultSortingOrder;
-    
     [Header("Settings")]
-    public float yOffset = 0.5f; // Adjust based on your sprite pivot points
-    public int behindSortOrder = 0;
-    public int frontSortOrder = 1;
+    public LayerMask possessableLayer;
+    public float yOffset = 0.5f; // Adjust based on sprite pivot points
+    public int baseNumber = 1;
+    
+    Transform playerTransform;
+    SpriteRenderer playerRenderer;
+    Collider2D[] sortedObjects = new Collider2D[50]; // Buffer for objects to sort
 
-    void Start()
+    void Awake()
     {
-        objectRenderer = GetComponent<Renderer>();
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        defaultSortingOrder = objectRenderer.sortingOrder;
+        playerRenderer = playerTransform.GetComponent<SpriteRenderer>();
     }
 
-    void Update()
+    void LateUpdate()
     {
-        // Compare positions with y-offset to determine if player is in front or behind
-        float playerYWithOffset = playerTransform.position.y - yOffset;
-        float objectY = transform.position.y;
+        int count = Physics2D.OverlapCircleNonAlloc(
+            playerTransform.position,
+            100f,
+            sortedObjects,
+            possessableLayer
+        );
 
-        if (playerYWithOffset > objectY)
+        var playerCollider = playerTransform.GetComponent<Collider2D>();
+        sortedObjects[count] = playerCollider;
+        count++;
+
+        System.Array.Sort(sortedObjects, (a, b) =>
         {
-            // Player is behind the object
-            objectRenderer.sortingOrder = frontSortOrder;
-        }
-        else
+            if (a == null && b == null) 
+            {
+                return 0;
+            }
+            if (a == null) 
+            {
+                return 1;
+            }
+            if (b == null)
+            {
+                return -1;
+            }
+            
+            float aY = a.transform.position.y - yOffset;
+            float bY = b.transform.position.y - yOffset;
+            
+            if (a.transform == playerTransform) 
+            {
+                aY -= yOffset;
+            }
+            if (b.transform == playerTransform)
+            {
+                bY -= yOffset;
+            }
+            return bY.CompareTo(aY);
+        });
+
+        for (int i = 0; i < count; i++)
         {
-            // Player is in front of the object
-            objectRenderer.sortingOrder = behindSortOrder;
+            if (sortedObjects[i] != null)
+            {
+                var renderer = sortedObjects[i].GetComponent<SpriteRenderer>();
+                if (renderer != null) 
+                {
+                    int sortingOrder = i + baseNumber;
+                    renderer.sortingOrder = sortingOrder;
+            
+                    if (renderer.transform.childCount > 0)
+                    {
+                        Transform child = renderer.transform.GetChild(0);
+                        var childRenderer = child.GetComponent<SpriteRenderer>();
+                        if (childRenderer != null)
+                        {
+                            childRenderer.sortingOrder = sortingOrder + 1;
+                        }
+                    }
+                }
+            }
         }
     }
 }

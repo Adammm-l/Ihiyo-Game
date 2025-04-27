@@ -160,7 +160,7 @@ public class GhostNPCInteraction : MonoBehaviour
         }
 
         // Resume player and NPC movement
-        if (playerControl != null)
+        if (playerControl != null && !playerForm.isPossessing)
         {
             playerControl.canMove = true;
         }

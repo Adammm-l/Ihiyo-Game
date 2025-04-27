@@ -25,8 +25,10 @@ public class PossessedObjectMovement : MonoBehaviour
         
         rb.gravityScale = 0;
         rb.drag = 2f;
-        rb.freezeRotation = true; // prevent tipping over
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation; // prevent tipping over
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+
+        UnfreezePosition();
     }
 
     void Update()
@@ -66,9 +68,9 @@ public class PossessedObjectMovement : MonoBehaviour
         // reset physics after possession ends
         if (rb != null)
         {
-            rb.freezeRotation = false;
             rb.gravityScale = 0;
             rb.velocity = Vector2.zero;
+            FreezePosition();
         }
     }
 
@@ -76,5 +78,15 @@ public class PossessedObjectMovement : MonoBehaviour
     {
         CanBePossessed = false;
         enabled = false;
+    }
+
+    void FreezePosition()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    void UnfreezePosition()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }
