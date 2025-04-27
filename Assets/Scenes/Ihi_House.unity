@@ -6516,7 +6516,7 @@ GameObject:
   - component: {fileID: 994310704}
   - component: {fileID: 994310703}
   m_Layer: 5
-  m_Name: mainMenu
+  m_Name: MenuButton
   m_TagString: SaveButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

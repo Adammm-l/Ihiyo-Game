@@ -735,7 +735,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
                 break;
             }
             GameObject nameLabel = saveSlot.Find("Name").gameObject;
-            GameObject dayNightLabel = saveSlot.Find("DayNight").gameObject;
+            GameObject timeLabel = saveSlot.Find("Time").gameObject;
             GameObject noSavesLabel = saveSlot.Find("NoSaves").gameObject;
             Button slotButton = saveSlot.GetComponent<Button>();
 
@@ -748,12 +748,12 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             if (slotHasSave)
             {
                 nameLabel.GetComponent<TMP_Text>().text = saveData.saveName;
-                dayNightLabel.GetComponent<TMP_Text>().text = ConvertDayNightToString(saveData.currentDay, saveData.isNight);
+                timeLabel.GetComponent<TMP_Text>().text = saveData.currentTime;
             }
 
-            // if save is empty (display empty save text), otherwise display name and current day/night
+            // if save is empty (display empty save text), otherwise display name and current time
             nameLabel.SetActive(slotHasSave);
-            dayNightLabel.SetActive(slotHasSave);
+            timeLabel.SetActive(slotHasSave);
             noSavesLabel.SetActive(!slotHasSave);
         }
     }

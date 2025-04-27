@@ -10742,7 +10742,7 @@ GameObject:
   - component: {fileID: 772229224}
   - component: {fileID: 772229223}
   m_Layer: 5
-  m_Name: DayNight
+  m_Name: Time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10787,10 +10787,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Insert Day/Night
+  m_text: Insert Time
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -1591303727919942190, guid: 6e153ec49b33922409d02c387275f612, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10853,7 +10853,7 @@ MonoBehaviour:
   m_margin: {x: -11.273407, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &772229224
@@ -20082,7 +20082,7 @@ GameObject:
   - component: {fileID: 1388064407}
   - component: {fileID: 1388064406}
   m_Layer: 5
-  m_Name: DayNight
+  m_Name: Time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21019,7 +21019,7 @@ GameObject:
   - component: {fileID: 1459666015}
   - component: {fileID: 1459666014}
   m_Layer: 5
-  m_Name: DayNight
+  m_Name: Time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
