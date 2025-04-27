@@ -27,6 +27,8 @@ public class SwitchPlayerForm : MonoBehaviour
     BoxCollider2D playerCollider;
     PlayerControl playerMovement;
     GameObject ghostIndicator;
+    Transform ghostStateIcon;
+    Transform humanStateIcon;
 
     [Header("Keybinds")]
     KeybindManager keybindManager;
@@ -48,7 +50,7 @@ public class SwitchPlayerForm : MonoBehaviour
     Dictionary<Renderer, Color> allPossessableRenderers = new Dictionary<Renderer, Color>();
     List<Renderer> currentPossessableInRange = new List<Renderer>();
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         playerRenderer = GetComponent<Renderer>();
@@ -63,6 +65,7 @@ public class SwitchPlayerForm : MonoBehaviour
 
         keybindManager = KeybindManager.Instance;
         playerMovement = GetComponent<PlayerControl>();
+
         
         FindAllPassableObjects();
         FindAllPossessableObjects();
@@ -101,7 +104,6 @@ public class SwitchPlayerForm : MonoBehaviour
     void Update()
     {
         switchForm = keybindManager.GetKeybind("SwitchForm");
-        ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
 
         if (Input.GetKeyDown(switchForm))
         {
@@ -206,8 +208,9 @@ public class SwitchPlayerForm : MonoBehaviour
         HighlightAllPassableObjects();
         UpdatePossessableObjects();
 
-        Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
-        Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
+        ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
+        ghostStateIcon = ghostIndicator.transform.GetChild(0);
+        humanStateIcon = ghostIndicator.transform.GetChild(1);
 
         ghostStateIcon.gameObject.SetActive(true);
         humanStateIcon.gameObject.SetActive(false);
@@ -225,9 +228,10 @@ public class SwitchPlayerForm : MonoBehaviour
         ResetAllPossessableObjectColors();
         ReleaseObject();
 
-        Transform ghostStateIcon = ghostIndicator.transform.GetChild(0);
-        Transform humanStateIcon = ghostIndicator.transform.GetChild(1);
-
+        ghostIndicator = GameObject.Find("GhostIndicatorCanvas/GhostIndicatorHUD");
+        ghostStateIcon = ghostIndicator.transform.GetChild(0);
+        humanStateIcon = ghostIndicator.transform.GetChild(1);
+        
         ghostStateIcon.gameObject.SetActive(false);
         humanStateIcon.gameObject.SetActive(true);
     }
