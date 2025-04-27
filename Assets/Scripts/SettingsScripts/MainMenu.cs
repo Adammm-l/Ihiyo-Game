@@ -1254,14 +1254,11 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             case "GameMenuButton":
                 return "GameMenu";
             
-            case "InventoryButton":
-                return "Inventory";
-
-            case "MapButton":
-                return "Map";
-            
             case "SwitchFormButton":
                 return "SwitchForm";
+            
+            case "PossessObjectButton":
+                return "PossessObject";
 
             default:
                 return null;

@@ -5,7 +5,8 @@ using Cinemachine;
 
 public class SwitchPlayerForm : MonoBehaviour
 {
-    public bool isGhost = false;
+    public bool isGhost;
+    public bool canTransform = true; // FIX: make this false later
     public bool isPossessing = false;
     public bool isInsideGhostPassable = false;
 
@@ -33,7 +34,7 @@ public class SwitchPlayerForm : MonoBehaviour
     [Header("Keybinds")]
     KeybindManager keybindManager;
     KeyCode switchForm;
-    KeyCode possessKey = KeyCode.P;
+    KeyCode possessKey;
 
     [Header("Possession Settings")]
     public float maxPossessionDistance = 5f;
@@ -66,7 +67,14 @@ public class SwitchPlayerForm : MonoBehaviour
         keybindManager = KeybindManager.Instance;
         playerMovement = GetComponent<PlayerControl>();
 
-        
+        SaveController saveManager = FindObjectOfType<SaveController>();
+        int activeSlot = saveManager.GetActiveSlot();
+        SaveData saveData = saveManager.GetSaveData(activeSlot);
+
+        isGhost = saveData.isGhost;
+        canTransform = saveData.canTransform;
+
+        SwitchForm();
         FindAllPassableObjects();
         FindAllPossessableObjects();
     }
@@ -104,8 +112,9 @@ public class SwitchPlayerForm : MonoBehaviour
     void Update()
     {
         switchForm = keybindManager.GetKeybind("SwitchForm");
+        possessKey = keybindManager.GetKeybind("PossessObject");
 
-        if (Input.GetKeyDown(switchForm))
+        if (Input.GetKeyDown(switchForm) && canTransform)
         {
             TryToggleForm();
         }
@@ -182,6 +191,11 @@ public class SwitchPlayerForm : MonoBehaviour
     void ToggleForm()
     {
         isGhost = !isGhost;
+        SwitchForm();
+    }
+
+    public void SwitchForm()
+    {
         if (isGhost)
         {
             EnterGhostForm();
