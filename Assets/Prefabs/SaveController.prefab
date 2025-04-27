@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1752562816899338041}
   - component: {fileID: 9214388362506505593}
+  - component: {fileID: 3875660294801563128}
   m_Layer: 0
   m_Name: SaveController
   m_TagString: Untagged
@@ -44,3 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4396b4dd99e9a6b4b88ecf8b516dd9ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  autoSaveManager: {fileID: 0}
+--- !u!114 &3875660294801563128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5837719625281808392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c28b7af97860af34e89245925f22cdaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveInterval: 300
+  saveOnInitialize: 1
+  isInitialized: 0

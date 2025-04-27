@@ -10,7 +10,6 @@ using System;
 using UnityEditor;
 
 // can't navigate to menu on save/load screens if not on center (ui fix) - can't get this to happen anymore so i think it's fixed?
-// fix video settings
 
 public class MainMenuController : MonoBehaviour // Terrence Akinola
 {
@@ -47,7 +46,10 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         
         menuTextLabel = dialoguePopup.transform.Find("MenuText").GetComponent<TextMeshProUGUI>();
         keybindManager = KeybindManager.Instance;
+
         saveManager = SaveController.Instance;
+        saveManager.autoSaveManager.isInitialized = false;
+
         volumeSettings = GetComponent<VolumeSettings>();
         currentKeybindCoroutine = null;
 
@@ -246,7 +248,7 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
         if (arrowKeyIsPressed)
         {
-            List<string> buttonNames = new List<string>() {null, "AudioButton", "VideoButton", "ControlsButton"};
+            List<string> buttonNames = new List<string>() {null, "AudioButton", "ControlsButton"};
             if (buttonNames.Contains(eventSystem.currentSelectedGameObject.name)) // if focus on menu button, switch to first button on tab after keyboard press
             {
                 SelectFirstButton();
@@ -257,7 +259,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         if (settingsMenu.activeSelf)
         {
             GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
-            GameObject videoSettings = settingsMenu.transform.Find("VideoSettings").gameObject;
             GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
 
             foreach (Transform keybindObject in controlsSettings.transform)
@@ -274,11 +275,11 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
             {
                 if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) // shift + tab: move to the previous tab
                 {
-                    SwitchToPreviousTab(audioSettings, videoSettings, controlsSettings);
+                    SwitchToPreviousTab(audioSettings, controlsSettings);
                 }
                 else // tab: move to the next tab
                 {
-                    SwitchToNextTab(audioSettings, videoSettings, controlsSettings);
+                    SwitchToNextTab(audioSettings, controlsSettings);
                 }
             }
         }
@@ -289,22 +290,17 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         }
     }
 
-    void SwitchToNextTab(GameObject audioSettings, GameObject videoSettings, GameObject controlsSettings)
+    void SwitchToNextTab(GameObject audioSettings, GameObject controlsSettings)
     {
         
         GameObject settingsButtonHolder = settingsMenu.transform.Find("SettingPanel").gameObject;
         Button audioButton = settingsButtonHolder.transform.Find("AudioButton").GetComponent<Button>();
-        Button videoButton = settingsButtonHolder.transform.Find("VideoButton").GetComponent<Button>();
         Button controlsButton = settingsButtonHolder.transform.Find("ControlsButton").GetComponent<Button>();
 
-        GameObject activeTab = GetActiveTab(audioSettings, videoSettings, controlsSettings);
-        Button[] settingsButtons = {audioButton, videoButton, controlsButton};
+        GameObject activeTab = GetActiveTab(audioSettings, controlsSettings);
+        Button[] settingsButtons = {audioButton, controlsButton};
         
         if (activeTab == audioSettings)
-        {
-            SetActiveSettingTab(videoSettings, videoButton, settingsButtons);
-        }
-        else if (activeTab == videoSettings)
         {
             SetActiveSettingTab(controlsSettings, controlsButton, settingsButtons);
         }
@@ -314,40 +310,31 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         }
     }
 
-    void SwitchToPreviousTab(GameObject audioSettings, GameObject videoSettings, GameObject controlsSettings)
+    void SwitchToPreviousTab(GameObject audioSettings, GameObject controlsSettings)
     {
         GameObject settingsButtonHolder = settingsMenu.transform.Find("SettingPanel").gameObject;
         Button audioButton = settingsButtonHolder.transform.Find("AudioButton").GetComponent<Button>();
-        Button videoButton = settingsButtonHolder.transform.Find("VideoButton").GetComponent<Button>();
         Button controlsButton = settingsButtonHolder.transform.Find("ControlsButton").GetComponent<Button>();
 
-        Button[] settingsButtons = {audioButton, videoButton, controlsButton};
-        GameObject activeTab = GetActiveTab(audioSettings, videoSettings, controlsSettings); // get currently active tab
+        Button[] settingsButtons = {audioButton, controlsButton};
+        GameObject activeTab = GetActiveTab(audioSettings, controlsSettings); // get currently active tab
 
         // determine previous tab based on the current tab
         if (activeTab == audioSettings)
         {
             SetActiveSettingTab(controlsSettings, controlsButton, settingsButtons);
         }
-        else if (activeTab == videoSettings)
+        else if (activeTab == controlsSettings)
         {
             SetActiveSettingTab(audioSettings, audioButton, settingsButtons);
         }
-        else if (activeTab == controlsSettings)
-        {
-            SetActiveSettingTab(videoSettings, videoButton, settingsButtons);
-        }
     }
 
-    GameObject GetActiveTab(GameObject audioSettings, GameObject videoSettings, GameObject controlsSettings)
+    GameObject GetActiveTab(GameObject audioSettings, GameObject controlsSettings)
     {
         if (audioSettings.activeSelf)
         {
             return audioSettings;
-        }
-        else if (videoSettings.activeSelf)
-        {
-            return videoSettings;
         }
         else if (controlsSettings.activeSelf)
         {
@@ -958,7 +945,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         GameObject settingsOptions = settingsMenu.transform.Find("OptionPanel").gameObject;
 
         Button audioButton = settingsButtonHolder.transform.Find("AudioButton").GetComponent<Button>();
-        Button videoButton = settingsButtonHolder.transform.Find("VideoButton").GetComponent<Button>();
         Button controlsButton = settingsButtonHolder.transform.Find("ControlsButton").GetComponent<Button>();
 
         Button resetButton = settingsOptions.transform.Find("Reset").GetComponent<Button>();
@@ -966,10 +952,9 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
         Button saveButton = settingsOptions.transform.Find("Save").GetComponent<Button>();
 
         GameObject audioSettings = settingsMenu.transform.Find("AudioSettings").gameObject;
-        GameObject videoSettings = settingsMenu.transform.Find("VideoSettings").gameObject;
         GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;
 
-        Button[] settingsButtons = {audioButton, videoButton, controlsButton};
+        Button[] settingsButtons = {audioButton, controlsButton};
 
         InitializeKeybindButtons(controlsSettings);
 
@@ -982,11 +967,9 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
 
         // reassign listeners to settings buttons to avoid issues
         audioButton.onClick.RemoveAllListeners();
-        videoButton.onClick.RemoveAllListeners();
         controlsButton.onClick.RemoveAllListeners();
 
         audioButton.onClick.AddListener(() => SetActiveSettingTab(audioSettings, audioButton, settingsButtons)); // lambda expression, allows a parameter to pass through the function
-        videoButton.onClick.AddListener(() => SetActiveSettingTab(videoSettings, videoButton, settingsButtons));
         controlsButton.onClick.AddListener(() => SetActiveSettingTab(controlsSettings, controlsButton, settingsButtons));
 
         resetButton.onClick.RemoveAllListeners();
@@ -1289,7 +1272,6 @@ public class MainMenuController : MonoBehaviour // Terrence Akinola
     {
         // deactivate all settings panels
         settingsMenu.transform.Find("AudioSettings").gameObject.SetActive(false);
-        settingsMenu.transform.Find("VideoSettings").gameObject.SetActive(false);
         settingsMenu.transform.Find("ControlsSettings").gameObject.SetActive(false);
         
         GameObject controlsSettings = settingsMenu.transform.Find("ControlsSettings").gameObject;

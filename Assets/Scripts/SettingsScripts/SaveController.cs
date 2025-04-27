@@ -13,6 +13,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
     SaveData defaultSaveData;
+    public AutoSaveManager autoSaveManager;
 
     public static SaveController Instance;
     //private static bool saveExists; // All instances of this Player references the exact same variable
@@ -36,8 +37,9 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
                 sceneName = "Ihi_House",
                 mapBoundary = "Ihi_Room",
                 currentTime = "8:00 AM",
-                isNight = false,
             };
+
+            autoSaveManager = GetComponent<AutoSaveManager>();
         }
         else if (Instance != this)
         {
@@ -71,6 +73,9 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         saveData.sceneName = SceneManager.GetActiveScene().name;
         saveData.mapBoundary = FindObjectOfType<CinemachineConfiner>().m_BoundingShape2D.gameObject.name;
 
+        SwitchPlayerForm switchForm = FindObjectOfType<SwitchPlayerForm>();
+        // canBeGhost = false
+
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
         Debug.Log($"Saved game on slot {activeSaveSlot}.");
     }
@@ -86,7 +91,6 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             mapBoundary = defaultSaveData.mapBoundary,
             saveName = name,
             currentTime = defaultSaveData.currentTime,
-            isNight = defaultSaveData.isNight,
         };
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
@@ -183,6 +187,8 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         }
         VolumeSettings volumeController = FindObjectOfType<VolumeSettings>();
         volumeController.LoadVolume();
+
+        autoSaveManager.Initialize();
     }
 
     public void DeleteSave(int slot)
