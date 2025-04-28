@@ -1,3 +1,9 @@
+---
+layout: default
+title: Poster
+permalink: /poster/
+---
+
 # Project Poster
 
 Check out our final project poster:
@@ -7,6 +13,6 @@ Check out our final project poster:
 or view it embedded below:
 
 <iframe src="/assets/files/ihiyo-poster.pdf" width="100%" height="600px">
-  This browser does not support PDFs. Please download it here:
+  This browser does not support PDFs. Please download the PDF here:
   <a href="/assets/files/ihiyo-poster.pdf">Download Poster</a>.
 </iframe>
