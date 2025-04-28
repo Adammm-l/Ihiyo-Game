@@ -764,7 +764,7 @@ Transform:
   m_GameObject: {fileID: 23607878}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -51.36, y: -5.65, z: 0}
+  m_LocalPosition: {x: -30.904, y: 3.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -9885,7 +9885,7 @@ Transform:
   m_GameObject: {fileID: 606095050}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -27.239, y: -2.078, z: 0}
+  m_LocalPosition: {x: -28.82, y: 20.58, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -10131,7 +10131,7 @@ PrefabInstance:
     - target: {fileID: 5026507223717984794, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
       propertyPath: mapParent
       value: 
-      objectReference: {fileID: 1984445316}
+      objectReference: {fileID: 0}
     - target: {fileID: 5026507223717984794, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
       propertyPath: startArea
       value: 
@@ -10139,7 +10139,7 @@ PrefabInstance:
     - target: {fileID: 5026507223717984794, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
       propertyPath: playerIcon
       value: 
-      objectReference: {fileID: 1984445315}
+      objectReference: {fileID: 0}
     - target: {fileID: 6581697393602967765, guid: 56cbdfdc2c7b3ed43b3c345b96b42e49, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1168.9967
@@ -10884,11 +10884,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 21e53312cd0b11c4f8b8a4722cfc8884, type: 3}
   - {fileID: 21300000, guid: 1b1dffea27c929a43a5f487b0000c2d3, type: 3}
   - {fileID: 21300000, guid: 7b19d6f55514f194a9ac9ffc23d719f6, type: 3}
-  - {fileID: 21300000, guid: acf0b3b51b395014189e56af74f3e205, type: 3}
+  - {fileID: 21300000, guid: a38e7fb81b198694cac3a4a76e2e1c35, type: 3}
   fadeDuration: 0.5
-  pulseIntensity: 2
+  pulseIntensity: 1.5
   pulseSpeed: 2
-  onAllPillarsCompleted: 0
+  isPuzzleFinished: 0
 --- !u!4 &692235970
 Transform:
   m_ObjectHideFlags: 0
@@ -10981,6 +10981,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -13098,6 +13099,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3116879113453481000, guid: 1a3e1faab4f66410da4c216541d1cbcb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1172082622}
+    - targetCorrespondingSourceObject: {fileID: 3116879113453481000, guid: 1a3e1faab4f66410da4c216541d1cbcb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1172082628}
   m_SourcePrefab: {fileID: 100100000, guid: 1a3e1faab4f66410da4c216541d1cbcb, type: 3}
 --- !u!1 &842113116
 GameObject:
@@ -16600,6 +16604,19 @@ MonoBehaviour:
     endHour: 6
     endMinute: 44
     activeInRange: 1
+--- !u!114 &1172082628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172082616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01d81ed15d671ef478f2081e52e8cd67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canChangeTime: 0
 --- !u!1 &1175899636
 GameObject:
   m_ObjectHideFlags: 0
@@ -57885,6 +57902,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58126,6 +58144,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58156,6 +58175,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58183,6 +58203,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58207,6 +58228,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58436,6 +58458,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58462,6 +58485,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58489,6 +58513,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58513,6 +58538,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58546,6 +58572,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58574,6 +58601,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58599,6 +58627,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58624,6 +58653,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58655,6 +58685,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58681,6 +58712,7 @@ MonoBehaviour:
       requiredItem: Mystical Stone
       requiredAmount: 3
       currentAmount: 0
+      requiredItems: []
       completionNPC: ???
       giverIncompleteResponse: It looks like you have not collected all three stones
         yet. Come back to me when you are ready
@@ -59967,6 +59999,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -59991,6 +60024,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60015,6 +60049,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60048,6 +60083,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60072,6 +60108,7 @@ MonoBehaviour:
       requiredItem: Kelsey's Note
       requiredAmount: 1
       currentAmount: 0
+      requiredItems: []
       completionNPC: Joseph
       giverIncompleteResponse: Bring Joseph my note! I'll make it worth your time
       completionCompleteResponse: What is this?? You know what, normally I would
@@ -60100,6 +60137,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60125,6 +60163,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60151,6 +60190,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60178,6 +60218,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60203,6 +60244,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -62018,7 +62060,7 @@ Transform:
   m_GameObject: {fileID: 1965649782}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.3788402, y: -3.5265555, z: -10}
+  m_LocalPosition: {x: -3.3745244, y: -3.5586925, z: -10}
   m_LocalScale: {x: 0.49379784, y: 0.49379784, z: 0.49379784}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -62862,16 +62904,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df82968d288998e44b45dfd350492a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &1984445315 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7195128491090586485, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
-  m_PrefabInstance: {fileID: 1984445311}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &1984445316 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2359572470747415156, guid: faae4cdfc1352d944a2af3065ad9adeb, type: 3}
-  m_PrefabInstance: {fileID: 1984445311}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1988795161
 GameObject:
   m_ObjectHideFlags: 0

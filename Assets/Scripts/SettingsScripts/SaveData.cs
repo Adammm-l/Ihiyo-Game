@@ -18,7 +18,6 @@ public class SaveData
     
     // moveable object positions
     // npc positions
-    // has access to time machine
     // dialogue
     // active quests
     // items

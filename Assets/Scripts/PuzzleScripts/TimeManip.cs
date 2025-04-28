@@ -6,24 +6,28 @@ using UnityEngine.Rendering;
 public class TimeManipulator : MonoBehaviour
 {
     public bool canChangeTime;
-    void Awake()
+    GameObject timeButton;
+
+    void Start()
     {
         SaveController saveManager = FindObjectOfType<SaveController>();
         int activeSlot = saveManager.GetActiveSlot();
         SaveData saveData = saveManager.GetSaveData(activeSlot);
 
         canChangeTime = saveData.canChangeTime;
+
+        Transform child = transform.Find("TimeManipulatorButton");
+        if (child != null)
+        {
+            timeButton = child.gameObject;
+        }
     }
 
     void Update()
     {
-        if (canChangeTime)
+        if (timeButton != null)
         {
-            this.gameObject.SetActive(true);
-        }
-        else
-        {
-            this.gameObject.SetActive(false);
+            timeButton.SetActive(canChangeTime);
         }
     }
 }

@@ -43,6 +43,8 @@ public class ItemPickup : MonoBehaviour
                 {
                     return;
                 }
+                TimeManipulator timeManipulator = FindObjectOfType<TimeManipulator>();
+                timeManipulator.canChangeTime = puzzleChecker.isPuzzleFinished;
             }
             Inventory questInventory = FindObjectOfType<Inventory>();
             if (questInventory != null && item != null)
