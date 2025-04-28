@@ -114,6 +114,9 @@ public class SwitchPlayerForm : MonoBehaviour
         switchForm = keybindManager.GetKeybind("SwitchForm");
         possessKey = keybindManager.GetKeybind("PossessObject");
 
+        FindAllPassableObjects();
+        FindAllPossessableObjects();
+
         if (Input.GetKeyDown(switchForm) && canTransform && !NPCInteraction.IsInteracting)
         {
             TryToggleForm();
@@ -277,7 +280,7 @@ public class SwitchPlayerForm : MonoBehaviour
         {
             if (allPassableRenderers[i] != null)
             {
-                allPassableRenderers[i].material.color = allPassableOriginalColors[i];
+                allPassableRenderers[i].material.color = Color.white;
             }
         }
     }
