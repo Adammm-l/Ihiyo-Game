@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 252ddb51a78128345a6236fe47b7bfd1, type: 3}
-  m_Name: TimeStone
+  m_Name: Mystical Stone
   m_EditorClassIdentifier: 
   <IsStack>k__BackingField: 0
   <MaxStackSize>k__BackingField: 1
-  <Name>k__BackingField: Time Stone
-  <Description>k__BackingField: In the back of my head, I feel like I could control
-    time..
-  <ItemIMG>k__BackingField: {fileID: 21300000, guid: a38e7fb81b198694cac3a4a76e2e1c35, type: 3}
+  <Name>k__BackingField: Mystical Stone
+  <Description>k__BackingField: The weight of this stone does not match the size.
+    It is also so cold!
+  <ItemIMG>k__BackingField: {fileID: 21300000, guid: 689df9453f937410aaf8424de4b2578f, type: 3}
   <DefaultParamList>k__BackingField: []

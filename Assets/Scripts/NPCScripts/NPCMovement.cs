@@ -1,32 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class TimeScheduleEntry
+{
+    public int startHour; // 24-hour format
+    public int startMinute;
+    public Transform[] waypoints;
+}
+
 public class NPCMovement : MonoBehaviour
 {
-    [SerializeField] private Transform[] waypoints;
+    [SerializeField] private TimeScheduleEntry[] schedule;
     [SerializeField] private float movementSpeed = 2f;
-    [SerializeField] private bool loop = true; //Loop through waypoints or stop at the end
-    [SerializeField] private float waitTime = 2f; //how long to wait at a waypoint before moving again
+    [SerializeField] private bool loop = true;
+    [SerializeField] private float waitTime = 2f;
 
+    private Transform[] currentWaypoints;
     private int currentWaypointIndex = 0;
-    private bool isWaiting = false; //is idle at a waypoint
-    private bool isPaused = false; //paused for interaction with something
+    private bool isWaiting = false;
+    private bool isPaused = false;
     private float resumeMovementTimer = 0f;
     private float pauseDuration = 0f;
+    private TimeScheduleEntry currentSchedule;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        UpdateScheduleBasedOnTime();
     }
 
-    // Update is called once per frame
     private void Update()
     {
+        UpdateScheduleBasedOnTime();
+
         if (isPaused)
         {
-            if (resumeMovementTimer > 0) //pauses while interacting for a set time in NPCInteraction
+            if (resumeMovementTimer > 0)
             {
                 resumeMovementTimer -= Time.deltaTime;
                 if (resumeMovementTimer <= 0)
@@ -37,15 +48,54 @@ public class NPCMovement : MonoBehaviour
             return;
         }
 
-        if (!isWaiting)
+        if (!isWaiting && currentWaypoints != null && currentWaypoints.Length > 0)
         {
             MoveToWaypoint();
         }
     }
+
+    private void UpdateScheduleBasedOnTime()
+    {
+        if (TimeManager.Instance == null) return;
+
+        int currentHour = TimeManager.Instance.GetHour();
+        int currentMinute = TimeManager.Instance.GetMinute();
+
+        TimeScheduleEntry bestMatch = null;
+        int bestMatchTime = -1;
+
+        foreach (var entry in schedule)
+        {
+            int entryTimeValue = entry.startHour * 60 + entry.startMinute;
+            int currentTimeValue = currentHour * 60 + currentMinute;
+
+            // Find the most recent schedule that's not in the future
+            if (entryTimeValue <= currentTimeValue && entryTimeValue > bestMatchTime)
+            {
+                bestMatch = entry;
+                bestMatchTime = entryTimeValue;
+            }
+        }
+
+        // If we found a matching schedule and it's different from the current one
+        if (bestMatch != null && bestMatch != currentSchedule)
+        {
+            currentSchedule = bestMatch;
+            currentWaypoints = bestMatch.waypoints;
+
+            // Reset waypoint index if the waypoints changed
+            if (currentWaypointIndex >= currentWaypoints.Length)
+            {
+                currentWaypointIndex = 0;
+                isWaiting = false;
+            }
+        }
+    }
+
     private void MoveToWaypoint()
     {
-        Transform targetWaypoint = waypoints[currentWaypointIndex]; //finds waypoint
-        transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, movementSpeed * Time.deltaTime); //move towards waypoint
+        Transform targetWaypoint = currentWaypoints[currentWaypointIndex];
+        transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, movementSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
         {
@@ -60,15 +110,15 @@ public class NPCMovement : MonoBehaviour
         isWaiting = false;
         currentWaypointIndex++;
 
-        if (currentWaypointIndex >= waypoints.Length) //handles looping or stop
+        if (currentWaypointIndex >= currentWaypoints.Length)
         {
-            if (loop) //loop true
+            if (loop)
             {
                 currentWaypointIndex = 0;
             }
-            else //loop false
+            else
             {
-                currentWaypointIndex = waypoints.Length - 1;
+                currentWaypointIndex = currentWaypoints.Length - 1;
                 isWaiting = true;
             }
         }
@@ -91,4 +141,3 @@ public class NPCMovement : MonoBehaviour
         isPaused = false;
     }
 }
-
