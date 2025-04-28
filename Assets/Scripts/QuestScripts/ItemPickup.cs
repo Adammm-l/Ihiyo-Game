@@ -10,6 +10,7 @@ public class ItemPickup : MonoBehaviour
     [SerializeField] private ItemSO inventoryItemSO; //Reference to the ItemSO
     private bool isPlayerInRange = false;
     private Item item;
+    PuzzleCompletionChecker puzzleChecker;
 
     [Header("References")]
     KeybindManager keybindManager;
@@ -22,6 +23,12 @@ public class ItemPickup : MonoBehaviour
 
         if (inventoryItemSO != null && GetComponent<SpriteRenderer>() != null)
             GetComponent<SpriteRenderer>().sprite = inventoryItemSO.ItemIMG;
+
+        if (item.name == "TimeManipStone")
+        {
+            puzzleChecker = FindObjectOfType<PuzzleCompletionChecker>();
+            GetComponent<SpriteRenderer>().sprite = puzzleChecker.completionSprites[0];
+        }
     }
 
     void Update()
@@ -29,6 +36,14 @@ public class ItemPickup : MonoBehaviour
         interactKey = keybindManager.GetKeybind("Interact");
         if (isPlayerInRange && Input.GetKeyDown(interactKey))
         {
+            if (item.name == "TimeManipStone")
+            {
+                puzzleChecker = FindObjectOfType<PuzzleCompletionChecker>();
+                if (!puzzleChecker.isPuzzleFinished)
+                {
+                    return;
+                }
+            }
             Inventory questInventory = FindObjectOfType<Inventory>();
             if (questInventory != null && item != null)
             {
