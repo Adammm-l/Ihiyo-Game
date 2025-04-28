@@ -133,8 +133,8 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
             isLoadingSave = true;
-            MapController_Dynamic.Instance?.GenerateMap(); // Generate Map 
             StartCoroutine(AssignDataAfterSceneLoad(saveData));
+            StartCoroutine(ForceMPUpdate(saveData.mapBoundary));
             
             return true;
         }
@@ -174,18 +174,20 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             confiner.InvalidatePathCache();
         }
 
-        if (MapController_Dynamic.Instance != null)
-        {
-            yield return new WaitUntil(() => MapController_Dynamic.Instance.gameObject.activeInHierarchy);
-        }
-        if (MapController_Dynamic.Instance != null)
-        {
-            while (MapController_Dynamic.Instance == null || !MapController_Dynamic.Instance.gameObject.activeInHierarchy)
-            {
-                yield return null;
-            }
-        }
+       // while (MapController_Dynamic.Instance == null)
+       // {
+           // yield return null; //new WaitUntil(() => MapController_Dynamic.Instance.gameObject.activeInHierarchy);
+        //}
         
+        //yield return new WaitForEndOfFrame();
+
+        // Generate map with the correct area the player is in
+        MapController_Dynamic.Instance.GenerateMap(polyCollider);
+
+        // Update the player's position on the map
+        yield return null;
+        //MapController_Dynamic.Instance.UpdateCurrentArea(saveData.mapBoundary);
+
         timeManager = FindObjectOfType<TimeManager>();
         if (timeManager != null)
         {
@@ -211,6 +213,24 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
         autoSaveManager.Initialize();
         isLoadingSave = false;
+
+        yield return null;
+        MapController_Dynamic.Instance?.UpdateCurrentArea(saveData.mapBoundary);
+    }
+
+    private IEnumerator ForceMPUpdate(string boundaryName) {
+
+        // Wait for the MapController to be ready
+        yield return new WaitUntil(() => MapController_Dynamic.Instance != null);
+
+        //Safety Wait
+        yield return null;
+
+        //Call a forced map regenration
+        MapController_Dynamic.Instance.GenerateMap();
+        //MapController_Dynamic.Instance.UpdateCurrentArea(boundaryName);
+
+        Debug.Log($"Forced Map Update to:  {boundaryName}");
     }
 
     public void DeleteSave(int slot)
