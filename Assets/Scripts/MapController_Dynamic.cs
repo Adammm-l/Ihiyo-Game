@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MapController_Dynamic : MonoBehaviour
 {
@@ -43,7 +44,7 @@ public class MapController_Dynamic : MonoBehaviour
         }
 
         mapsAreas = MapBounds.GetComponentsInChildren<PolygonCollider2D>();
-        DontDestroyOnLoad(transform.gameObject);
+        //DontDestroyOnLoad(transform.gameObject);
     }
 
     // Generate Map
