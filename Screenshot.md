@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Snapshots
-permalink: /Snapshots/
+title: snapshots
+permalink: /snapshots/
 ---
 
 # Project Snapshots
