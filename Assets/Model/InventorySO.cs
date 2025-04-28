@@ -12,7 +12,7 @@ namespace InventoryModel {
 public class InventorySO : ScriptableObject
 {
 
-    [SerializeField] private List<InventoryItem> inventoryItems;
+    public List<InventoryItem> inventoryItems;
 
     [field: SerializeField] 
 

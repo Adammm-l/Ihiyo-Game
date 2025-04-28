@@ -5,6 +5,7 @@ using Cinemachine;
 using System.IO;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 // Terrence and Edwin (Eri)
 public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) Sotres
@@ -18,6 +19,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     // data to change
     TimeManager timeManager;
     SwitchPlayerForm switchForm;
+    InventoryBridge inventory;
     public AutoSaveManager autoSaveManager;
 
     public static SaveController Instance;
@@ -88,6 +90,16 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         TimeManipulator timeManipulator = FindObjectOfType<TimeManipulator>();
         saveData.canChangeTime = timeManipulator.canChangeTime;
 
+        inventory = FindObjectOfType<InventoryBridge>();
+        for (int i = 0; i < inventory.inventoryDataSO.inventoryItems.Count; i++)
+        {
+            if (inventory.inventoryDataSO.inventoryItems[i].isEmpty)
+            {
+                continue;
+            }
+            saveData.savedItems[i] = inventory.inventoryDataSO.inventoryItems[i].item.Name;
+        }
+
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
         Debug.Log($"Saved game on slot {activeSaveSlot}.");
     }
@@ -135,6 +147,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
             isLoadingSave = true;
+
             StartCoroutine(AssignDataAfterSceneLoad(saveData));
             StartCoroutine(ForceMPUpdate(saveData.mapBoundary));
             
@@ -203,12 +216,24 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
             }
         }
 
+        
+
         switchForm = FindObjectOfType<SwitchPlayerForm>();
         switchForm.isGhost = saveData.isGhost;
         switchForm.SwitchForm();
 
         switchForm.canTransform = saveData.canTransform;
-        // ... = saveData.canChangeTime
+        
+        inventory = FindObjectOfType<InventoryBridge>();
+        for (int i = 0; i < inventory.inventoryDataSO.inventoryItems.Count; i++)
+        {
+            inventory.inventoryDataSO.RemoveItem(i, inventory.inventoryDataSO.inventoryItems[i].num);
+        }
+        for (int i = 0; i < saveData.savedItems.Count; i++)
+        {
+            string itemName = saveData.savedItems[i];
+            inventory.AddItemToInventory(itemName);
+        }
 
         VolumeSettings volumeController = FindObjectOfType<VolumeSettings>();
         volumeController.LoadVolume();

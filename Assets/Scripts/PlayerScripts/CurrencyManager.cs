@@ -4,19 +4,16 @@ using UnityEngine;
 using InventoryCTRL;
 using InventoryModel;
 
-// This modified CurrencyManager uses the inventory system to track coins
 public class CurrencyManager : MonoBehaviour
 {
     public static CurrencyManager Instance { get; private set; }
 
-    [SerializeField] private string currencyItemName = "Coin"; // The item to use as currency
+    [SerializeField] private string currencyItemName = "Coin";
 
-    // Event that other classes can subscribe to
     public event System.Action<int> OnCurrencyChanged;
 
     private void Awake()
     {
-        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
@@ -29,7 +26,6 @@ public class CurrencyManager : MonoBehaviour
         }
     }
 
-    // Get current coin count from inventory
     public int GetCurrentCurrency()
     {
         Inventory questInventory = FindObjectOfType<Inventory>();
@@ -40,24 +36,17 @@ public class CurrencyManager : MonoBehaviour
         return 0;
     }
 
-    // Spend currency by removing coins from inventory
     public bool SpendCurrency(int amount)
     {
         if (GetCurrentCurrency() >= amount)
         {
-            // Remove from quest inventory
             Inventory questInventory = FindObjectOfType<Inventory>();
             if (questInventory != null)
                 questInventory.RemoveItem(currencyItemName, amount);
 
-            // Remove from UI inventory
             InventoryController inventoryController = FindObjectOfType<InventoryController>();
-            if (inventoryController != null)
-            {
-                inventoryController.RemoveItemByName(currencyItemName, amount);
-            }
+            inventoryController.RemoveItemByName(currencyItemName, amount);
 
-            // Notify subscribers
             NotifyCurrencyChanged();
             return true;
         }
@@ -65,7 +54,6 @@ public class CurrencyManager : MonoBehaviour
         return false;
     }
 
-    // Add currency by adding coins to inventory
     public void AddCurrency(int amount)
     {
         Inventory questInventory = FindObjectOfType<Inventory>();
@@ -78,22 +66,15 @@ public class CurrencyManager : MonoBehaviour
         }
 
         ItemSO itemSO = Resources.Load<ItemSO>("Items/" + currencyItemName);
-        if (itemSO != null)
-        {
-            InventoryBridge.AddItem(itemSO, amount);
-        }
-
-        // Notify subscribers
+        InventoryBridge.AddItem(itemSO, amount);
         NotifyCurrencyChanged();
     }
 
-    // Public method to force a currency update notification
     public void UpdateCurrencyDisplay()
     {
         NotifyCurrencyChanged();
     }
 
-    // Private method to trigger the event
     private void NotifyCurrencyChanged()
     {
         OnCurrencyChanged?.Invoke(GetCurrentCurrency());

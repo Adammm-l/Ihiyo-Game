@@ -15,6 +15,7 @@ public class SaveData
     public bool isGhost;
     public bool canTransform;
     public bool canChangeTime;
+    public List<string> savedItems;
     
     // moveable object positions
     // npc positions

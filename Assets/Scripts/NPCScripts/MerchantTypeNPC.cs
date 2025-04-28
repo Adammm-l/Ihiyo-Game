@@ -53,8 +53,15 @@ public class MerchantTypeNPC : MonoBehaviour
         shopUI.SetActive(true);
         PopulateShopUI();
 
-        // Manually trigger currency update when shop opens
+        // Update currency display in both ways
         CurrencyManager.Instance.UpdateCurrencyDisplay();
+
+        // Also directly update any CurrencyDisplay components in the shop UI
+        CurrencyDisplay[] displays = shopUI.GetComponentsInChildren<CurrencyDisplay>(true);
+        foreach (var display in displays)
+        {
+            display.ForceUpdate();
+        }
     }
 
     public void CloseShop()
