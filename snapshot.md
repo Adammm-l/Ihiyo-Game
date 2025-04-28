@@ -1,6 +1,6 @@
 ---
 layout: default
-title: snapshots
+title: Snapshots
 permalink: /snapshots/
 ---
 
