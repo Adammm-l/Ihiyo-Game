@@ -59,12 +59,9 @@ public class ItemPickup : MonoBehaviour
                 if (questLogManager != null)
                     questLogManager.UpdateQuestLog();
             }
-            if (inventoryItemSO != null)
-            {
-                InventoryBridge.AddItem(inventoryItemSO, 1);
-            }
+            InventoryBridge.AddItem(inventoryItemSO, 1);
 
-            Debug.Log($"Picked up: {item.ItemName}");
+            //Debug.Log($"Picked up: {item.ItemName}");
             Destroy(gameObject);
         }
     }

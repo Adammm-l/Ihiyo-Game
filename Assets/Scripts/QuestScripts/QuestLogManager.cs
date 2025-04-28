@@ -62,18 +62,14 @@ public class QuestLogManager : MonoBehaviour
             GameObject questText = Instantiate(questTextPrefab, questContent);
             TextMeshProUGUI textComponent = questText.GetComponent<TextMeshProUGUI>();
 
-            // Set the font
             if (questFont != null)
             {
                 textComponent.font = questFont;
             }
-
-            // Set quest details with proper progress display
             string progressText;
 
             if (quest.UsesMultipleItems)
             {
-                // For multiple items, build detailed progress list
                 string itemProgress = "";
                 foreach (QuestItemRequirement req in quest.requiredItems)
                 {
@@ -83,7 +79,6 @@ public class QuestLogManager : MonoBehaviour
             }
             else
             {
-                // Legacy single item display
                 progressText = $"{quest.questTitle}\n{quest.questDescription}\nProgress: {quest.currentAmount}/{quest.requiredAmount}";
             }
 

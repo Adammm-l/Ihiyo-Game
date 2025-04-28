@@ -28,7 +28,7 @@ public class Inventory : MonoBehaviour
             items[itemName] = 1;
         }
 
-        Debug.Log($"Added {itemName}. Total: {items[itemName]}");
+        //Debug.Log($"Added {itemName}. Total: {items[itemName]}");
 
         // Update quest progress when an item is added
         PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
@@ -52,7 +52,7 @@ public class Inventory : MonoBehaviour
             {
                 items.Remove(itemName); //Remove item completely if count reaches 0
             }
-            Debug.Log($"Removed {amount} {itemName}(s). Remaining: {GetItemCount(itemName)}");
+            //Debug.Log($"Removed {amount} {itemName}(s). Remaining: {GetItemCount(itemName)}");
         }
     }
 }

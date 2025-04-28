@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using InventoryModel;
-
+//useless script can throw away
 public class ItemPick : MonoBehaviour
 {
     [field: SerializeField]

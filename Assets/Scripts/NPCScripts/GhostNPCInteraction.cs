@@ -38,19 +38,13 @@ public class GhostNPCInteraction : MonoBehaviour
     {
         keybindManager = KeybindManager.Instance;
         npcMovement = GetComponentInParent<NPCMovement>();
-
-        // Make sure thoughts UI is hidden at start
-        if (thoughtBubbleUI != null)
-        {
-            thoughtBubbleUI.SetActive(false);
-        }
+        thoughtBubbleUI.SetActive(false);
     }
 
     void Update()
     {
         if (!isPlayerInRange) return;
 
-        // Get player references if we don't have them
         if (playerControl == null)
         {
             playerControl = FindObjectOfType<PlayerControl>();
@@ -59,21 +53,16 @@ public class GhostNPCInteraction : MonoBehaviour
                 playerForm = playerControl.GetComponent<SwitchPlayerForm>();
             }
         }
-
-        // Update interact key in case keybinds changed
         interactKey = keybindManager.GetKeybind("Interact");
 
-        // Check if player switched forms while reading thoughts
         if (isShowingThoughts && playerForm != null && !playerForm.isGhost)
         {
             HideThoughts();
             return;
         }
 
-        // Handle ghost interaction when player is in ghost form
         if (playerForm != null && playerForm.isGhost)
         {
-            // Handle ghost interaction
             if (Input.GetKeyDown(interactKey) && !isShowingThoughts)
             {
                 ShowThoughts();
@@ -91,7 +80,6 @@ public class GhostNPCInteraction : MonoBehaviour
         {
             isPlayerInRange = true;
 
-            // Get player references
             playerControl = other.GetComponent<PlayerControl>();
             if (playerControl != null)
             {
@@ -113,14 +101,12 @@ public class GhostNPCInteraction : MonoBehaviour
     {
         if (playerForm == null || !playerForm.isGhost) return;
 
-        // Stop player movement and NPC movement
         playerControl.canMove = false;
         if (npcMovement != null)
         {
             npcMovement.PauseMovementInfinitely();
         }
 
-        // Set the title text
         if (titleText != null)
         {
             titleText.text = $"{npcName}'s Thoughts";
@@ -128,26 +114,22 @@ public class GhostNPCInteraction : MonoBehaviour
             titleText.gameObject.SetActive(true);
         }
 
-        // Show the thought UI
         if (thoughtBubbleUI != null)
         {
             thoughtBubbleUI.SetActive(true);
             isShowingThoughts = true;
 
-            // Start spawning random thoughts
             thoughtsRoutine = StartCoroutine(SpawnThoughtsRoutine());
         }
     }
 
     private void HideThoughts()
     {
-        // Stop spawning thoughts
         if (thoughtsRoutine != null)
         {
             StopCoroutine(thoughtsRoutine);
         }
 
-        // Destroy all active thoughts
         foreach (GameObject thought in activeThoughts)
         {
             Destroy(thought);
@@ -159,7 +141,6 @@ public class GhostNPCInteraction : MonoBehaviour
             thoughtBubbleUI.SetActive(false);
         }
 
-        // Resume player and NPC movement
         if (playerControl != null && !playerForm.isPossessing)
         {
             playerControl.canMove = true;
@@ -184,47 +165,36 @@ public class GhostNPCInteraction : MonoBehaviour
 
     private void SpawnRandomThought()
     {
-        // Pick a random thought fragment
         if (thoughtFragments == null || thoughtFragments.Count == 0) return;
 
         string thought = thoughtFragments[Random.Range(0, thoughtFragments.Count)];
 
-        // Create text object at random position within container
         GameObject thoughtObj = Instantiate(thoughtTextPrefab, thoughtsContainer);
         RectTransform rt = thoughtObj.GetComponent<RectTransform>();
 
-        // Increased padding to keep text away from borders
         float padding = 75f;
         float verticalPadding = 40f;
-
-        // Random position within container bounds
         float randX = Random.Range(-thoughtsContainer.rect.width / 2 + padding, thoughtsContainer.rect.width / 2 - padding);
         float randY = Random.Range(-thoughtsContainer.rect.height / 2 + verticalPadding, thoughtsContainer.rect.height / 2 - verticalPadding);
         rt.anchoredPosition = new Vector2(randX, randY);
-
-        // Set the text
         TextMeshProUGUI textComponent = thoughtObj.GetComponent<TextMeshProUGUI>();
         textComponent.text = thought;
-        textComponent.color = new Color(1f, 1f, 1f, 0);  // Start transparent
+        textComponent.color = new Color(1f, 1f, 1f, 0);
 
-        // Add text constraints to prevent overflow
         textComponent.enableWordWrapping = true;
 
-        // Set maximum width for the text based on panel size
         float maxWidth = thoughtsContainer.rect.width - (padding * 2);
         rt.sizeDelta = new Vector2(maxWidth * 0.6f, textComponent.preferredHeight);
 
-        // Add some rotation for variety
         rt.rotation = Quaternion.Euler(0, 0, Random.Range(-10f, 10f));
 
-        // Manage the thought object
         activeThoughts.Add(thoughtObj);
         StartCoroutine(AnimateThought(thoughtObj, textComponent));
     }
 
     private IEnumerator AnimateThought(GameObject thoughtObj, TextMeshProUGUI textComponent)
     {
-        // Fade in
+        //Fade in
         float timer = 0f;
         while (timer < fadeInTime)
         {
@@ -234,10 +204,10 @@ public class GhostNPCInteraction : MonoBehaviour
             yield return null;
         }
 
-        // Stay visible
+        //Stay visible
         yield return new WaitForSeconds(stayTime);
 
-        // Fade out
+        //ade out
         timer = 0f;
         while (timer < fadeOutTime)
         {
@@ -246,8 +216,6 @@ public class GhostNPCInteraction : MonoBehaviour
             textComponent.color = new Color(textComponent.color.r, textComponent.color.g, textComponent.color.b, alpha);
             yield return null;
         }
-
-        // Remove and destroy
         activeThoughts.Remove(thoughtObj);
         Destroy(thoughtObj);
     }

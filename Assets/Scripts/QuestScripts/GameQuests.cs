@@ -24,12 +24,10 @@ public class GameQuests
     public string questDescription;
     public bool isCompleted;
 
-    // Legacy single item support
     public string requiredItem;
     public int requiredAmount;
     public int currentAmount;
 
-    // New multiple items support
     public List<QuestItemRequirement> requiredItems = new List<QuestItemRequirement>();
 
     public string completionNPC;
@@ -37,7 +35,7 @@ public class GameQuests
     public string completionCompleteResponse;
     public string completionIncompleteResponse;
 
-    // Helper property to check if using new system
+    // Helper
     public bool UsesMultipleItems => requiredItems != null && requiredItems.Count > 0;
 
     public bool IsQuestCompleted()

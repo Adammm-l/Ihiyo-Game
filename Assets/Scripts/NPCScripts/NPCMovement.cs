@@ -69,7 +69,6 @@ public class NPCMovement : MonoBehaviour
             int entryTimeValue = entry.startHour * 60 + entry.startMinute;
             int currentTimeValue = currentHour * 60 + currentMinute;
 
-            // Find the most recent schedule that's not in the future
             if (entryTimeValue <= currentTimeValue && entryTimeValue > bestMatchTime)
             {
                 bestMatch = entry;
@@ -77,13 +76,10 @@ public class NPCMovement : MonoBehaviour
             }
         }
 
-        // If we found a matching schedule and it's different from the current one
         if (bestMatch != null && bestMatch != currentSchedule)
         {
             currentSchedule = bestMatch;
             currentWaypoints = bestMatch.waypoints;
-
-            // Reset waypoint index if the waypoints changed
             if (currentWaypointIndex >= currentWaypoints.Length)
             {
                 currentWaypointIndex = 0;

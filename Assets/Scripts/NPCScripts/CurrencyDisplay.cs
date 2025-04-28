@@ -58,7 +58,6 @@ public class CurrencyDisplay : MonoBehaviour
         }
     }
 
-    // Add this method to force an update
     public void ForceUpdate()
     {
         if (currencyManager != null)

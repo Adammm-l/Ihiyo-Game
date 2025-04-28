@@ -46,12 +46,8 @@ public class InventoryController : MonoBehaviour
         void Start()
         {
             keybindManager = KeybindManager.Instance;
-
-            // Make sure these methods are called during initialization
             PrepareInventoryData();
             PrepareUI();
-
-            Debug.Log($"InventoryController initialized with data ID: {inventoryData.GetInstanceID()}");
         }
 
 
@@ -84,13 +80,11 @@ public class InventoryController : MonoBehaviour
         {
             if (inventoryData == null) return;
 
-            // Loop through inventory slots to find the item
             for (int i = 0; i < inventoryData.Size; i++)
             {
                 var item = inventoryData.GetItemAt(i);
                 if (!item.isEmpty && item.item.name == itemName)
                 {
-                    // Found the item, remove it
                     inventoryData.RemoveItem(i, amount);
                     Debug.Log($"Removed {amount}x {itemName} from UI inventory at slot {i}");
                     break;
@@ -124,11 +118,11 @@ public class InventoryController : MonoBehaviour
 
     private void HandleSwapItems(int item1, int item2) {
 
-        inventoryData.SwapItems(item1, item2); // Swap Items around and call to the original function
+        inventoryData.SwapItems(item1, item2);
 
     }
 
-    private void HandleDragging(int itemIndex) { // Call original function to handle dragging behavior
+    private void HandleDragging(int itemIndex) {
 
         InventoryItem invenItem = inventoryData.GetItemAt(itemIndex);
 
@@ -151,7 +145,7 @@ public class InventoryController : MonoBehaviour
 
         IItemAction itemAction = item.item as IItemAction;
 
-        if (itemAction != null) { // Selected an interactble item
+        if (itemAction != null) {
 
             itemAction.PerformAction(gameObject, null);
 
@@ -159,7 +153,7 @@ public class InventoryController : MonoBehaviour
 
         IDestroyableItem destroyableItem = item.item as IDestroyableItem;
 
-        if (destroyableItem != null) { // Get rid of item upon use
+        if (destroyableItem != null) {
 
             inventoryData.RemoveItem(wield,1);
         }
