@@ -6,7 +6,7 @@ using System.Reflection;
 public class InventoryBridge : MonoBehaviour
 {
     private static InventoryBridge instance;
-    [SerializeField] private InventorySO inventoryDataSO;
+    public InventorySO inventoryDataSO;
     private static InventorySO staticInventoryData;
 
     private void Awake()

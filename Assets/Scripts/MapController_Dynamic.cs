@@ -67,12 +67,12 @@ public class MapController_Dynamic : MonoBehaviour
     // Clear Map
     private void ClearMap()
     {
-        foreach (Transform child in mapParent)
-        {
-            Destroy(child.gameObject);
-        }
+        // foreach (Transform child in mapParent)
+        // {
+        //     Destroy(child.gameObject);
+        // }
 
-        uiAreas.Clear();
+        // uiAreas.Clear();
     }
 
     private void CreateAreaUI(PolygonCollider2D area, bool isCurrent)
@@ -115,7 +115,7 @@ public class MapController_Dynamic : MonoBehaviour
         if (uiAreas.TryGetValue(newCurrentArea, out RectTransform areaUI))
         {
             // If the current area is found, set the icon's position to the center of the area
-            playerIcon.anchoredPosition = areaUI.anchoredPosition;
+            // playerIcon.anchoredPosition = areaUI.anchoredPosition;
         }
     }
 }
