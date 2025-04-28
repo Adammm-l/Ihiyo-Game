@@ -133,7 +133,9 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
 
             GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
             isLoadingSave = true;
+            MapController_Dynamic.Instance?.GenerateMap(); // Generate Map 
             StartCoroutine(AssignDataAfterSceneLoad(saveData));
+            
             return true;
         }
 
