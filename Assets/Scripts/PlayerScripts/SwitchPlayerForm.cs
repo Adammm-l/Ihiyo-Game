@@ -114,7 +114,7 @@ public class SwitchPlayerForm : MonoBehaviour
         switchForm = keybindManager.GetKeybind("SwitchForm");
         possessKey = keybindManager.GetKeybind("PossessObject");
 
-        if (Input.GetKeyDown(switchForm) && canTransform)
+        if (Input.GetKeyDown(switchForm) && canTransform && !NPCInteraction.IsInteracting)
         {
             TryToggleForm();
         }
