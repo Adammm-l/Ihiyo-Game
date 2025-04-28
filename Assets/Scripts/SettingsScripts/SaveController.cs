@@ -84,7 +84,9 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         switchForm = FindObjectOfType<SwitchPlayerForm>();
         saveData.isGhost = switchForm.isGhost;
         saveData.canTransform = switchForm.canTransform;
-        saveData.canChangeTime = defaultSaveData.canChangeTime;
+
+        TimeManipulator timeManipulator = FindObjectOfType<TimeManipulator>();
+        saveData.canChangeTime = timeManipulator.canChangeTime;
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
         Debug.Log($"Saved game on slot {activeSaveSlot}.");
