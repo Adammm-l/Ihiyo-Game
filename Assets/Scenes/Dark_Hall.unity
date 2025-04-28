@@ -10981,6 +10981,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -57885,6 +57886,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58126,6 +58128,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58156,6 +58159,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58183,6 +58187,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58207,6 +58212,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58370,6 +58376,7 @@ GameObject:
   - component: {fileID: 1665998052}
   - component: {fileID: 1665998051}
   - component: {fileID: 1665998054}
+  - component: {fileID: 1665998055}
   m_Layer: 6
   m_Name: InteractionCollider
   m_TagString: Untagged
@@ -58436,6 +58443,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58462,6 +58470,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58489,6 +58498,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58513,6 +58523,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58546,6 +58557,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58574,6 +58586,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58599,6 +58612,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58624,6 +58638,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58655,6 +58670,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -58678,9 +58694,19 @@ MonoBehaviour:
         then when I blinked again, I was told that I have to save the world?!?!?
         Something about collecting 3 stones?!?!
       isCompleted: 0
-      requiredItem: Mystical Stone
-      requiredAmount: 3
+      requiredItem: 
+      requiredAmount: 0
       currentAmount: 0
+      requiredItems:
+      - itemName: Mystical Stone
+        amount: 1
+        currentAmount: 0
+      - itemName: Lightning Stone
+        amount: 1
+        currentAmount: 0
+      - itemName: Time Stone
+        amount: 1
+        currentAmount: 0
       completionNPC: ???
       giverIncompleteResponse: It looks like you have not collected all three stones
         yet. Come back to me when you are ready
@@ -58772,6 +58798,19 @@ MonoBehaviour:
   fadeInTime: 0.5
   stayTime: 1.7
   fadeOutTime: 1
+--- !u!114 &1665998055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665998049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ac46b8a14c44746b22c87e32692845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueSegmentToUnlock: 0
 --- !u!1 &1681258722
 GameObject:
   m_ObjectHideFlags: 0
@@ -59967,6 +60006,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -59991,6 +60031,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60015,6 +60056,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60048,6 +60090,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60072,6 +60115,7 @@ MonoBehaviour:
       requiredItem: Kelsey's Note
       requiredAmount: 1
       currentAmount: 0
+      requiredItems: []
       completionNPC: Joseph
       giverIncompleteResponse: Bring Joseph my note! I'll make it worth your time
       completionCompleteResponse: What is this?? You know what, normally I would
@@ -60100,6 +60144,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60125,6 +60170,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60151,6 +60197,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60178,6 +60225,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -60203,6 +60251,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -61349,7 +61398,7 @@ Transform:
   m_GameObject: {fileID: 1911184980}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -55.63, y: 14.06, z: 0}
+  m_LocalPosition: {x: -84.8, y: 35.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
