@@ -12,6 +12,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
     public const int MAX_SLOTS = 3;
     const string ActiveSlotKey = "ActiveSaveSlot";
     private string saveLocation;
+    public bool isLoadingSave = false; // fix for that script idk what to do with
     SaveData defaultSaveData;
 
     // data to change
@@ -83,7 +84,7 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         switchForm = FindObjectOfType<SwitchPlayerForm>();
         saveData.isGhost = switchForm.isGhost;
         saveData.canTransform = switchForm.canTransform;
-        // canChangeTime = defaultSaveData.canChangeTime
+        saveData.canChangeTime = defaultSaveData.canChangeTime;
 
         File.WriteAllText(savePath, JsonUtility.ToJson(saveData)); //Writes the Data to a file
         Debug.Log($"Saved game on slot {activeSaveSlot}.");
@@ -130,6 +131,8 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
                 wavePoint.SetActive(false);
             }
 
+            GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
+            isLoadingSave = true;
             StartCoroutine(AssignDataAfterSceneLoad(saveData));
             return true;
         }
@@ -199,12 +202,13 @@ public class SaveController : MonoBehaviour // Terrence Akinola / Edwin (Eri) So
         switchForm.SwitchForm();
 
         switchForm.canTransform = saveData.canTransform;
+        // ... = saveData.canChangeTime
 
         VolumeSettings volumeController = FindObjectOfType<VolumeSettings>();
         volumeController.LoadVolume();
 
         autoSaveManager.Initialize();
-        GameObject.FindGameObjectWithTag("Player").transform.position = saveData.playerPosition;
+        isLoadingSave = false;
     }
 
     public void DeleteSave(int slot)

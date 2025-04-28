@@ -50,6 +50,12 @@ public class SceneLightingManager : MonoBehaviour
         UpdateLighting();
     }
 
+    void Awake()
+    {
+        ResetSceneLighting();
+        StartCoroutine(CollectObjectsNextFrame());
+    }
+
     void Start()
     {
         CollectRenderersAndTilemaps();

@@ -11,9 +11,12 @@ public class PlayerStartPoint : MonoBehaviour
     public void Start()
     {
         //thePlayer = FindObjectOfType<PlayerControl>();
-        GameObject thePlayer = GameObject.FindGameObjectWithTag("Player");
-        thePlayer.transform.position = new Vector3(transform.position.x,transform.position.y,thePlayer.transform.position.z); // Set the player's location
-
+        SaveController saveController = SaveController.Instance;
+        if (!saveController.isLoadingSave)
+        {
+            GameObject thePlayer = GameObject.FindGameObjectWithTag("Player");
+            thePlayer.transform.position = new Vector3(transform.position.x,transform.position.y,thePlayer.transform.position.z); // Set the player's location
+        }
 
         //theCam = FindObjectOfType<findPlayer>();
         //theCam.transform.position = new Vector3(transform.position.x, transform.position.y, theCam.transform.position.z);

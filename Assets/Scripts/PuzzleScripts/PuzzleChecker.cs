@@ -15,7 +15,7 @@ public class PuzzleCompletionChecker : MonoBehaviour
     public float pulseSpeed = 2f;
 
     [Header("Completion Events")]
-    public UnityEvent onAllPillarsCompleted;
+    public bool onAllPillarsCompleted;
 
     private SpriteRenderer stoneRenderer;
     private int completedPillars = 0;
@@ -46,7 +46,7 @@ public class PuzzleCompletionChecker : MonoBehaviour
         int newCount = 0;
         foreach (GameObject pillar in pillars)
         {
-            if (pillar.GetComponent<ObjectSnap>().hasSnappedObject)
+            if (pillar.GetComponent<ObjectSnap>().hasSnappedObject && pillar.GetComponent<PillarInteraction>().hasBeenActivated)
             {
                 newCount++;
             }
@@ -59,7 +59,7 @@ public class PuzzleCompletionChecker : MonoBehaviour
             
             if (completedPillars == pillars.Count)
             {
-                onAllPillarsCompleted.Invoke();
+                onAllPillarsCompleted = true;
             }
         }
     }

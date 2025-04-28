@@ -21,7 +21,7 @@ public class PillarInteraction : MonoBehaviour
     private KeybindManager keybindManager;
     private KeyCode interactKey;
     private bool isPlayerInRange = false;
-    private bool hasBeenActivated = false;
+    public bool hasBeenActivated = false;
     private DialogueManager dialogueManager;
 
     void Start() //***COMMENTS FOR TERRENCE WHEN HE FIXES COLLIDER POSSESSION*** (i didn't even need them lmao)
