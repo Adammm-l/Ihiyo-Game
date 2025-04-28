@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-//Adam
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-    PlayerControl playerControl;
-    TimeManager timeManager;
-    private GameObject currentOpenPanel;
+    [HideInInspector] public GameObject currentOpenPanel;
 
     void Awake()
     {
@@ -15,9 +11,6 @@ public class UIManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-
-            playerControl = FindObjectOfType<PlayerControl>();
-            timeManager = FindObjectOfType<TimeManager>();
         }
         else
         {
@@ -25,39 +18,47 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public bool TogglePanel(GameObject panel, bool forceState = false, bool desiredState = false)
+    public bool TogglePanel(GameObject panel, bool forceState = false, bool desiredState = false, bool isNPCPanel = false)
     {
+        // Check if we can toggle panels
+        // Allow NPC panels like shops to open during interaction
+        if (NPCInteraction.IsInteracting && !isNPCPanel)
+        {
+            // Only allow force closing during dialogue
+            if (forceState && !desiredState)
+            {
+                panel.SetActive(false);
+                if (currentOpenPanel == panel) currentOpenPanel = null;
+                return false;
+            }
+            return panel.activeSelf;
+        }
+
+        // Rest of the function remains the same
         if (panel.activeSelf && !forceState)
         {
             panel.SetActive(false);
             currentOpenPanel = null;
-
-            playerControl.canMove = true;
-            timeManager.canIncrementTime = true;
             return false;
         }
+
         if (currentOpenPanel != null && currentOpenPanel != panel)
         {
             currentOpenPanel.SetActive(false);
         }
+
         bool newState = forceState ? desiredState : true;
         panel.SetActive(newState);
         currentOpenPanel = newState ? panel : null;
-
-        if (newState)
-        {
-            playerControl.canMove = false;
-        }
-        else
-        {
-            playerControl.canMove = true;
-        }
-        timeManager.canIncrementTime = playerControl.canMove;
         return newState;
     }
 
-    public bool CanTogglePanel()
+    public void CloseAllPanels()
     {
-        return !NPCInteraction.IsInteracting;
+        if (currentOpenPanel != null)
+        {
+            currentOpenPanel.SetActive(false);
+            currentOpenPanel = null;
+        }
     }
 }

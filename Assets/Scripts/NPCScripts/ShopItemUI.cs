@@ -31,7 +31,7 @@ public class ShopItemUI : MonoBehaviour
     }
 
     private void UpdateButtonState()
-    { 
+    {
         bool canAfford = CurrencyManager.Instance.GetCurrentCurrency() >= currentItem.itemPrice;
         Image buttonImage = buyButton.GetComponent<Image>();
         Color buttonColor = buttonImage.color;
