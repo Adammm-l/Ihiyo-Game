@@ -764,7 +764,7 @@ Transform:
   m_GameObject: {fileID: 23607878}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -51.36, y: -5.65, z: 0}
+  m_LocalPosition: {x: -30.904, y: 3.71, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -9885,7 +9885,7 @@ Transform:
   m_GameObject: {fileID: 606095050}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -27.239, y: -2.078, z: 0}
+  m_LocalPosition: {x: -28.82, y: 20.58, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -10884,13 +10884,11 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 21e53312cd0b11c4f8b8a4722cfc8884, type: 3}
   - {fileID: 21300000, guid: 1b1dffea27c929a43a5f487b0000c2d3, type: 3}
   - {fileID: 21300000, guid: 7b19d6f55514f194a9ac9ffc23d719f6, type: 3}
-  - {fileID: 21300000, guid: acf0b3b51b395014189e56af74f3e205, type: 3}
+  - {fileID: 21300000, guid: a38e7fb81b198694cac3a4a76e2e1c35, type: 3}
   fadeDuration: 0.5
-  pulseIntensity: 2
+  pulseIntensity: 1.5
   pulseSpeed: 2
-  onAllPillarsCompleted:
-    m_PersistentCalls:
-      m_Calls: []
+  isPuzzleFinished: 0
 --- !u!4 &692235970
 Transform:
   m_ObjectHideFlags: 0
@@ -16787,6 +16785,7 @@ MonoBehaviour:
   onObjectInteracted:
     m_PersistentCalls:
       m_Calls: []
+  hasBeenActivated: 0
 --- !u!114 &1194546898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19110,6 +19109,7 @@ MonoBehaviour:
   onObjectInteracted:
     m_PersistentCalls:
       m_Calls: []
+  hasBeenActivated: 0
 --- !u!114 &1381979428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59857,6 +59857,7 @@ MonoBehaviour:
   onObjectInteracted:
     m_PersistentCalls:
       m_Calls: []
+  hasBeenActivated: 0
 --- !u!114 &1811925803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63129,6 +63130,7 @@ MonoBehaviour:
   onObjectInteracted:
     m_PersistentCalls:
       m_Calls: []
+  hasBeenActivated: 0
 --- !u!114 &2029330429
 MonoBehaviour:
   m_ObjectHideFlags: 0

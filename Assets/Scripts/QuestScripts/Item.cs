@@ -27,6 +27,14 @@ public class Item : MonoBehaviour
     {
         if (other.CompareTag("Player") && interactionText != null)
         {
+            if (itemName == "Time Stone")
+            {
+                PuzzleCompletionChecker puzzleChecker = FindObjectOfType<PuzzleCompletionChecker>();
+                if (!puzzleChecker.isPuzzleFinished)
+                {
+                    return;
+                }
+            }
             interactionText.SetActive(true);
         }
     }
