@@ -7,33 +7,21 @@ permalink: /Snapshots/
 # Project Snapshots
 
 Here is Ihiyo's Promotional Game Art:
-<p align="center">
-  <img src="Assets/Art/Ihiyo_Title.png" alt="Nali's Grim Eye">
-</p>
+![Nali's Grim Eye](Assets/Art/Ihiyo_Title.png)
 
 A look at Ihiyo himself:
-<p align="center">
-  <img src="Assets/Art/Nali.png" alt="Nali's Self Portrait">
-</p>
+![Nali's Self Portrait](Assets/Art/Nali.png)
 
 Now let's take a peek at some of the game's snapshots:
 
 Having a small talk with Mom:
-<p align="center">
-  <img src="Assets/files/MomDC.png" alt="A talk with Mom">
-</p>
+![A talk with Mom](Assets/files/MomDC.png)
 
 A look at our inventory:
-<p align="center">
-  <img src="Assets/files/Inven.png" alt="Inventory menu full of items">
-</p>
+![Inventory full of items](Assets/files/Inven.png)
 
 Checking our active quests:
-<p align="center">
-  <img src="Assets/files/QuestLog.png" alt="Quest Log">
-</p>
+![Quest Log](Assets/files/QuestLog.png)
 
 A look at the shop:
-<p align="center">
-  <img src="Assets/files/ShopMenu.png" alt="Shop">
-</p>
+![Shop Menu](Assets/files/ShopMenu.png)
