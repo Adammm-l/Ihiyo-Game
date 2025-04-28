@@ -6,8 +6,13 @@ permalink: /poster/
 
 # Project Poster
 
-Check out our final project poster below:
+Here’s our final presentation:
 
-<object data="/assets/files/ihiyo-poster.pdf" width="100%" height="600px" type="application/pdf">
-  <p>Your browser does not support PDFs. <a href="/assets/files/ihiyo-poster.pdf">Download the PDF</a>.</p>
-</object>
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQx0F2-7-LzDVaYwr3ZhGf8VItAxX8WhksTZyHLZB7kqXHd7GswNmIoWBXfrR2Pmh67OZ9rFbAfSdzg/pub?start=false&loop=false&delayms=3000" 
+width="960" 
+height="569" 
+frameborder="0" 
+allowfullscreen="true" 
+mozallowfullscreen="true" 
+webkitallowfullscreen="true">
+</iframe>
