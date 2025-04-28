@@ -2,34 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerQuestManager : MonoBehaviour //manages the player's active quests
+public class PlayerQuestManager : MonoBehaviour
 {
-
     private List<GameQuests> activeQuests = new List<GameQuests>();
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void AcceptQuest(GameQuests quest)
     {
         activeQuests.Add(quest);
-        Debug.Log($"[PlayerQuestManager] Quest accepted: {quest.questTitle}, Required: {quest.requiredItem}, Amount: {quest.requiredAmount}, Current: {quest.currentAmount}");
 
-        QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+        if (quest.UsesMultipleItems)
+        {
+            string itemDetails = "";
+            foreach (QuestItemRequirement req in quest.requiredItems)
+            {
+                itemDetails += $"{req.itemName}({req.currentAmount}/{req.amount}), ";
+            }
+            Debug.Log($"[PlayerQuestManager] Quest accepted: {quest.questTitle}, Required items: {itemDetails}");
+        }
+        else
+        {
+            Debug.Log($"[PlayerQuestManager] Quest accepted: {quest.questTitle}, Required: {quest.requiredItem}, Amount: {quest.requiredAmount}, Current: {quest.currentAmount}");
+        }
+
+        QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
         if (questLogManager != null)
         {
             questLogManager.UpdateQuestLog();
         }
-
     }
 
     public void CompleteQuest(GameQuests quest)
@@ -39,15 +38,14 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
         {
             quest.isCompleted = true;
             quest.isEnabled = false;
-            activeQuests.Remove(quest); // Remove completed quest
+            activeQuests.Remove(quest);
 
-            // Add this line to save completion status
             PlayerPrefs.SetInt("Quest_" + quest.questTitle + "_Completed", 1);
             PlayerPrefs.Save();
 
             Debug.Log($"[PlayerQuestManager] Quest completed and removed: {quest.questTitle}");
 
-            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
             if (questLogManager != null)
             {
                 questLogManager.UpdateQuestLog();
@@ -62,10 +60,6 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
     public List<GameQuests> GetActiveQuests()
     {
         Debug.Log($"[PlayerQuestManager] Getting active quests, count: {activeQuests.Count}");
-        foreach (var quest in activeQuests)
-        {
-            Debug.Log($"[PlayerQuestManager] Active quest: {quest.questTitle}, Required: {quest.requiredItem}, Current: {quest.currentAmount}/{quest.requiredAmount}");
-        }
         return activeQuests;
     }
 
@@ -76,20 +70,37 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
 
         foreach (GameQuests quest in activeQuests)
         {
-            Debug.Log($"[PlayerQuestManager] Checking quest: {quest.questTitle}, Required: {quest.requiredItem}, Current: {quest.currentAmount}/{quest.requiredAmount}");
+            if (quest.isCompleted) continue;
 
-            if (quest.requiredItem == itemName && !quest.isCompleted)
+            bool questUpdated = false;
+
+            // Check for multi-item quests
+            if (quest.UsesMultipleItems)
             {
-                if (quest.currentAmount < quest.requiredAmount)
+                foreach (QuestItemRequirement req in quest.requiredItems)
                 {
-                    quest.currentAmount++;
-                    updated = true;
-                    Debug.Log($"[PlayerQuestManager] Updated progress for {quest.questTitle}: {quest.currentAmount}/{quest.requiredAmount}");
+                    if (req.itemName == itemName && req.currentAmount < req.amount)
+                    {
+                        req.currentAmount++;
+                        questUpdated = true;
+                        updated = true;
+                        Debug.Log($"[PlayerQuestManager] Updated progress for {quest.questTitle} - {itemName}: {req.currentAmount}/{req.amount}");
+                        break;
+                    }
                 }
-                else
-                {
-                    Debug.Log($"[PlayerQuestManager] Progress already at max for {quest.questTitle}: {quest.currentAmount}/{quest.requiredAmount}");
-                }
+            }
+            // Check for legacy single-item quests
+            else if (quest.requiredItem == itemName && quest.currentAmount < quest.requiredAmount)
+            {
+                quest.currentAmount++;
+                questUpdated = true;
+                updated = true;
+                Debug.Log($"[PlayerQuestManager] Updated progress for {quest.questTitle}: {quest.currentAmount}/{quest.requiredAmount}");
+            }
+
+            if (questUpdated)
+            {
+                // Check if quest is now complete - could auto-complete here if desired
             }
         }
 
@@ -98,7 +109,7 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
             Debug.Log($"[PlayerQuestManager] No quests found needing {itemName} or already at max progress");
         }
 
-        QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+        QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
         if (questLogManager != null)
         {
             questLogManager.UpdateQuestLog();
@@ -112,22 +123,11 @@ public class PlayerQuestManager : MonoBehaviour //manages the player's active qu
             activeQuests.Remove(quest);
             Debug.Log($"[PlayerQuestManager] Removed quest: {quest.questTitle}");
 
-            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>(); //refresh
+            QuestLogManager questLogManager = FindObjectOfType<QuestLogManager>();
             if (questLogManager != null)
             {
                 questLogManager.UpdateQuestLog();
             }
         }
     }
-
-    /*private void OnTriggerEnter2D(Collider2D other)   //reactivate later
-    {
-        if (other.CompareTag("Item")) 
-        {
-            string itemName = other.gameObject.name;
-            FindObjectOfType<PlayerQuestManager>().UpdateQuestProgress(itemName);
-            Destroy(other.gameObject);
-        }
-    }
-    */
 }

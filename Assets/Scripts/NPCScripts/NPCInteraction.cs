@@ -327,20 +327,55 @@ public class NPCInteraction : MonoBehaviour
 
     private void HandleQuestResponses(Inventory playerInventory, GameQuests quest, NPCMovement npcMovement)
     {
-        //check if quest is fulfilled
-        int playerItemCount = playerInventory.GetItemCount(quest.requiredItem);
-        Debug.Log($"[HandleQuestResponses] Player has {playerItemCount} of {quest.requiredItem}.");
+        bool questCompleted = false;
+
+        if (quest.UsesMultipleItems)
+        {
+            // Check all required items
+            questCompleted = true;
+            foreach (QuestItemRequirement req in quest.requiredItems)
+            {
+                int playerItemCount = playerInventory.GetItemCount(req.itemName);
+                Debug.Log($"[HandleQuestResponses] Player has {playerItemCount} of {req.itemName}. Needs {req.amount}");
+
+                // Update current amount for quest tracking
+                req.currentAmount = playerItemCount;
+
+                if (playerItemCount < req.amount)
+                {
+                    questCompleted = false;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // Legacy single item check
+            int playerItemCount = playerInventory.GetItemCount(quest.requiredItem);
+            quest.currentAmount = playerItemCount;
+            Debug.Log($"[HandleQuestResponses] Player has {playerItemCount} of {quest.requiredItem}.");
+            questCompleted = playerItemCount >= quest.requiredAmount;
+        }
 
         bool isCompletionNPC = (quest.completionNPC == npcName);
 
-        if (playerItemCount >= quest.requiredAmount) //quest is done
+        if (questCompleted)
         {
             // Only completion NPC can actually complete the quest
             if (isCompletionNPC || string.IsNullOrEmpty(quest.completionNPC))
             {
-                // Remove items and complete the quest
-                Debug.Log($"[HandleQuestResponses] Player has enough items to complete the quest. Completing quest...");
-                RemoveItemFromPlayer(quest.requiredItem, quest.requiredAmount);
+                // Remove all required items
+                if (quest.UsesMultipleItems)
+                {
+                    foreach (QuestItemRequirement req in quest.requiredItems)
+                    {
+                        RemoveItemFromPlayer(req.itemName, req.amount);
+                    }
+                }
+                else
+                {
+                    RemoveItemFromPlayer(quest.requiredItem, quest.requiredAmount);
+                }
 
                 PlayerQuestManager questManager = FindObjectOfType<PlayerQuestManager>();
                 if (questManager != null)
@@ -349,7 +384,6 @@ public class NPCInteraction : MonoBehaviour
                     Debug.Log($"[HandleQuestResponses] Quest completed: {quest.questTitle}");
                 }
 
-                // Use completion NPC's complete response or default
                 string completeResponse = !string.IsNullOrEmpty(quest.completionCompleteResponse)
                     ? quest.completionCompleteResponse
                     : "Thank you for completing this task!";
@@ -357,21 +391,19 @@ public class NPCInteraction : MonoBehaviour
                 dialogueManager.ShowDialogue(npcName, completeResponse);
             }
         }
-        else //quest is not done
+        else
         {
+            // Quest not completed - same as before
             string incompleteResponse;
 
-            // Different response based on if this is the quest giver or the completion NPC
             if (isCompletionNPC)
             {
-                // This is the completion NPC
                 incompleteResponse = !string.IsNullOrEmpty(quest.completionIncompleteResponse)
                     ? quest.completionIncompleteResponse
                     : "I'm waiting for you to complete this task.";
             }
             else
             {
-                // This is the quest giver
                 incompleteResponse = !string.IsNullOrEmpty(quest.giverIncompleteResponse)
                     ? quest.giverIncompleteResponse
                     : "Have you completed that task yet?";
@@ -379,7 +411,7 @@ public class NPCInteraction : MonoBehaviour
 
             dialogueManager.ShowDialogue(npcName, incompleteResponse);
         }
-        // NPC stays in place for quest responses instead of walking away
+
         npcMovement.PauseMovementInfinitely();
     }
 
@@ -442,7 +474,6 @@ public class NPCInteraction : MonoBehaviour
         {
             quest.IsEnabled = true;
 
-            // If completionNPC is empty, it means the quest needs to be delivered back to this NPC
             if (string.IsNullOrEmpty(quest.completionNPC))
             {
                 quest.completionNPC = npcName;
@@ -450,8 +481,19 @@ public class NPCInteraction : MonoBehaviour
 
             questManager.AcceptQuest(quest);
             ShowQuestNotification();
-            //Debug.Log($"Triggered quest: {quest.questTitle} to be completed by {quest.completionNPC}");
-            EnableQuestItems(quest.requiredItem);
+
+            // Enable all required items
+            if (quest.UsesMultipleItems)
+            {
+                foreach (QuestItemRequirement req in quest.requiredItems)
+                {
+                    EnableQuestItems(req.itemName);
+                }
+            }
+            else
+            {
+                EnableQuestItems(quest.requiredItem);
+            }
         }
     }
 

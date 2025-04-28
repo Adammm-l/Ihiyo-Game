@@ -14,14 +14,11 @@ public class QuestLogManager : MonoBehaviour
 
     private bool isLogOpen = false;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         keybindManager = KeybindManager.Instance;
     }
 
-    // Update is called once per frame
     private void Update()
     {
         toggleKey = keybindManager.GetKeybind("QuestLog");
@@ -62,8 +59,26 @@ public class QuestLogManager : MonoBehaviour
             GameObject questText = Instantiate(questTextPrefab, questContent);
             TextMeshProUGUI textComponent = questText.GetComponent<TextMeshProUGUI>();
 
-            //Set le quest details
-            textComponent.text = $"{quest.questTitle}\n{quest.questDescription}\nProgress: {quest.currentAmount}/{quest.requiredAmount}";
+            // Set quest details with proper progress display
+            string progressText;
+
+            if (quest.UsesMultipleItems)
+            {
+                // For multiple items, build detailed progress list
+                string itemProgress = "";
+                foreach (QuestItemRequirement req in quest.requiredItems)
+                {
+                    itemProgress += $"\n- {req.itemName}: {req.currentAmount}/{req.amount}";
+                }
+                progressText = $"{quest.questTitle}\n{quest.questDescription}{itemProgress}";
+            }
+            else
+            {
+                // Legacy single item display
+                progressText = $"{quest.questTitle}\n{quest.questDescription}\nProgress: {quest.currentAmount}/{quest.requiredAmount}";
+            }
+
+            textComponent.text = progressText;
         }
     }
 
