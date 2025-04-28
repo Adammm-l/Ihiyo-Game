@@ -385,12 +385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2d761717cde1c4f8c3d0a395fe490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 302787494}
-  - {fileID: 1461468007}
-  - {fileID: 2026337681}
-  - {fileID: 233473573}
-  - {fileID: 174267448}
+  schedule: []
   movementSpeed: 1.5
   loop: 1
   waitTime: 3
@@ -12631,9 +12626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2d761717cde1c4f8c3d0a395fe490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 2104948008}
-  - {fileID: 1099833779}
+  schedule: []
   movementSpeed: 1.3
   loop: 1
   waitTime: 5
@@ -13236,7 +13229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2d761717cde1c4f8c3d0a395fe490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints: []
+  schedule: []
   movementSpeed: 2
   loop: 1
   waitTime: 2

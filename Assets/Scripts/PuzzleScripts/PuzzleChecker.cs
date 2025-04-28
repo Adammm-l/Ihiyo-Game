@@ -15,7 +15,7 @@ public class PuzzleCompletionChecker : MonoBehaviour
     public float pulseSpeed = 2f;
 
     [Header("Completion Events")]
-    public bool onAllPillarsCompleted;
+    public bool isPuzzleFinished;
 
     private SpriteRenderer stoneRenderer;
     private int completedPillars = 0;
@@ -59,7 +59,7 @@ public class PuzzleCompletionChecker : MonoBehaviour
             
             if (completedPillars == pillars.Count)
             {
-                onAllPillarsCompleted = true;
+                isPuzzleFinished = true;
             }
         }
     }
