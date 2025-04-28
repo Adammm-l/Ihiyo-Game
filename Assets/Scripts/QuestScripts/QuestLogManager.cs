@@ -5,6 +5,9 @@ using TMPro;
 
 public class QuestLogManager : MonoBehaviour
 {
+    [Header("Text Settings")]
+    [SerializeField] private TMP_FontAsset questFont;
+
     [Header("References")]
     [SerializeField] private GameObject questLogPanel;
     [SerializeField] private Transform questContent;
@@ -58,6 +61,12 @@ public class QuestLogManager : MonoBehaviour
         {
             GameObject questText = Instantiate(questTextPrefab, questContent);
             TextMeshProUGUI textComponent = questText.GetComponent<TextMeshProUGUI>();
+
+            // Set the font
+            if (questFont != null)
+            {
+                textComponent.font = questFont;
+            }
 
             // Set quest details with proper progress display
             string progressText;

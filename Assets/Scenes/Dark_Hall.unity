@@ -698,7 +698,7 @@ GameObject:
   - component: {fileID: 23607881}
   m_Layer: 0
   m_Name: Cube Shaped Stone
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4502,7 +4502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2135153075346702012, guid: 98dc644649049004eab532ae53fa4fa3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -5
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 2135153075346702012, guid: 98dc644649049004eab532ae53fa4fa3, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4795,6 +4795,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8188755934945226398, guid: b3a4c3e592bbd7b4a865696c150f20c2, type: 3}
+      propertyPath: questFont
+      value: 
+      objectReference: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
     - target: {fileID: 8188755934945226398, guid: b3a4c3e592bbd7b4a865696c150f20c2, type: 3}
       propertyPath: keybindHolder
       value: 
@@ -12864,6 +12868,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1720170248805842939, guid: 1404ab8288e6ad14ba26e81c9236f02a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3628643700430686946, guid: 1404ab8288e6ad14ba26e81c9236f02a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 40.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3628643700430686946, guid: 1404ab8288e6ad14ba26e81c9236f02a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 298.8
+      objectReference: {fileID: 0}
     - target: {fileID: 4153421502902602312, guid: 1404ab8288e6ad14ba26e81c9236f02a, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -13644,6 +13660,7 @@ MonoBehaviour:
   - Floor
   - NPC
   - Player
+  - Item
   playerTag: Player
   affectPlayer: 1
 --- !u!4 &938302338
@@ -13948,7 +13965,7 @@ GameObject:
   - component: {fileID: 983249776}
   m_Layer: 0
   m_Name: Shield Shaped Stone
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14674,7 +14691,7 @@ GameObject:
   - component: {fileID: 1032284310}
   m_Layer: 0
   m_Name: Sphere Shaped Stone
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15250,6 +15267,10 @@ PrefabInstance:
     - target: {fileID: 7947911505737750455, guid: d730038d263986f4dac93230e1dd62b0, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947911505737750455, guid: d730038d263986f4dac93230e1dd62b0, type: 3}
+      propertyPath: m_TagString
+      value: Item
       objectReference: {fileID: 0}
     - target: {fileID: 7947911505844789836, guid: d730038d263986f4dac93230e1dd62b0, type: 3}
       propertyPath: m_Layer
@@ -16044,6 +16065,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7947911505737750455, guid: c5bdca1933fde624698bb8c6d6daa44b, type: 3}
+      propertyPath: m_TagString
+      value: Item
+      objectReference: {fileID: 0}
     - target: {fileID: 7947911505844789836, guid: c5bdca1933fde624698bb8c6d6daa44b, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -16513,6 +16538,10 @@ PrefabInstance:
     - target: {fileID: 7947911505737750455, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947911505737750455, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
+      propertyPath: m_TagString
+      value: Item
       objectReference: {fileID: 0}
     - target: {fileID: 7947911505844789836, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
       propertyPath: m_Layer
@@ -19018,6 +19047,10 @@ PrefabInstance:
     - target: {fileID: 7947911505737750455, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947911505737750455, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
+      propertyPath: m_TagString
+      value: Item
       objectReference: {fileID: 0}
     - target: {fileID: 7947911505844789836, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
       propertyPath: m_Layer
@@ -58724,6 +58757,34 @@ MonoBehaviour:
     giveItemAfterSegment: 0
     itemToGive: 
     itemAmount: 0
+  - lines:
+    - I have tested your abilities and you have proven to wield them for good
+    - I will allow you to keep your time stone, granting you the power to manipulate
+      time. This will be very helpful to you in your future endeavors
+    - Actually, you will need it
+    - Until next time, Ihiyo
+    breakPoints: 
+    responseOptions:
+      responses:
+      - ...
+      nextSegmentIDs: 
+    triggeredQuest:
+      isEnabled: 0
+      questTitle: 
+      questDescription: 
+      isCompleted: 0
+      requiredItem: 
+      requiredAmount: 0
+      currentAmount: 0
+      requiredItems: []
+      completionNPC: 
+      giverIncompleteResponse: 
+      completionCompleteResponse: 
+      completionIncompleteResponse: 
+    triggerQuestAfterSegment: 0
+    giveItemAfterSegment: 1
+    itemToGive: Time Stone
+    itemAmount: 1
   interactionText: {fileID: 1914393691}
   questNotificationSprite: {fileID: 827341235}
   notificationDuration: 3
@@ -63078,6 +63139,10 @@ PrefabInstance:
     - target: {fileID: 7947911505737750455, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7947911505737750455, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
+      propertyPath: m_TagString
+      value: Item
       objectReference: {fileID: 0}
     - target: {fileID: 7947911505844789836, guid: 41ea6afb203377e42995d7d016ea5907, type: 3}
       propertyPath: m_Layer

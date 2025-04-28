@@ -385,7 +385,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2d761717cde1c4f8c3d0a395fe490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  schedule: []
+  schedule:
+  - startHour: 0
+    startMinute: 0
+    waypoints:
+    - {fileID: 302787494}
+    - {fileID: 1461468007}
+    - {fileID: 2026337681}
+    - {fileID: 233473573}
+    - {fileID: 174267448}
   movementSpeed: 1.5
   loop: 1
   waitTime: 3
@@ -3958,6 +3966,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -3983,6 +3992,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -4007,6 +4017,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -4033,6 +4044,7 @@ MonoBehaviour:
       requiredItem: Wallet
       requiredAmount: 1
       currentAmount: 0
+      requiredItems: []
       completionNPC: Dad
       giverIncompleteResponse: Do you have my wallet yet?
       completionCompleteResponse: Oh, you found it!
@@ -4063,6 +4075,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -4089,6 +4102,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -4114,6 +4128,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -4139,6 +4154,7 @@ MonoBehaviour:
       requiredItem: talktomom
       requiredAmount: 1
       currentAmount: 0
+      requiredItems: []
       completionNPC: Mom
       giverIncompleteResponse: Heading out to work!
       completionCompleteResponse: Do you remember what we do every night before bed?
@@ -4385,6 +4401,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -4409,6 +4426,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -5718,7 +5736,7 @@ Transform:
   m_GameObject: {fileID: 758159184}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.480163, y: 0.6916839, z: -10}
+  m_LocalPosition: {x: -4.723314, y: 1.0876216, z: -10}
   m_LocalScale: {x: 0.49379784, y: 0.49379784, z: 0.49379784}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11933,6 +11951,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -11959,6 +11978,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -11984,6 +12004,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -12010,6 +12031,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -12035,6 +12057,7 @@ MonoBehaviour:
       requiredItem: talktodad
       requiredAmount: 1
       currentAmount: 0
+      requiredItems: []
       completionNPC: Dad
       giverIncompleteResponse: Have you said good morning to your Dad yet?
       completionCompleteResponse: Oh, Ihiyo!
@@ -12060,6 +12083,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -12085,6 +12109,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -12110,6 +12135,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -12140,6 +12166,7 @@ MonoBehaviour:
       requiredItem: 
       requiredAmount: 0
       currentAmount: 0
+      requiredItems: []
       completionNPC: 
       giverIncompleteResponse: 
       completionCompleteResponse: 
@@ -12165,6 +12192,7 @@ MonoBehaviour:
       requiredItem: Apple
       requiredAmount: 3
       currentAmount: 0
+      requiredItems: []
       completionNPC: Mom
       giverIncompleteResponse: Do you have the apples yet?
       completionCompleteResponse: Oh! The apples!
@@ -12189,6 +12217,7 @@ MonoBehaviour:
       requiredItem: Apple
       requiredAmount: 3
       currentAmount: 0
+      requiredItems: []
       completionNPC: Mom
       giverIncompleteResponse: Do you have the apples yet?
       completionCompleteResponse: Oh! The apples!
@@ -12626,7 +12655,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2d761717cde1c4f8c3d0a395fe490a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  schedule: []
+  schedule:
+  - startHour: 8
+    startMinute: 0
+    waypoints:
+    - {fileID: 2104948008}
+    - {fileID: 1099833779}
   movementSpeed: 1.3
   loop: 1
   waitTime: 5
@@ -13408,7 +13442,7 @@ GameObject:
   - component: {fileID: 1911447249}
   m_Layer: 0
   m_Name: ' ItemsForQuests'
-  m_TagString: Untagged
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14268,11 +14302,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3628643700430686946, guid: 1404ab8288e6ad14ba26e81c9236f02a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 230
+      value: 999.8
       objectReference: {fileID: 0}
     - target: {fileID: 3628643700430686946, guid: 1404ab8288e6ad14ba26e81c9236f02a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -206
+      value: -241.4
       objectReference: {fileID: 0}
     - target: {fileID: 4153421502902602312, guid: 1404ab8288e6ad14ba26e81c9236f02a, type: 3}
       propertyPath: m_Pivot.x
@@ -15826,6 +15860,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -58
       objectReference: {fileID: 0}
+    - target: {fileID: 4966322282492193201, guid: b3a4c3e592bbd7b4a865696c150f20c2, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5056935814899419829, guid: b3a4c3e592bbd7b4a865696c150f20c2, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -15923,6 +15961,10 @@ PrefabInstance:
       value: 0.000056813427
       objectReference: {fileID: 0}
     - target: {fileID: 8188755934945226398, guid: b3a4c3e592bbd7b4a865696c150f20c2, type: 3}
+      propertyPath: questFont
+      value: 
+      objectReference: {fileID: 11400000, guid: 6e153ec49b33922409d02c387275f612, type: 2}
+    - target: {fileID: 8188755934945226398, guid: b3a4c3e592bbd7b4a865696c150f20c2, type: 3}
       propertyPath: keybindHolder
       value: 
       objectReference: {fileID: 0}
@@ -15957,11 +15999,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2135153075346702012, guid: 98dc644649049004eab532ae53fa4fa3, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 112
+      value: 155
       objectReference: {fileID: 0}
     - target: {fileID: 2135153075346702012, guid: 98dc644649049004eab532ae53fa4fa3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -46
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 3109213459458446445, guid: 98dc644649049004eab532ae53fa4fa3, type: 3}
       propertyPath: m_margin.x

@@ -319,7 +319,7 @@ public class NPCInteraction : MonoBehaviour
             }
         }
 
-        dialogueManager.ShowDialogue(npcName, "That's all I have to say!"); //nothing active
+        dialogueManager.ShowDialogue(npcName, "**yawn**"); //nothing active
         npcMovement.PauseMovementWithTimer(5f); // For default interaction, NPC walks away after 5 seconds
         player.canMove = true;
         IsInteracting = false;
